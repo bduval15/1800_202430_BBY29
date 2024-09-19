@@ -7,7 +7,7 @@ This browser based web application to ...
 ## 2. Names of Contributors
 List team members and/or short bio's here... 
 * Brady Duval - I like to make music.
-* Aleen (I like potatos)
+* Aleen Dawood - I like potatos. 
 * Natalia Arseniuk- I like to learn new things and code.
 	
 ## 3. Technologies and Resources Used

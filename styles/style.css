@@ -12,7 +12,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #333;
+    background-color: #e03a3a;
     padding: 10px 20px;
 }
 
@@ -22,35 +22,15 @@ body {
     text-decoration: none;
     font-weight: bold;
 }
-
-.nav-links {
-    list-style: none;
-    display: flex;
-}
-
-.nav-links li {
-    margin-left: 20px;
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-size: 1rem;
-}
-
-.nav-links a:hover {
-    color: #ffcc00;
-}
-
 .profile-icon a {
     display: flex;
     align-items: center;
 }
 
-.profile-icon img {
-    width: 40px;
-    height: 40px;
+.profile-icon i {
+    font-size: 1.5rem;
     border-radius: 50%;
+    color: black;
 }
 
 .profile-icon a:hover img {

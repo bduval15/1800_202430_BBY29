@@ -12,7 +12,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #e03a3a;
+    background-color: #28AFB0;
     padding: 10px 20px;
 }
 
@@ -21,19 +21,27 @@ body {
     font-size: 1.5rem;
     text-decoration: none;
     font-weight: bold;
+    padding-left: 10px;
 }
-.profile-icon a {
+.dropdown a {
     display: flex;
     align-items: center;
 }
-
-.profile-icon i {
+.dropdown a {
+  background-color: #5ac9be;
+  border: #28AFB0;
+  margin-right: 70px;
+}
+.dropdown i {
     font-size: 1.5rem;
     border-radius: 50%;
-    color: black;
+    color: white;
+}
+.dropdown-menu ul li a {
+  color: white;
 }
 
-.profile-icon a:hover img {
+.dropdown a:hover  {
     opacity: 0.8;
 }
 
@@ -43,7 +51,7 @@ body {
         display: none;
     }
     
-    .profile-icon {
+    .dropdown{
         margin-left: auto;
     }
 }
@@ -61,7 +69,7 @@ body {
   
   .welcome-content {
     max-width: 800px;
-    background-color: rgba(255, 105, 105, 0.6); /* Transparent background for text readability */
+    background-color: #28b0b0b2; /* Transparent background for text readability */
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
@@ -112,7 +120,7 @@ body {
 
   /* Footer Styles */
 footer {
-  background-color: #333;
+  background-color: #2f2f2f;
   color: #fff;
   padding: 20px 0;
   text-align: center;
@@ -167,5 +175,4 @@ footer {
   margin-top: 20px;
   font-size: 12px;
 }
-
 

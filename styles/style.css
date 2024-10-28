@@ -267,3 +267,21 @@ div.scroll {
   font-size: 28px; /* Make the Plus Icon slightly larger */
 }
 
+.container h1 {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+#firebaseui-auth-container {
+  margin-bottom: 4rem;
+}
+#firebaseui-auth-container button {
+  background-color: #28AFB0;
+}
+#firebaseui-auth-container a {
+  color: #28AFB0;
+}
+.firebaseui-textfield.mdl-textfield .firebaseui-label::after  {
+  background-color: #28AFB0;
+}
+
+

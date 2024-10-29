@@ -345,10 +345,10 @@ body{
   border:none;
 }
 .jumbotron {
-  background-image: url('/images/teal.jpg'); 
+  background-image: url('/images/'); 
   background-size: cover;
   background-position: center;
-  color: white; 
+  color: rgb(0, 0, 0); 
   padding: 2rem 1rem; 
   min-height: 20vh;
   display: flex;

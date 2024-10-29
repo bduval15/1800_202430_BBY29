@@ -344,4 +344,27 @@ body{
   box-shadow: none;
   border:none;
 }
+.jumbotron {
+  background-image: url('/images/teal.jpg'); 
+  background-size: cover;
+  background-position: center;
+  color: white; 
+  padding: 2rem 1rem; 
+  min-height: 20vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+}
+
+.jumbotron::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.jumbotron h1 {
+  margin-top: 5px; 
+}
+
+
+
 

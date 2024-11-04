@@ -16,10 +16,7 @@
         <!-- Other libraries go here -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-<<<<<<< HEAD
-        <script type="module" src="/scripts/main.js"></script>
-=======
->>>>>>> ac3e1d4a4bbdae025e50f1f31d1a9e699627816e
+        <script type="module" src="./scripts/main.js"></script>
     
         <!-- Link to styles of your own -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -71,12 +68,45 @@
         </div>
         <div class="container">
           <h1>Events</h1>
-            <a href="https://getbootstrap.com/docs/4.4/examples/album/#" class="btn btn-primary" id="submit"
-              >Create</a>
+            <button onclick="openPopup()">Create</button>
             
-          </p>
+          
         </div>
       </section>
+      <div class="overlay" id="overlay" onclick="closePopup()"></div>
+
+    <div class="popup" id="popup">
+        <h2>Create Event</h2>
+        <form id="eventForm">
+            <label for="title">Event Title:</label><br>
+            <input type="text" id="title" required><br><br>
+
+            <label for="picture">Event Picture URL:</label><br>
+            <input type="url" id="picture" required><br><br>
+
+            <label for="description">Description:</label><br>
+            <textarea id="description" required></textarea><br><br>
+
+            <div class="field-container">
+                <div>
+                    <label for="time">Time:</label><br>
+                    <input type="datetime-local" id="time" required>
+                </div>
+                <div>
+                    <label for="place">Place:</label><br>
+                    <input type="text" id="place" required>
+                </div>
+            </div>
+
+            <button type="button" onclick="closePopup()">Cancel</button>
+            <button type="submit">Submit Event</button>
+        </form>
+
+    </div>
+
+    <div id="eventList">
+        <h2>Upcoming Events:</h2>
+    </div>
 
       <div class="album py-5 bg-light">
         <div class="container">

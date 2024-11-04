@@ -1,3 +1,10 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
+import { serverTimestamp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
+
+
+
 // Initialize Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyCgoRZsTUjYcglJhubcVWGlbzA0s3QnpZc",
@@ -9,8 +16,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
 document.addEventListener('DOMContentLoaded', () => {
     const createButton = document.getElementById('createButton');
@@ -23,8 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.addEventListener('click', closePopup);
     cancelButton.addEventListener('click', closePopup); // Add event listener to cancel button
 
-    eventForm.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Prevent default form submission
+    document.getElementById('eventForm').addEventListener('submit', async (event) => {
+        event.preventDefault(); 
 
         // Retrieve values from form
         const title = document.getElementById('title').value;
@@ -40,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             description: description,
             time: time,
             place: place,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            timestamp: serverTimestamp()
         };
 
         // Add the new event to Firestore
@@ -57,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load existing events on page load
     loadEvents();
 });
-
 // Function to open the popup
 function openPopup() {
     overlay.style.display = 'block';
@@ -76,7 +83,8 @@ async function loadEvents() {
     eventsContainer.innerHTML = ''; // Clear the container before loading events
 
     try {
-        const snapshot = await db.collection('events').orderBy('timestamp', 'desc').get();
+        const eventsQuery = query(collection(db, 'events'), orderBy('timestamp', 'desc'));
+        const snapshot = await getDocs(eventsQuery);
         snapshot.forEach((doc) => {
             const eventData = doc.data();
             const eventCard = document.createElement('div');

@@ -1,9 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
-import { serverTimestamp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
-
-
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -29,10 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     createButton.addEventListener('click', openPopup);
     overlay.addEventListener('click', closePopup);
-    cancelButton.addEventListener('click', closePopup); // Add event listener to cancel button
+    cancelButton.addEventListener('click', closePopup);
 
-    document.getElementById('eventForm').addEventListener('submit', async (event) => {
-        event.preventDefault(); 
+    eventForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
         // Retrieve values from form
         const title = document.getElementById('title').value;
@@ -43,17 +40,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Create a new event object
         const newEvent = {
-            title: title,
-            picture: picture,
-            description: description,
-            time: time,
-            place: place,
+            title,
+            picture,
+            description,
+            time,
+            place,
             timestamp: serverTimestamp()
         };
 
         // Add the new event to Firestore
         try {
-            await db.collection('events').add(newEvent);
+            await addDoc(collection(db, 'events'), newEvent);
             closePopup();
             eventForm.reset(); // Reset the form
             loadEvents(); // Reload events to display the new one
@@ -65,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load existing events on page load
     loadEvents();
 });
+
 // Function to open the popup
 function openPopup() {
     overlay.style.display = 'block';

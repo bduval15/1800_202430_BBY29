@@ -365,5 +365,71 @@ body{
 
 
 
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+button {
+  margin-top: 20px;
+  padding: 15px 30px; /* Increased padding for a bigger button */
+  background-color: teal; /* Teal color for the button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px; /* Increased font size */
+}
+.event {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+.field-container {
+  display: flex;
+  justify-content: space-between; /* Aligns fields side by side */
+  margin-bottom: 10px; /* Space between rows */
+}
+.field-container div {
+  flex: 1; /* Distributes space equally */
+  margin-right: 10px; /* Space between the two fields */
+}
+.field-container div:last-child {
+  margin-right: 0; /* Remove margin from last child */
+}
+input[type="text"],
+input[type="url"],
+input[type="datetime-local"],
+textarea {
+  width: 100%; /* Make input boxes take the full width of the container */
+  padding: 10px; /* Add padding for better appearance */
+  border: 1px solid #ccc; /* Border styling */
+  border-radius: 5px; /* Rounded corners */
+  box-sizing: border-box; /* Ensures padding is included in width */
+}
+textarea {
+  height: 100px; /* Make the description box taller */
+}
 
 

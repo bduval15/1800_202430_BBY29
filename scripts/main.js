@@ -1,37 +1,100 @@
+// Initialize Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyCgoRZsTUjYcglJhubcVWGlbzA0s3QnpZc",
+    authDomain: "notefy-39045.firebaseapp.com",
+    projectId: "notefy-39045",
+    storageBucket: "notefy-39045.appspot.com",
+    messagingSenderId: "955603975402",
+    appId: "1:955603975402:web:fc7713afd606b621fa2b93"
+};
 
-        function openPopup() {
-            document.getElementById('popup').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createButton = document.getElementById('createButton');
+    const overlay = document.getElementById('overlay');
+    const popup = document.getElementById('popup');
+    const eventForm = document.getElementById('eventForm');
+    const cancelButton = document.querySelector('.popup button[type="button"]');
+
+    createButton.addEventListener('click', openPopup);
+    overlay.addEventListener('click', closePopup);
+    cancelButton.addEventListener('click', closePopup); // Add event listener to cancel button
+
+    eventForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent default form submission
+
+        // Retrieve values from form
+        const title = document.getElementById('title').value;
+        const picture = document.getElementById('picture').value;
+        const description = document.getElementById('description').value;
+        const time = document.getElementById('time').value;
+        const place = document.getElementById('place').value;
+
+        // Create a new event object
+        const newEvent = {
+            title: title,
+            picture: picture,
+            description: description,
+            time: time,
+            place: place,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        // Add the new event to Firestore
+        try {
+            await db.collection('events').add(newEvent);
+            closePopup();
+            eventForm.reset(); // Reset the form
+            loadEvents(); // Reload events to display the new one
+        } catch (error) {
+            console.error("Error adding document: ", error);
         }
+    });
 
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
+    // Load existing events on page load
+    loadEvents();
+});
 
-        document.getElementById('eventForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const title = document.getElementById('title').value;
-            const picture = document.getElementById('picture').value;
-            const description = document.getElementById('description').value;
-            const time = document.getElementById('time').value;
-            const place = document.getElementById('place').value;
+// Function to open the popup
+function openPopup() {
+    overlay.style.display = 'block';
+    popup.style.display = 'block';
+}
 
-            // Create a new event element
-            const eventItem = document.createElement('div');
-            eventItem.classList.add('event');
-            eventItem.innerHTML = `
-                <h3>${title}</h3>
-                <img src="${picture}" alt="${title}" style="width: 100px; height: auto;">
-                <p><strong>Description:</strong> ${description}</p>
-                <p><strong>Time:</strong> ${new Date(time).toLocaleString()}</p>
-                <p><strong>Place:</strong> ${place}</p>
+// Function to close the popup
+function closePopup() {
+    overlay.style.display = 'none';
+    popup.style.display = 'none';
+}
+
+// Function to load events from Firestore
+async function loadEvents() {
+    const eventsContainer = document.getElementById('events-container');
+    eventsContainer.innerHTML = ''; // Clear the container before loading events
+
+    try {
+        const snapshot = await db.collection('events').orderBy('timestamp', 'desc').get();
+        snapshot.forEach((doc) => {
+            const eventData = doc.data();
+            const eventCard = document.createElement('div');
+            eventCard.className = 'col-md-4'; // Bootstrap column
+            eventCard.innerHTML = `
+                <div class="card mb-4">
+                    <img src="${eventData.picture}" class="card-img-top" alt="${eventData.title}">
+                    <div class="card-body">
+                        <h5 class="card-title">${eventData.title}</h5>
+                        <p class="card-text">${eventData.description}</p>
+                        <p class="card-text"><strong>Time:</strong> ${new Date(eventData.time).toLocaleString()}</p>
+                        <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
+                    </div>
+                </div>
             `;
-
-            // Append the new event to the event list
-            document.getElementById('eventList').appendChild(eventItem);
-
-            // Clear the form
-            document.getElementById('eventForm').reset();
-            closePopup(); // Close the popup after submission
+            eventsContainer.appendChild(eventCard);
         });
+    } catch (error) {
+        console.error("Error getting documents: ", error);
+    }
+}

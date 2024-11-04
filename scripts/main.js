@@ -35,3 +35,45 @@
             document.getElementById('eventForm').reset();
             closePopup(); // Close the popup after submission
         });
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+async function fetchEvents() {
+    const eventsContainer = document.getElementById('events-container');
+    try {
+        const querySnapshot = await db.collection('events').get();
+        querySnapshot.forEach((doc) => {
+            const event = doc.data();
+
+            // Create event card
+            const eventCard = document.createElement('div');
+            eventCard.className = 'col-md-4';
+
+            eventCard.innerHTML = `
+                <div class="card mb-4 shadow-sm">
+                    <img src="images/default.jpg" class="card-img-top" alt="Event Image">
+                    <div class="card-body">
+                        <h5 class="card-title">${event.title}</h5>
+                        <p class="card-text">${event.description}</p>
+                        <p><strong>Location:</strong> ${event.location}</p>
+                        <p><strong>Category:</strong> ${event.category}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary">RSVP</button>
+                            </div>
+                            <small class="text-muted">${new Date(event.timestamp.seconds * 1000).toLocaleDateString()} at ${event.timeofevent}</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            eventsContainer.appendChild(eventCard);
+        });
+    } catch (error) {
+        console.error('Error fetching events:', error);
+    }
+}
+
+fetchEvents();

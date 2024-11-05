@@ -113,6 +113,26 @@
                     <input type="text" id="place" required>
                 </div>
             </div>
+            
+            <fieldset>
+                <legend>Select Event Category:</legend>
+                <div>
+                    <input type="radio" id="sports" name="category" value="Sports" required>
+                    <label for="sports">Sports</label>
+                </div>
+                <div>
+                    <input type="radio" id="clubs" name="category" value="Clubs">
+                    <label for="clubs">Clubs</label>
+                </div>
+                <div>
+                    <input type="radio" id="music" name="category" value="Music">
+                    <label for="music">Music</label>
+                </div>
+                <div>
+                    <input type="radio" id="art" name="category" value="Art">
+                    <label for="art">Art</label>
+                </div>
+            </fieldset>
 
             <button type="button" onclick="closePopup()">Cancel</button>
             <button type="submit">Submit Event</button>

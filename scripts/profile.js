@@ -45,8 +45,16 @@ async function saveProfileSettings() {
     try {
         await setDoc(docRef, data);
         console.log("Profile settings saved successfully!");
+
+        localStorage.setItem('fname', fname);
     } catch (error) {
         console.error("Error saving profile settings: ", error);
     }
 }
 document.getElementById('saveButton').addEventListener('click', saveProfileSettings);
+
+
+
+
+
+

@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createButton.addEventListener('click', openPopup);
     overlay.addEventListener('click', closePopup);
     cancelButton.addEventListener('click', closePopup);
+    createIcon.addEventListener("click", openPopup)
 
     eventForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -37,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const description = document.getElementById('description').value;
         const time = document.getElementById('time').value;
         const place = document.getElementById('place').value;
+
+        const owner = localStorage.getItem('fname') || 'Unknown Owner';
         
 
         // Create a new event object
@@ -46,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             description,
             time,
             place,
+            owner,
             timestamp: serverTimestamp()
         };
 
@@ -77,6 +81,7 @@ function closePopup() {
 }
 
 // Function to load events from Firestore
+// Function to load events from Firestore
 async function loadEvents() {
     const eventsContainer = document.getElementById('events-container');
     eventsContainer.innerHTML = ''; // Clear the container before loading events
@@ -94,6 +99,7 @@ async function loadEvents() {
                     <div class="card-body">
                         <h5 class="card-title">${eventData.title}</h5>
                         <p class="card-text">${eventData.description}</p>
+                        <p class="card-text"><strong>Owner:</strong> ${eventData.owner || 'Unknown Owner'}</p>
                         <p class="card-text"><strong>Time:</strong> ${new Date(eventData.time).toLocaleString()}</p>
                         <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
                     </div>
@@ -105,3 +111,4 @@ async function loadEvents() {
         console.error("Error getting documents: ", error);
     }
 }
+

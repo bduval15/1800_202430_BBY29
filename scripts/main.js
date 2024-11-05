@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const description = document.getElementById('description').value;
         const time = document.getElementById('time').value;
         const place = document.getElementById('place').value;
+        
 
         // Create a new event object
         const newEvent = {

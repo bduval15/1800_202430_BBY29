@@ -19,27 +19,30 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function saveProfileSettings() {
-    // Get the input values
+
     const website = document.querySelector('input[name="website"]').value;
     const git = document.querySelector('input[name="git"]').value;
-    const twitter = document.querySelector('input[name="twitter"]').value;
-    const insta = document.querySelector('input[name="insta"]').value;
-    const facebook = document.querySelector('input[name="facebook"]').value;
-    const fname = document.querySelector('input[name="fname"]').value;
     const email = document.querySelector('input[name="email"]').value;
     const school = document.querySelector('input[name="school"]').value;
 
-    const docRef = doc(db, "profileSettings", "dDpB8KYPNodX8mfHphS9"); 
+    const preferences = {
+        sports: document.getElementById('sports').checked,
+        clubs: document.getElementById('clubs').checked,
+        music: document.getElementById('music').checked,
+        art: document.getElementById('art').checked,
+        festivals: document.getElementById('festivals').checked,
+        networking: document.getElementById('networking').checked
+    };
 
+    const docRef = doc(db, "profileSettings", "dDpB8KYPNodX8mfHphS9"); 
+    
     const data = {
         website,
         git,
-        twitter,
-        insta,
-        facebook,
         fname,
         email,
-        school
+        school,
+        preferences 
     };
 
     try {

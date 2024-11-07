@@ -13,23 +13,23 @@ const firebaseConfig = {
     appId: "1:955603975402:web:fc7713afd606b621fa2b93"
 };
 
-// Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
 console.log("Firebase app initialized");
 
-const db = getFirestore(app); // Initialize Firestore
-const auth = getAuth(app); // Initialize Auth
+const db = getFirestore(app); 
+const auth = getAuth(app);
 console.log("Auth initialized");
 
 async function saveProfileSettings() {
     console.log("Save button clicked");
 
-    // Retrieve the current user
+   
     const user = auth.currentUser; 
     if (user) {
         console.log("User is authenticated:", user.uid);
 
-        // Retrieve fname from the text content of the element
+    
         const fname = document.getElementById('fname').textContent;
         console.log("Retrieved fname:", fname);
 
@@ -71,5 +71,4 @@ async function saveProfileSettings() {
     }
 }
 
-// Event listener for the save button
 document.getElementById('saveButton').addEventListener('click', saveProfileSettings);

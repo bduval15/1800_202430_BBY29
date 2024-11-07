@@ -41,6 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const owner = localStorage.getItem('fname') || 'Unknown Owner';
         
+        const preferences = {
+            sports: document.getElementById('sports').checked,
+            clubs: document.getElementById('clubs').checked,
+            music: document.getElementById('music').checked,
+            art: document.getElementById('art').checked,
+            festivals: document.getElementById('festivals').checked,
+            networking: document.getElementById('networking').checked
+        };
+        
 
         // Create a new event object
         const newEvent = {
@@ -50,7 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
             time,
             place,
             owner,
+            preferences,
             timestamp: serverTimestamp()
+            
         };
 
         // Add the new event to Firestore

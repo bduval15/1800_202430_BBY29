@@ -18,6 +18,9 @@
     <!-- Other libraries go here -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script type="module" src="./scripts/index.js"></script>
 
     <!-- Link to styles of your own -->
     <!-- <link rel="stylesheet" href="./styles/style.css"> -->
@@ -58,33 +61,9 @@
             </div>
             <div class="fixed-bottom py-3 ">
         </div>
-            <div class="scroll">
-                <article>
-                    <h3>Article 1 Title</h3>
-                    <p>Summary or brief description of Article 1 goes here...</p>
-                </article>
-                <article>
-                    <h3>Article 2 Title</h3>
-                    <p>Summary or brief description of Article 2 goes here...</p>
-                </article>
-                <article>
-                    <h3>Article 3 Title</h3>
-                    <p>Summary or brief description of Article 3 goes here...</p>
-                </article>
-                <article>
-                    <h3>Article 4 Title</h3>
-                    <p>Summary or brief description of Article 4 goes here...</p>
-                </article>
-                <article>
-                    <h3>Article 5 Title</h3>
-                    <p>Summary or brief description of Article 5 goes here...</p>
-                </article>
-                <article>
-                    <h3>Article 6 Title</h3>
-                    <p>Summary or brief description of Article 6 goes here...</p>
-                </article>
-            </div>
-
+        <div class="scroll" id="events-container">       
+            <!-- Events will be populated here dynamically -->
+        </div>
     </section>  
     
     
@@ -129,7 +108,7 @@
         <!---------------------------------------------->
 
         <!-- Link to scripts of your own -->
-        <!-- <script src="./scripts/script.js"></script> -->
+         <script src="./scripts/index.js"></script> 
 
 </body>
 

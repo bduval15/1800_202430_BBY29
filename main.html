@@ -66,6 +66,24 @@
       </div>
 
     </div>
+
+    <div class="container text-center">
+      <h2>Find Event By Category:</h2>
+      <div>
+          <input type="text" id="selectedCategoriesDisplay" placeholder="Select Categories" readonly>
+          <div id="dropdownContent" style="display: none; border: 1px solid #ccc; padding: 10px; position: absolute; width: 200px; background-color: white; z-index: 1000;">
+              <input type="checkbox" id="sports" name="category" value="Sports"> Sports<br>
+              <input type="checkbox" id="clubs" name="category" value="Clubs"> Clubs<br>
+              <input type="checkbox" id="music" name="category" value="Music"> Music<br>
+              <input type="checkbox" id="art" name="category" value="Art"> Art<br>
+              <input type="checkbox" id="festivals" name="category" value="Festivals"> Festivals<br>
+              <input type="checkbox" id="networking" name="category" value="Networking"> Networking<br>
+              <button id="submitFilter">Submit</button>
+              <button id="cancelFilter">Cancel</button>
+          </div>
+      </div>
+  </div>
+  
     <div class="container">
       <h1>Events</h1>
       <button id="createButton">Create</button>

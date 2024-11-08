@@ -123,3 +123,76 @@ async function loadEvents() {
     }
 }
 
+// Display dropdown on textbox click
+const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
+const dropdownContent = document.getElementById('dropdownContent');
+
+selectedCategoriesDisplay.addEventListener('click', () => {
+    dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+});
+
+// Function to update the textbox with selected categories
+function updateSelectedCategoriesDisplay() {
+    const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
+    selectedCategoriesDisplay.value = selectedCategories.join(', ') || 'Select Categories';
+}
+
+// Update textbox when checkboxes are clicked
+document.querySelectorAll('input[name="category"]').forEach((checkbox) => {
+    checkbox.addEventListener('change', updateSelectedCategoriesDisplay);
+});
+
+// Event Listener for Submit button
+document.getElementById('submitFilter').addEventListener('click', () => {
+    const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
+    loadFilteredEvents(selectedCategories); // Filter events based on selected categories
+    dropdownContent.style.display = 'none'; // Close dropdown after submitting
+});
+
+// Event Listener for Cancel button
+document.getElementById('cancelFilter').addEventListener('click', () => {
+    document.querySelectorAll('input[name="category"]').forEach(cb => cb.checked = false); // Uncheck all checkboxes
+    selectedCategoriesDisplay.value = 'Select Categories'; // Reset textbox display
+    loadEvents(); // Show all events without filters
+    dropdownContent.style.display = 'none'; // Close dropdown after cancelling
+});
+
+// Function to load filtered events
+async function loadFilteredEvents(categories) {
+    const eventsContainer = document.getElementById('events-container');
+    eventsContainer.innerHTML = ''; // Clear the container before loading events
+
+    try {
+        const eventsQuery = query(collection(db, 'events'), orderBy('timestamp', 'desc'));
+        const snapshot = await getDocs(eventsQuery);
+        snapshot.forEach((doc) => {
+            const eventData = doc.data();
+            const eventPreferences = eventData.preferences;
+
+            // Check if the event matches any selected categories
+            const matchesCategory = categories.some(category => eventPreferences[category.toLowerCase()]);
+
+            if (categories.length === 0 || matchesCategory) { // Show all if no category selected
+                const eventCard = document.createElement('div');
+                eventCard.className = 'col-md-4'; // Bootstrap column
+                eventCard.innerHTML = `
+                    <div class="card mb-4">
+                        <img src="${eventData.picture}" class="card-img-top" alt="${eventData.title}">
+                        <div class="card-body">
+                            <h5 class="card-title">${eventData.title}</h5>
+                            <p class="card-text">${eventData.description}</p>
+                            <p class="card-text"><strong>Owner:</strong> ${eventData.owner || 'Unknown Owner'}</p>
+                            <p class="card-text"><strong>Time:</strong> ${new Date(eventData.time).toLocaleString()}</p>
+                            <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
+                        </div>
+                    </div>
+                `;
+                eventsContainer.appendChild(eventCard);
+            }
+        });
+    } catch (error) {
+        console.error("Error getting documents: ", error);
+    }
+}
+
+

@@ -28,29 +28,33 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.addEventListener('click', closePopup);
     cancelButton.addEventListener('click', closePopup);
     createIcon.addEventListener("click", openPopup)
+    const confirmationPopup = document.getElementById('confirmationPopup');
+
+    createButton.addEventListener('click', openPopup);
+    overlay.addEventListener('click', closePopup);
+    cancelButton.addEventListener('click', closePopup);
 
     eventForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-
+    
         // Retrieve values from form
         const title = document.getElementById('title').value;
         const picture = document.getElementById('picture').value;
         const description = document.getElementById('description').value;
         const time = document.getElementById('time').value;
         const place = document.getElementById('place').value;
-
+    
         const owner = localStorage.getItem('fname') || 'Unknown Owner';
         
         const preferences = {
-            sports: document.getElementById('sports').checked,
-            clubs: document.getElementById('clubs').checked,
-            music: document.getElementById('music').checked,
-            art: document.getElementById('art').checked,
-            festivals: document.getElementById('festivals').checked,
-            networking: document.getElementById('networking').checked
+            sports: document.getElementById('sports')?.checked || false,
+            clubs: document.getElementById('clubs')?.checked || false,
+            music: document.getElementById('music')?.checked || false,
+            art: document.getElementById('art')?.checked || false,
+            festivals: document.getElementById('festivals')?.checked || false,
+            networking: document.getElementById('networking')?.checked || false
         };
-        
-
+    
         // Create a new event object
         const newEvent = {
             title,
@@ -61,35 +65,63 @@ document.addEventListener('DOMContentLoaded', () => {
             owner,
             preferences,
             timestamp: serverTimestamp()
-            
         };
-
+    
         // Add the new event to Firestore
         try {
             await addDoc(collection(db, 'events'), newEvent);
-            closePopup();
-            eventForm.reset(); // Reset the form
+            closePopup(); // Close the event creation form popup
+            eventForm.reset(); // Reset the form fields
             loadEvents(); // Reload events to display the new one
+    
+            // Show confirmation popup with the event details
+            openConfirmationPopup(newEvent); // Display the confirmation popup
         } catch (error) {
             console.error("Error adding document: ", error);
         }
+    });
+    
+
+    document.getElementById('undoButton').addEventListener('click', () => {
+        confirmationPopup.style.display = 'none';
+        overlay.style.display = 'none';
+        // Additional undo logic can be added here if needed
+    });
+
+    document.getElementById('homeButton').addEventListener('click', () => {
+        confirmationPopup.style.display = 'none';
+        overlay.style.display = 'none';
+        window.location.href = 'main.html';
     });
 
     // Load existing events on page load
     loadEvents();
 });
 
-// Function to open the popup
 function openPopup() {
-    overlay.style.display = 'block';
-    popup.style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+    document.getElementById('popup').style.display = 'block';
 }
 
-// Function to close the popup
 function closePopup() {
-    overlay.style.display = 'none';
-    popup.style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('popup').style.display = 'none';
 }
+
+function openConfirmationPopup(eventData) {
+    // Populate the confirmation popup with event details
+    document.getElementById('confirmTitle').innerText = eventData.title;
+    document.getElementById('confirmPicture').innerText = eventData.picture;
+    document.getElementById('confirmDescription').innerText = eventData.description;
+    document.getElementById('confirmSettings').innerText = Object.keys(eventData.preferences)
+        .filter(key => eventData.preferences[key])
+        .join(', ');
+
+    // Show the confirmation popup and overlay
+    document.getElementById('confirmationPopup').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+}
+
 
 // Function to load events from Firestore
 // Function to load events from Firestore
@@ -194,5 +226,3 @@ async function loadFilteredEvents(categories) {
         console.error("Error getting documents: ", error);
     }
 }
-
-

@@ -1,6 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
+
+
+let currentUser = null; // Declare a global variable for user
 
 
 const firebaseConfig = {
@@ -16,6 +19,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+
+// Wait for the authentication state to change
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is signed in
+        currentUser = user;  // Store the user object in the global variable
+        console.log("User is signed in: ", user.displayName);
+    } else {
+        // No user is signed in
+        currentUser = null;  // Reset the global variable when no user is signed in
+        console.log("No user is signed in");
+    }
+});
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const createButton = document.getElementById('createButton');
@@ -44,7 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const time = document.getElementById('time').value;
         const place = document.getElementById('place').value;
     
-        const owner = localStorage.getItem('fname') || 'Unknown Owner';
+        
+        const owner = currentUser.displayName || 'Unknown Owner'; // Use the user's name or default to 'Unknown Owner'
+
         
         const preferences = {
             sports: document.getElementById('sports')?.checked || false,
@@ -123,8 +142,6 @@ function openConfirmationPopup(eventData) {
 }
 
 
-// Function to load events from Firestore
-// Function to load events from Firestore
 async function loadEvents() {
     const eventsContainer = document.getElementById('events-container');
     eventsContainer.innerHTML = ''; // Clear the container before loading events
@@ -142,7 +159,7 @@ async function loadEvents() {
                     <div class="card-body">
                         <h5 class="card-title">${eventData.title}</h5>
                         <p class="card-text">${eventData.description}</p>
-                        <p class="card-text"><strong>Owner:</strong> ${eventData.owner || 'Unknown Owner'}</p>
+                        <p class="card-text"><strong>Owner:</strong> ${eventData.owner}</p> <!-- Display owner's name -->
                         <p class="card-text"><strong>Time:</strong> ${new Date(eventData.time).toLocaleString()}</p>
                         <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
                     </div>
@@ -154,6 +171,7 @@ async function loadEvents() {
         console.error("Error getting documents: ", error);
     }
 }
+
 
 // Display dropdown on textbox click
 const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');

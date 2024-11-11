@@ -2,7 +2,7 @@ console.log("profile.js loaded");
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"; // Make sure the version matches
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"; // Add onAuthStateChanged
 
 const firebaseConfig = {
     apiKey: "AIzaSyCgoRZsTUjYcglJhubcVWGlbzA0s3QnpZc",
@@ -13,26 +13,28 @@ const firebaseConfig = {
     appId: "1:955603975402:web:fc7713afd606b621fa2b93"
 };
 
-
 const app = initializeApp(firebaseConfig);
-console.log("Firebase app initialized");
-
 const db = getFirestore(app); 
 const auth = getAuth(app);
-console.log("Auth initialized");
+
+console.log("Firebase app initialized");
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log("User is signed in:", user.displayName);
+        document.getElementById('userName').textContent = user.displayName || "Unknown User"; // Set display name
+    } else {
+        console.log("No user signed in.");
+    }
+});
 
 async function saveProfileSettings() {
     console.log("Save button clicked");
 
-   
     const user = auth.currentUser; 
     if (user) {
-        console.log("User is authenticated:", user.uid);
-
-    
-        const fname = document.getElementById('fname').textContent;
-        console.log("Retrieved fname:", fname);
-
+        // Collect profile data from form
+        const displayName = user.displayName || "Unknown User"; // Default if no displayName
         const website = document.querySelector('input[name="website"]').value;
         const git = document.querySelector('input[name="git"]').value;
         const email = document.querySelector('input[name="email"]').value;
@@ -47,10 +49,12 @@ async function saveProfileSettings() {
             networking: document.getElementById('networking').checked
         };
 
+        const fname = displayName; // Use displayName from user
+
         const data = {
             website,
             git,
-            fname, 
+            fname,
             email,
             school,
             preferences
@@ -62,7 +66,7 @@ async function saveProfileSettings() {
         try {
             await setDoc(profileRef, data);
             console.log("Profile settings saved successfully!");
-            localStorage.setItem('fname', fname);
+            localStorage.setItem('fname', fname); // Save fname in localStorage
         } catch (error) {
             console.error("Error saving profile settings:", error);
         }

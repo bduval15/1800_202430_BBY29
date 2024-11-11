@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>NotEFY</title>
-        <meta name="comp1800 template" content="My 1800 App">
-    
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="styles/style.css" />
-        <script src="https://kit.fontawesome.com/62f3b3a061.js" crossorigin="anonymous"></script>
-        <!-- Bootstrap Library CSS CDN go here -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Boostrap Library JS CDN  go here -->
-    
-        <!-- Other libraries go here -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-        <script type="module" src="./scripts/main.js"></script>
-        
-        <!-- Link to styles of your own -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-      
-        <!-- <link rel="stylesheet" href="./styles/style.css"> -->
-    
-    </head>
+
+<head>
+  <title>NotEFY</title>
+  <meta name="comp1800 template" content="My 1800 App">
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="styles/style.css" />
+  <script src="https://kit.fontawesome.com/62f3b3a061.js" crossorigin="anonymous"></script>
+  <!-- Bootstrap Library CSS CDN go here -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Boostrap Library JS CDN  go here -->
+
+  <!-- Other libraries go here -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <script type="module" src="./scripts/main.js"></script>
+
+  <!-- Link to styles of your own -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- <link rel="stylesheet" href="./styles/style.css"> -->
+
+</head>
 
 
 
@@ -70,20 +71,21 @@
     <div class="container text-center">
       <h2>Find Event By Category:</h2>
       <div>
-          <input type="text" id="selectedCategoriesDisplay" placeholder="Select Categories" readonly>
-          <div id="dropdownContent" style="display: none; border: 1px solid #ccc; padding: 10px; position: absolute; width: 200px; background-color: white; z-index: 1000;">
-              <input type="checkbox" id="sports" name="category" value="Sports"> Sports<br>
-              <input type="checkbox" id="clubs" name="category" value="Clubs"> Clubs<br>
-              <input type="checkbox" id="music" name="category" value="Music"> Music<br>
-              <input type="checkbox" id="art" name="category" value="Art"> Art<br>
-              <input type="checkbox" id="festivals" name="category" value="Festivals"> Festivals<br>
-              <input type="checkbox" id="networking" name="category" value="Networking"> Networking<br>
-              <button id="submitFilter">Submit</button>
-              <button id="cancelFilter">Cancel</button>
-          </div>
+        <input type="text" id="selectedCategoriesDisplay" placeholder="Select Categories" readonly>
+        <div id="dropdownContent"
+          style="display: none; border: 1px solid #ccc; padding: 10px; position: absolute; width: 200px; background-color: white; z-index: 1000;">
+          <input type="checkbox" id="sports" name="category" value="Sports"> Sports<br>
+          <input type="checkbox" id="clubs" name="category" value="Clubs"> Clubs<br>
+          <input type="checkbox" id="music" name="category" value="Music"> Music<br>
+          <input type="checkbox" id="art" name="category" value="Art"> Art<br>
+          <input type="checkbox" id="festivals" name="category" value="Festivals"> Festivals<br>
+          <input type="checkbox" id="networking" name="category" value="Networking"> Networking<br>
+          <button id="submitFilter">Submit</button>
+          <button id="cancelFilter">Cancel</button>
+        </div>
       </div>
-  </div>
-  
+    </div>
+
     <div class="container">
       <h1>Events</h1>
       <button id="createButton">Create</button>
@@ -115,28 +117,36 @@
           <input type="text" id="place" required>
         </div>
       </div>
-      
-    
+      <div>
+        <input type="checkbox" name="category" value="sports"> Sports
+        <input type="checkbox" name="category" value="clubs"> Clubs
+        <input type="checkbox" name="category" value="music"> Music
+        <input type="checkbox" name="category" value="art"> Art
+        <input type="checkbox" name="category" value="festivals"> Festivals
+        <input type="checkbox" name="category" value="networking"> Networking
+
+      </div>
+
       <button type="button">Cancel</button>
       <button type="submit" id="submitButton">Submit Event</button>
-      
+
     </form>
 
     <!-- Confirmation Popup -->
-<div class="popup" id="confirmationPopup" style="display: none;">
-  <h2>Your event has been posted!</h2>
-  <p>Your event details:</p>
-  <div class="event-details">
-      <p><strong>Title:</strong> <span id="confirmTitle"></span></p>
-      <p><strong>Picture:</strong> <span id="confirmPicture"></span></p>
-      <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
-      <p><strong>Settings:</strong> <span id="confirmSettings"></span></p>
-  </div>
-  <div class="confirmation-buttons">
-      <button id="undoButton">Undo</button>
-      <button id="homeButton">Home</button>
-  </div>
-</div>
+    <div class="popup" id="confirmationPopup" style="display: none;">
+      <h2>Your event has been posted!</h2>
+      <p>Your event details:</p>
+      <div class="event-details">
+        <p><strong>Title:</strong> <span id="confirmTitle"></span></p>
+        <p><strong>Picture:</strong> <span id="confirmPicture"></span></p>
+        <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
+        <p><strong>Settings:</strong> <span id="confirmSettings"></span></p>
+      </div>
+      <div class="confirmation-buttons">
+        <button id="undoButton">Undo</button>
+        <button id="homeButton">Home</button>
+      </div>
+    </div>
 
 
 
@@ -192,7 +202,7 @@
       <a href="#search" class="footer-icon">
         <i class="fa fa-search"></i> <!-- Search Icon -->
       </a>
-      <a href="#add" id ="createIcon" class="footer-icon plus-icon">
+      <a href="#add" id="createIcon" class="footer-icon plus-icon">
         <i class="fa fa-plus"></i> <!-- Plus Icon -->
       </a>
       <a href="profile.html" class="footer-icon">

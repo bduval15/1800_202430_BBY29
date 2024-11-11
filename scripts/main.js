@@ -210,7 +210,7 @@ document.getElementById('cancelFilter').addEventListener('click', () => {
 // Function to load filtered events
 async function loadFilteredEvents(categories) {
     const eventsContainer = document.getElementById('events-container');
-    eventsContainer.innerHTML = ''; // Clear the container before loading events
+    eventsContainer.innerHTML = ''; // Clear previous events
 
     try {
         const eventsQuery = query(collection(db, 'events'), orderBy('timestamp', 'desc'));
@@ -219,12 +219,11 @@ async function loadFilteredEvents(categories) {
             const eventData = doc.data();
             const eventPreferences = eventData.preferences;
 
-            // Check if the event matches any selected categories
             const matchesCategory = categories.some(category => eventPreferences[category.toLowerCase()]);
 
-            if (categories.length === 0 || matchesCategory) { // Show all if no category selected
+            if (categories.length === 0 || matchesCategory) {
                 const eventCard = document.createElement('div');
-                eventCard.className = 'col-md-4'; // Bootstrap column
+                eventCard.className = 'col-md-4';
                 eventCard.innerHTML = `
                     <div class="card mb-4">
                         <img src="${eventData.picture}" class="card-img-top" alt="${eventData.title}">

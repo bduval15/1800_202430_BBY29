@@ -1,10 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
 
-
-let currentUser = null; // Declare a global variable for user
-
+let currentUser = null; 
 
 const firebaseConfig = {
     apiKey: "AIzaSyCgoRZsTUjYcglJhubcVWGlbzA0s3QnpZc",
@@ -216,7 +214,7 @@ async function loadFilteredEvents(categories) {
 
             const matchesCategory = categories.some(category => eventPreferences[category.toLowerCase()]);
             const isMyEvent = categories.includes("myevents") && eventData.owner === currentUser.displayName;
-            
+
             if (categories.length === 0 || matchesCategory) {
                 const eventCard = document.createElement('div');
                 eventCard.className = 'col-md-4';
@@ -239,3 +237,52 @@ async function loadFilteredEvents(categories) {
         console.error("Error getting documents: ", error);
     }
 }
+
+async function updateNavbarProfilePicture() {
+    if (!currentUser) {
+        console.log("No user is logged in");
+        return;
+    }
+
+    try {
+
+        const profileSettingsRef = doc(db, 'profileSettings', currentUser.uid); 
+        const profileSettingsSnap = await getDoc(profileSettingsRef);
+
+        if (profileSettingsSnap.exists()) {
+            const profileData = profileSettingsSnap.data();
+            const avatarFilePath = profileData.avatar; 
+            const navbarImage = document.getElementById('navProfileImage');
+            const userIcon = document.querySelector('.dropdown i'); 
+
+            if (avatarFilePath) {
+                navbarImage.src = avatarFilePath; 
+                navbarImage.style.display = 'block';  
+                userIcon.style.display = 'none';     
+            } else {
+                console.log("Avatar not found for user");
+            }
+        } else {
+            console.log("No profile settings found for user");
+        }
+    } catch (error) {
+        console.error("Error fetching avatar: ", error);
+    }
+}
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        currentUser = user;  
+        updateNavbarProfilePicture();  
+    } else {
+        currentUser = null;
+    }
+});
+
+document.getElementById('logoutButton').addEventListener('click', () => {
+    localStorage.removeItem('avatar');
+
+    signOut(auth).then(() => {
+        console.log('User logged out');
+    });
+});

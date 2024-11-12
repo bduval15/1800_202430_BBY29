@@ -1,5 +1,3 @@
-console.log("profile.js loaded");
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
@@ -17,6 +15,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app); 
 const auth = getAuth(app);
 
+console.log("profile.js loaded");
 console.log("Firebase app initialized");
 
 onAuthStateChanged(auth, (user) => {
@@ -25,6 +24,7 @@ onAuthStateChanged(auth, (user) => {
         document.getElementById('userName').textContent = user.displayName || "Unknown User"; 
         
         loadProfileSettings(user.uid);
+        updateNavbarProfilePicture(); 
     } else {
         console.log("No user signed in.");
     }
@@ -111,6 +111,45 @@ async function saveProfileSettings() {
     }
 }
 
+
+async function updateNavbarProfilePicture() {
+    const user = auth.currentUser; 
+    if (!user) {
+        console.log("No user is logged in");
+        return;
+    }
+
+    try {
+        const profileSettingsRef = doc(db, 'profileSettings', user.uid);
+        const profileSettingsSnap = await getDoc(profileSettingsRef);
+
+        if (profileSettingsSnap.exists()) {
+            const profileData = profileSettingsSnap.data();
+            console.log("Profile Data:", profileData);
+
+            const avatarFilePath = profileData.avatar;
+            const navbarImage = document.getElementById("navProfileImage");
+            const userIcon = document.querySelector('.dropdown i');
+
+            if (avatarFilePath) {
+                console.log("Avatar File Path:", avatarFilePath);
+                navbarImage.src = avatarFilePath;
+                navbarImage.style.display = 'block'; 
+                if (userIcon) {
+                    userIcon.style.display = 'none'; 
+                }
+                console.log("Navbar Image URL updated:", avatarFilePath);
+            } else {
+                console.log("No avatar file path found for user");
+            }
+        } else {
+            console.log("No profile settings found for user");
+        }
+    } catch (error) {
+        console.error("Error fetching avatar: ", error);
+    }
+}
+
 document.getElementById("profileImage").addEventListener("click", function() {
     document.getElementById("avatarModal").style.display = "flex";
 });
@@ -118,12 +157,12 @@ document.getElementById("profileImage").addEventListener("click", function() {
 document.querySelector(".close-button").addEventListener("click", function() {
     document.getElementById("avatarModal").style.display = "none";
 });
-  
+
 document.querySelectorAll(".avatar-option").forEach(avatar => {
     avatar.addEventListener("click", function() {
         document.getElementById("profileImage").src = avatar.src;
         document.getElementById("avatarModal").style.display = "none"; 
     });
 });
-  
+
 document.getElementById('saveButton').addEventListener('click', saveProfileSettings);

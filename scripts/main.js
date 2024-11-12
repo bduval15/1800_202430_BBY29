@@ -82,21 +82,23 @@ document.addEventListener('DOMContentLoaded', () => {
             preferences,
             timestamp: serverTimestamp()
         };
-    
+        
         // Add the new event to Firestore
         try {
             await addDoc(collection(db, 'events'), newEvent);
-            closePopup();  // Close the event creation form popup
-            openConfirmationPopup(newEvent); // Show confirmation popup immediately
+            closePopup();
+            openConfirmationPopup(newEvent);
+             // Show confirmation popup immediately
             eventForm.reset(); // Reset the form fields
-    
             setTimeout(loadEvents, 300); // Optional: delay loading to prevent conflicts
+            
         } catch (error) {
             console.error("Error adding document: ", error);
-        }
+        }     
+       
     });
-    
 
+   
     document.getElementById('undoButton').addEventListener('click', () => {
         confirmationPopup.style.display = 'none';
         overlay.style.display = 'none';
@@ -138,6 +140,7 @@ function openConfirmationPopup(eventData) {
 async function loadEvents() {
     const eventsContainer = document.getElementById('events-container');
     eventsContainer.innerHTML = ''; // Clear the container before loading events
+   
 
     try {
         const eventsQuery = query(collection(db, 'events'), orderBy('timestamp', 'desc'));

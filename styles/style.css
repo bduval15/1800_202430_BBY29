@@ -486,3 +486,9 @@ article p {
   border-radius: 5px;
   cursor: pointer;
 }
+#upcoming {
+  margin-left: 10px;
+}
+#createButton {
+  margin-top: 20px;
+}

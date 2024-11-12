@@ -51,24 +51,7 @@
     </nav>
   </header>
   <section class="jumbotron text-center">
-    <div class="container">
-
-      <div class="row height d-flex justify-content-center align-items-center">
-
-        <div class="col-md-6">
-
-          <div class="form">
-            <i class="fa fa-search"></i>
-            <input type="text" class="form-control form-input" placeholder="Search...">
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
+   
     <div class="container text-center">
       <h2>Find Event By Category:</h2>
       <div>
@@ -87,12 +70,8 @@
         </div>
       </div>
     </div>
-
     <div class="container">
-      <h1>Events</h1>
       <button id="createButton">Create</button>
-
-
     </div>
   </section>
   <div class="overlay" id="overlay"></div>
@@ -120,6 +99,7 @@
         </div>
       </div>
       <div>
+        <h4>Select category:</h4>
         <input type="checkbox" name="category" value="sports"> Sports
         <input type="checkbox" name="category" value="clubs"> Clubs
         <input type="checkbox" name="category" value="music"> Music
@@ -151,12 +131,10 @@
 </div>
 
 
-
-
   </div>
 
   <div id="eventList">
-    <h2>Upcoming Events:</h2>
+    <h2 id="upcoming">Upcoming Events:</h2>
   </div>
 
   <div class="album py-5 bg-light">

@@ -215,7 +215,8 @@ async function loadFilteredEvents(categories) {
             const eventPreferences = eventData.preferences;
 
             const matchesCategory = categories.some(category => eventPreferences[category.toLowerCase()]);
-
+            const isMyEvent = categories.includes("myevents") && eventData.owner === currentUser.displayName;
+            
             if (categories.length === 0 || matchesCategory) {
                 const eventCard = document.createElement('div');
                 eventCard.className = 'col-md-4';

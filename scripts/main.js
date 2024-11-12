@@ -40,12 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const popup = document.getElementById('popup');
     const eventForm = document.getElementById('eventForm');
     const cancelButton = document.querySelector('.popup button[type="button"]');
+    const confirmationPopup = document.getElementById('confirmationPopup');
 
     createButton.addEventListener('click', openPopup);
     overlay.addEventListener('click', closePopup);
     cancelButton.addEventListener('click', closePopup);
     createIcon.addEventListener("click", openPopup)
-    const confirmationPopup = document.getElementById('confirmationPopup');
+
 
     createButton.addEventListener('click', openPopup);
     overlay.addEventListener('click', closePopup);
@@ -60,8 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const description = document.getElementById('description').value;
         const time = document.getElementById('time').value;
         const place = document.getElementById('place').value;
-    
-        
         const owner = currentUser.displayName || 'Unknown Owner'; // Use the user's name or default to 'Unknown Owner'
 
         
@@ -89,12 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add the new event to Firestore
         try {
             await addDoc(collection(db, 'events'), newEvent);
-            closePopup(); // Close the event creation form popup
+            closePopup();  // Close the event creation form popup
+            openConfirmationPopup(newEvent); // Show confirmation popup immediately
             eventForm.reset(); // Reset the form fields
-            loadEvents(); // Reload events to display the new one
     
-            // Show confirmation popup with the event details
-            openConfirmationPopup(newEvent); // Display the confirmation popup
+            setTimeout(loadEvents, 300); // Optional: delay loading to prevent conflicts
         } catch (error) {
             console.error("Error adding document: ", error);
         }
@@ -128,7 +126,6 @@ function closePopup() {
 }
 
 function openConfirmationPopup(eventData) {
-    // Populate the confirmation popup with event details
     document.getElementById('confirmTitle').innerText = eventData.title;
     document.getElementById('confirmPicture').innerText = eventData.picture;
     document.getElementById('confirmDescription').innerText = eventData.description;
@@ -136,11 +133,9 @@ function openConfirmationPopup(eventData) {
         .filter(key => eventData.preferences[key])
         .join(', ');
 
-    // Show the confirmation popup and overlay
     document.getElementById('confirmationPopup').style.display = 'block';
     document.getElementById('overlay').style.display = 'block';
 }
-
 
 async function loadEvents() {
     const eventsContainer = document.getElementById('events-container');

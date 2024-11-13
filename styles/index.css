@@ -1,0 +1,56 @@
+.navbar {
+    background-color: black;
+}
+body {
+    background: rgb(0,0,0);
+background: linear-gradient(214deg, rgba(0,0,0,1) 20%, rgba(33,146,147,1) 45%, rgba(111,246,233,1) 75%);
+}
+footer {
+    background-color: black;
+} 
+.footer-container {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 5px 15px; /* Smaller padding */
+    font-size: 0.9rem; /* Smaller font size */
+    max-width: 100%;
+}
+
+.footer-section {
+    text-align: left;
+}
+
+.footer-bottom {
+    text-align: left;
+    font-size: 0.8rem; /* Reduce font size for bottom text */
+}
+
+.social-links {
+    display: flex;
+    gap: 15px; /* Space between icons */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.social-links li {
+    display: inline;
+}
+
+.social-links a {
+    color: #fff;
+    font-size: 1.2rem; /* Size of icons */
+    text-decoration: none;
+}
+
+footer {
+    color: #fff;
+    padding: 10px 0; /* Smaller padding */
+    font-family: Arial, sans-serif;
+}
+.footer-container {
+    font-size: 6px;
+}
+
+  

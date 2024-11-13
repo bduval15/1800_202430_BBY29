@@ -1,13 +1,14 @@
 .navbar {
-    background-color: black;
+    background-color: rgb(255, 255, 255);
 }
 body {
-    background: rgb(0,0,0);
-background: linear-gradient(214deg, rgba(0,0,0,1) 20%, rgba(33,146,147,1) 45%, rgba(111,246,233,1) 75%);
+    background: rgb(255,255,255);
+    background: linear-gradient(180deg, rgba(255,255,255,1) 25%, rgba(33,146,147,1) 51%, rgba(16,75,69,1) 90%);
 }
 footer {
-    background-color: black;
-} 
+    background-color: #175e60;
+}
+
 .footer-container {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -51,6 +52,17 @@ footer {
 }
 .footer-container {
     font-size: 6px;
+}
+.nav-logo a {
+    color: rgba(33,146,147,1);
+}
+
+#submit {
+    background-color: #175e60;
+    border: #175e60;
+}
+.scroll article {
+  background-color: #175e60;
 }
 
   

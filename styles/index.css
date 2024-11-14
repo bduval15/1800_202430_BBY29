@@ -6,7 +6,7 @@ body {
     background: linear-gradient(180deg, rgba(255,255,255,1) 25%, rgba(33,146,147,1) 51%, rgba(16,75,69,1) 90%);
 }
 footer {
-    background-color: #175e60;
+    background-color: #ffffff00;
 }
 
 .footer-container {
@@ -65,4 +65,32 @@ footer {
   background-color: #175e60;
 }
 
+  @keyframes colorChange {
+    0% {
+      color: #175e60;
+    }
+    25% {
+      color: rgb(46, 175, 177);
+    }
+    50% {
+      color:  #2cdde3;
+    }
+    75% {
+      color:  #71f2f7;
+    }
+    100% {
+      color:  #175e60;
+    }
+  }
+  
+ 
+  
+  #notefy {
+    font-size: 2rem; /* Adjust size as needed */
+    animation: colorChange 3s linear infinite;
+  }
+  
+
+
+  
   

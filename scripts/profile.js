@@ -12,7 +12,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app); 
+const db = getFirestore(app);
 const auth = getAuth(app);
 
 console.log("profile.js loaded");
@@ -21,10 +21,10 @@ console.log("Firebase app initialized");
 onAuthStateChanged(auth, (user) => {
     if (user) {
         console.log("User is signed in:", user.displayName);
-        document.getElementById('userName').textContent = user.displayName || "Unknown User"; 
-        
+        document.getElementById('userName').textContent = user.displayName || "Unknown User";
+
         loadProfileSettings(user.uid);
-        updateNavbarProfilePicture(); 
+        updateNavbarProfilePicture();
     } else {
         console.log("No user signed in.");
     }
@@ -64,9 +64,9 @@ async function loadProfileSettings(uid) {
 async function saveProfileSettings() {
     console.log("Save button clicked");
 
-    const user = auth.currentUser; 
+    const user = auth.currentUser;
     if (user) {
-        const displayName = user.displayName || "Unknown User"; 
+        const displayName = user.displayName || "Unknown User";
         const website = document.querySelector('input[name="website"]').value;
         const git = document.querySelector('input[name="git"]').value;
         const email = document.querySelector('input[name="email"]').value;
@@ -82,7 +82,7 @@ async function saveProfileSettings() {
         };
 
         const fname = displayName;
-        
+
         const selectedAvatar = document.querySelector('input[name="avatar"]:checked');
         const avatarUrl = selectedAvatar ? `/images/${selectedAvatar.value}` : "";
 
@@ -102,7 +102,7 @@ async function saveProfileSettings() {
         try {
             await setDoc(profileRef, data, { merge: true });
             console.log("Profile settings saved successfully!");
-            localStorage.setItem('fname', fname); 
+            localStorage.setItem('fname', fname);
         } catch (error) {
             console.error("Error saving profile settings:", error);
         }
@@ -113,7 +113,7 @@ async function saveProfileSettings() {
 
 
 async function updateNavbarProfilePicture() {
-    const user = auth.currentUser; 
+    const user = auth.currentUser;
     if (!user) {
         console.log("No user is logged in");
         return;
@@ -134,9 +134,9 @@ async function updateNavbarProfilePicture() {
             if (avatarFilePath) {
                 console.log("Avatar File Path:", avatarFilePath);
                 navbarImage.src = avatarFilePath;
-                navbarImage.style.display = 'block'; 
+                navbarImage.style.display = 'block';
                 if (userIcon) {
-                    userIcon.style.display = 'none'; 
+                    userIcon.style.display = 'none';
                 }
                 console.log("Navbar Image URL updated:", avatarFilePath);
             } else {
@@ -150,18 +150,18 @@ async function updateNavbarProfilePicture() {
     }
 }
 
-document.getElementById("profileImage").addEventListener("click", function() {
+document.getElementById("profileImage").addEventListener("click", function () {
     document.getElementById("avatarModal").style.display = "flex";
 });
 
-document.querySelector(".close-button").addEventListener("click", function() {
+document.querySelector(".close-button").addEventListener("click", function () {
     document.getElementById("avatarModal").style.display = "none";
 });
 
 document.querySelectorAll(".avatar-option").forEach(avatar => {
-    avatar.addEventListener("click", function() {
+    avatar.addEventListener("click", function () {
         document.getElementById("profileImage").src = avatar.src;
-        document.getElementById("avatarModal").style.display = "none"; 
+        document.getElementById("avatarModal").style.display = "none";
     });
 });
 

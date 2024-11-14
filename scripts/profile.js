@@ -1,41 +1,26 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCgoRZsTUjYcglJhubcVWGlbzA0s3QnpZc",
-    authDomain: "notefy-39045.firebaseapp.com",
-    projectId: "notefy-39045",
-    storageBucket: "notefy-39045.firebasestorage.app",
-    messagingSenderId: "955603975402",
-    appId: "1:955603975402:web:fc7713afd606b621fa2b93"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app); 
-const auth = getAuth(app);
-
+// Ensure Firebase has been initialized (this script should run after `firebase-config.js`)
 console.log("profile.js loaded");
 console.log("Firebase app initialized");
 
-onAuthStateChanged(auth, (user) => {
+var auth = firebase.auth();  // Firebase v8 auth
+
+auth.onAuthStateChanged((user) => {
     if (user) {
         console.log("User is signed in:", user.displayName);
         document.getElementById('userName').textContent = user.displayName || "Unknown User"; 
-        
+
         loadProfileSettings(user.uid);
-        updateNavbarProfilePicture(); 
+        updateNavbarProfilePicture();
     } else {
         console.log("No user signed in.");
     }
 });
 
-async function loadProfileSettings(uid) {
-    const profileRef = doc(db, "profileSettings", uid);
-    try {
-        const docSnap = await getDoc(profileRef);
-        if (docSnap.exists()) {
-            const data = docSnap.data();
+function loadProfileSettings(uid) {
+    var profileRef = window.db.collection("profileSettings").doc(uid);
+    profileRef.get().then((docSnap) => {
+        if (docSnap.exists) {
+            var data = docSnap.data();
             console.log("Profile settings loaded:", data);
 
             if (data.avatar) {
@@ -56,23 +41,23 @@ async function loadProfileSettings(uid) {
         } else {
             console.log("No profile settings found.");
         }
-    } catch (error) {
+    }).catch((error) => {
         console.error("Error loading profile settings:", error);
-    }
+    });
 }
 
-async function saveProfileSettings() {
+function saveProfileSettings() {
     console.log("Save button clicked");
 
-    const user = auth.currentUser; 
+    var user = auth.currentUser; 
     if (user) {
-        const displayName = user.displayName || "Unknown User"; 
-        const website = document.querySelector('input[name="website"]').value;
-        const git = document.querySelector('input[name="git"]').value;
-        const email = document.querySelector('input[name="email"]').value;
-        const school = document.querySelector('input[name="school"]').value;
+        var displayName = user.displayName || "Unknown User"; 
+        var website = document.querySelector('input[name="website"]').value;
+        var git = document.querySelector('input[name="git"]').value;
+        var email = document.querySelector('input[name="email"]').value;
+        var school = document.querySelector('input[name="school"]').value;
 
-        const preferences = {
+        var preferences = {
             sports: document.getElementById('sports').checked,
             clubs: document.getElementById('clubs').checked,
             music: document.getElementById('music').checked,
@@ -81,12 +66,12 @@ async function saveProfileSettings() {
             networking: document.getElementById('networking').checked
         };
 
-        const fname = displayName;
-        
-        const selectedAvatar = document.querySelector('input[name="avatar"]:checked');
-        const avatarUrl = selectedAvatar ? `/images/${selectedAvatar.value}` : "";
+        var fname = displayName;
 
-        const data = {
+        var selectedAvatar = document.querySelector('input[name="avatar"]:checked');
+        var avatarUrl = selectedAvatar ? `/images/${selectedAvatar.value}` : "";
+
+        var data = {
             website,
             git,
             fname,
@@ -98,38 +83,34 @@ async function saveProfileSettings() {
 
         console.log("Data to be saved:", data);
 
-        const profileRef = doc(db, "profileSettings", user.uid);
-        try {
-            await setDoc(profileRef, data, { merge: true });
+        var profileRef = window.db.collection("profileSettings").doc(user.uid);
+        profileRef.set(data, { merge: true }).then(() => {
             console.log("Profile settings saved successfully!");
             localStorage.setItem('fname', fname); 
-        } catch (error) {
+        }).catch((error) => {
             console.error("Error saving profile settings:", error);
-        }
+        });
     } else {
         console.log("User not authenticated");
     }
 }
 
-
-async function updateNavbarProfilePicture() {
-    const user = auth.currentUser; 
+function updateNavbarProfilePicture() {
+    var user = auth.currentUser; 
     if (!user) {
         console.log("No user is logged in");
         return;
     }
 
-    try {
-        const profileSettingsRef = doc(db, 'profileSettings', user.uid);
-        const profileSettingsSnap = await getDoc(profileSettingsRef);
-
-        if (profileSettingsSnap.exists()) {
-            const profileData = profileSettingsSnap.data();
+    var profileSettingsRef = window.db.collection('profileSettings').doc(user.uid);
+    profileSettingsRef.get().then((profileSettingsSnap) => {
+        if (profileSettingsSnap.exists) {
+            var profileData = profileSettingsSnap.data();
             console.log("Profile Data:", profileData);
 
-            const avatarFilePath = profileData.avatar;
-            const navbarImage = document.getElementById("navProfileImage");
-            const userIcon = document.querySelector('.dropdown i');
+            var avatarFilePath = profileData.avatar;
+            var navbarImage = document.getElementById("navProfileImage");
+            var userIcon = document.querySelector('.dropdown i');
 
             if (avatarFilePath) {
                 console.log("Avatar File Path:", avatarFilePath);
@@ -145,9 +126,9 @@ async function updateNavbarProfilePicture() {
         } else {
             console.log("No profile settings found for user");
         }
-    } catch (error) {
+    }).catch((error) => {
         console.error("Error fetching avatar: ", error);
-    }
+    });
 }
 
 document.getElementById("profileImage").addEventListener("click", function() {
@@ -166,3 +147,20 @@ document.querySelectorAll(".avatar-option").forEach(avatar => {
 });
 
 document.getElementById('saveButton').addEventListener('click', saveProfileSettings);
+
+window.addEventListener('load', function() {
+    const createIcon = document.getElementById('createIcon');
+
+    createIcon.addEventListener('click', function(event) {
+        // Prevent default anchor behavior (it would scroll to the #add section)
+        event.preventDefault();
+
+        // Set the flag in localStorage to notify the main page
+        localStorage.setItem('openCreateEventForm', 'true');
+
+        // Redirect to the main page
+        window.location.href = '/main.html'; // Ensure this is the correct path
+    });
+});
+
+

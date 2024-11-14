@@ -8,21 +8,26 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="styles/style.css" />
+  <link rel="stylesheet" type="text/css" href="/styles/style.css" />
   <script src="https://kit.fontawesome.com/62f3b3a061.js" crossorigin="anonymous"></script>
   <!-- Bootstrap Library CSS CDN go here -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    </script>
   <!-- Boostrap Library JS CDN  go here -->
-
-  <!-- Other libraries go here -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-  <script type="module" src="./scripts/main.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
   <!-- Link to styles of your own -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-  <!-- <link rel="stylesheet" href="./styles/style.css"> -->
+ 
 
 </head>
 
@@ -38,7 +43,8 @@
         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
           aria-expanded="false">
           <i class="fa-regular fa-user"></i>
-          <img id="navProfileImage" alt="Profile Image" style="width: 30px; height: 30px; border-radius: 50%; display: none;" />
+          <img id="navProfileImage" alt="Profile Image"
+            style="width: 30px; height: 30px; border-radius: 50%; display: none;" />
         </a>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="profile.html">Profile</a></li>
@@ -47,11 +53,10 @@
           <li><a class="dropdown-item" href="index.html">Log out</a></li>
         </ul>
       </div>
-
     </nav>
   </header>
   <section class="jumbotron text-center">
-   
+
     <div class="container text-center">
       <h2>Find Event By Category:</h2>
       <div>
@@ -115,20 +120,20 @@
     </form>
 
     <!-- Confirmation Popup -->
-<div class="popup" id="confirmationPopup" style="display: none;">
-  <h2>Your event has been posted!</h2>
-  <p>Your event details:</p>
-  <div class="event-details">
-      <p><strong>Title:</strong> <span id="confirmTitle"></span></p>
-      <p><strong>Picture:</strong> <span id="confirmPicture"></span></p>
-      <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
-      <p><strong>Settings:</strong> <span id="confirmSettings"></span></p>
-  </div>
-  <div class="confirmation-buttons">
-      <button id="undoButton">Undo</button>
-      <button id="homeButton">Home</button>
-  </div>
-</div>
+    <div class="popup" id="confirmationPopup" style="display: none;">
+      <h2>Your event has been posted!</h2>
+      <p>Your event details:</p>
+      <div class="event-details">
+        <p><strong>Title:</strong> <span id="confirmTitle"></span></p>
+        <p><strong>Picture:</strong> <span id="confirmPicture"></span></p>
+        <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
+        <p><strong>Settings:</strong> <span id="confirmSettings"></span></p>
+      </div>
+      <div class="confirmation-buttons">
+        <button id="undoButton">Undo</button>
+        <button id="homeButton">Home</button>
+      </div>
+    </div>
 
 
   </div>
@@ -180,9 +185,6 @@
       <a href="main.html" class="footer-icon">
         <i class="fa fa-home"></i> <!-- Home Icon -->
       </a>
-      <a href="#search" class="footer-icon">
-        <i class="fa fa-search"></i> <!-- Search Icon -->
-      </a>
       <a href="#add" id="createIcon" class="footer-icon plus-icon">
         <i class="fa fa-plus"></i> <!-- Plus Icon -->
       </a>
@@ -191,6 +193,9 @@
       </a>
     </div>
   </footer>
+
+  <script type="module" src="./scripts/firebaseAPI_TEAM29.js"></script>
+  <script type="module" src="./scripts/main.js"></script>
 
 
 </body>

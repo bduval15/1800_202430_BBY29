@@ -1,36 +1,19 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
+// Firebase Firestore and Authentication Setup
+const db = firebase.firestore();
+const auth = firebase.auth();
+let currentUser = null;
 
-let currentUser = null; 
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCgoRZsTUjYcglJhubcVWGlbzA0s3QnpZc",
-    authDomain: "notefy-39045.firebaseapp.com",
-    projectId: "notefy-39045",
-    storageBucket: "notefy-39045.appspot.com",
-    messagingSenderId: "955603975402",
-    appId: "1:955603975402:web:fc7713afd606b621fa2b93"
-};
-
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-
-// Wait for the authentication state to change
-onAuthStateChanged(auth, (user) => {
+// Authentication State Listener
+auth.onAuthStateChanged((user) => {
     if (user) {
-        // User is signed in
-        currentUser = user;  // Store the user object in the global variable
+        currentUser = user;
         console.log("User is signed in: ", user.displayName);
+        updateNavbarProfilePicture();
     } else {
-        // No user is signed in
-        currentUser = null;  // Reset the global variable when no user is signed in
+        currentUser = null;
         console.log("No user is signed in");
     }
 });
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const createButton = document.getElementById('createButton');
@@ -52,16 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     eventForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-    
-        // Retrieve values from form
+
+        // Get form values
         const title = document.getElementById('title').value;
         const picture = document.getElementById('picture').value;
         const description = document.getElementById('description').value;
         const time = document.getElementById('time').value;
         const place = document.getElementById('place').value;
-        const owner = currentUser.displayName || 'Unknown Owner'; // Use the user's name or default to 'Unknown Owner'
+        const owner = currentUser.displayName || 'Unknown Owner';
 
-        
         const preferences = {
             sports: document.getElementById('sports')?.checked || false,
             clubs: document.getElementById('clubs')?.checked || false,
@@ -70,8 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             festivals: document.getElementById('festivals')?.checked || false,
             networking: document.getElementById('networking')?.checked || false
         };
-    
-        // Create a new event object
+
         const newEvent = {
             title,
             picture,
@@ -80,40 +61,55 @@ document.addEventListener('DOMContentLoaded', () => {
             place,
             owner,
             preferences,
-            timestamp: serverTimestamp()
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
-        
-        // Add the new event to Firestore
+
         try {
-            await addDoc(collection(db, 'events'), newEvent);
+            await db.collection('events').add(newEvent);
             closePopup();
             openConfirmationPopup(newEvent);
-             // Show confirmation popup immediately
-            eventForm.reset(); // Reset the form fields
-            setTimeout(loadEvents, 300); // Optional: delay loading to prevent conflicts
-            
+            eventForm.reset();
+            setTimeout(loadEvents, 300);
         } catch (error) {
             console.error("Error adding document: ", error);
-        }     
-       
+        }
     });
 
-   
-    document.getElementById('undoButton').addEventListener('click', () => {
-        confirmationPopup.style.display = 'none';
-        overlay.style.display = 'none';
-        // Additional undo logic can be added here if needed
-    });
-
+    // Confirmation Popup Controls
+    document.getElementById('undoButton').addEventListener('click', closeConfirmationPopup);
     document.getElementById('homeButton').addEventListener('click', () => {
-        confirmationPopup.style.display = 'none';
-        overlay.style.display = 'none';
+        closeConfirmationPopup();
         window.location.href = 'main.html';
     });
 
-    // Load existing events on page load
+    // Load initial events
     loadEvents();
 });
+
+window.addEventListener('load', function() {
+    // Check if the "create event" form should be opened
+    const shouldOpenForm = localStorage.getItem('openCreateEventForm');
+    console.log("Should open form: ", shouldOpenForm); // Debug log to check the flag value
+
+    if (shouldOpenForm === 'true') {
+        // Open the create event form
+        openCreateEventForm(); // This function will show the form
+        // Reset the flag after the form is shown
+        localStorage.removeItem('openCreateEventForm');
+    }
+});
+
+// Function to show the create event form (popup)
+function openCreateEventForm() {
+    const popup = document.getElementById('popup'); // Reference the form by its ID 'popup'
+    if (popup) {
+        popup.style.display = 'block'; // Show the popup (or use any other logic)
+        console.log("Create Event Popup is now visible.");
+    } else {
+        console.log("Create Event Popup not found!");
+    }
+}
+
 
 function openPopup() {
     document.getElementById('overlay').style.display = 'block';
@@ -137,37 +133,45 @@ function openConfirmationPopup(eventData) {
     document.getElementById('overlay').style.display = 'block';
 }
 
+function closeConfirmationPopup() {
+    document.getElementById('confirmationPopup').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+}
+
+// Load Events from Firestore
 async function loadEvents() {
     const eventsContainer = document.getElementById('events-container');
-    eventsContainer.innerHTML = ''; // Clear the container before loading events
-   
+    eventsContainer.innerHTML = '';
 
     try {
-        const eventsQuery = query(collection(db, 'events'), orderBy('timestamp', 'desc'));
-        const snapshot = await getDocs(eventsQuery);
+        const snapshot = await db.collection('events').orderBy('timestamp', 'desc').get();
         snapshot.forEach((doc) => {
             const eventData = doc.data();
-            const eventCard = document.createElement('div');
-            eventCard.className = 'col-md-4'; // Bootstrap column
-            eventCard.innerHTML = `
-                <div class="card mb-4">
-                    <img src="${eventData.picture}" class="card-img-top" alt="${eventData.title}">
-                    <div class="card-body">
-                        <h5 class="card-title">${eventData.title}</h5>
-                        <p class="card-text">${eventData.description}</p>
-                        <p class="card-text"><strong>Owner:</strong> ${eventData.owner}</p> <!-- Display owner's name -->
-                        <p class="card-text"><strong>Time:</strong> ${new Date(eventData.time).toLocaleString()}</p>
-                        <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
-                    </div>
-                </div>
-            `;
-            eventsContainer.appendChild(eventCard);
+            displayEvent(eventData, eventsContainer);
         });
     } catch (error) {
         console.error("Error getting documents: ", error);
     }
 }
 
+// Display Single Event
+function displayEvent(eventData, container) {
+    const eventCard = document.createElement('div');
+    eventCard.className = 'col-md-4';
+    eventCard.innerHTML = `
+        <div class="card mb-4">
+            <img src="${eventData.picture}" class="card-img-top" alt="${eventData.title}">
+            <div class="card-body">
+                <h5 class="card-title">${eventData.title}</h5>
+                <p class="card-text">${eventData.description}</p>
+                <p class="card-text"><strong>Owner:</strong> ${eventData.owner || 'Unknown Owner'}</p>
+                <p class="card-text"><strong>Time:</strong> ${new Date(eventData.time).toLocaleString()}</p>
+                <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
+            </div>
+        </div>
+    `;
+    container.appendChild(eventCard);
+}
 
 // Display dropdown on textbox click
 const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
@@ -203,37 +207,22 @@ document.getElementById('cancelFilter').addEventListener('click', () => {
     dropdownContent.style.display = 'none'; // Close dropdown after cancelling
 });
 
-// Function to load filtered events
+// Load Filtered Events
 async function loadFilteredEvents(categories) {
     const eventsContainer = document.getElementById('events-container');
-    eventsContainer.innerHTML = ''; // Clear previous events
+    eventsContainer.innerHTML = '';
 
     try {
-        const eventsQuery = query(collection(db, 'events'), orderBy('timestamp', 'desc'));
-        const snapshot = await getDocs(eventsQuery);
+        const eventsQuery = db.collection('events').orderBy('timestamp', 'desc');
+        const snapshot = await eventsQuery.get();
+        
         snapshot.forEach((doc) => {
             const eventData = doc.data();
-            const eventPreferences = eventData.preferences;
+            const matchesCategory = categories.some(category => eventData.preferences[category.toLowerCase()]);
+            const isMyEvent = categories.includes("myevents") && eventData.owner === (currentUser?.displayName || "");
 
-            const matchesCategory = categories.some(category => eventPreferences[category.toLowerCase()]);
-            const isMyEvent = categories.includes("myevents") && eventData.owner === currentUser.displayName;
-
-            if (categories.length === 0 || matchesCategory) {
-                const eventCard = document.createElement('div');
-                eventCard.className = 'col-md-4';
-                eventCard.innerHTML = `
-                    <div class="card mb-4">
-                        <img src="${eventData.picture}" class="card-img-top" alt="${eventData.title}">
-                        <div class="card-body">
-                            <h5 class="card-title">${eventData.title}</h5>
-                            <p class="card-text">${eventData.description}</p>
-                            <p class="card-text"><strong>Owner:</strong> ${eventData.owner || 'Unknown Owner'}</p>
-                            <p class="card-text"><strong>Time:</strong> ${new Date(eventData.time).toLocaleString()}</p>
-                            <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
-                        </div>
-                    </div>
-                `;
-                eventsContainer.appendChild(eventCard);
+            if (categories.length === 0 || matchesCategory || isMyEvent) {
+                displayEvent(eventData, eventsContainer);
             }
         });
     } catch (error) {
@@ -241,51 +230,36 @@ async function loadFilteredEvents(categories) {
     }
 }
 
+// Update Navbar Profile Picture
 async function updateNavbarProfilePicture() {
-    if (!currentUser) {
-        console.log("No user is logged in");
-        return;
-    }
+    if (!currentUser) return;
 
     try {
+        const profileSettingsRef = db.collection('profileSettings').doc(currentUser.uid);
+        const profileSettingsSnap = await profileSettingsRef.get();
 
-        const profileSettingsRef = doc(db, 'profileSettings', currentUser.uid); 
-        const profileSettingsSnap = await getDoc(profileSettingsRef);
-
-        if (profileSettingsSnap.exists()) {
+        if (profileSettingsSnap.exists) {
             const profileData = profileSettingsSnap.data();
-            const avatarFilePath = profileData.avatar; 
+            const avatarFilePath = profileData.avatar;
             const navbarImage = document.getElementById('navProfileImage');
-            const userIcon = document.querySelector('.dropdown i'); 
+            const userIcon = document.querySelector('.dropdown i');
 
             if (avatarFilePath) {
-                navbarImage.src = avatarFilePath; 
-                navbarImage.style.display = 'block';  
-                userIcon.style.display = 'none';     
-            } else {
-                console.log("Avatar not found for user");
+                navbarImage.src = avatarFilePath;
+                navbarImage.style.display = 'block';
+                userIcon.style.display = 'none';
             }
-        } else {
-            console.log("No profile settings found for user");
         }
     } catch (error) {
         console.error("Error fetching avatar: ", error);
     }
 }
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        currentUser = user;  
-        updateNavbarProfilePicture();  
-    } else {
-        currentUser = null;
-    }
-});
-
+// Logout Function
 document.getElementById('logoutButton').addEventListener('click', () => {
     localStorage.removeItem('avatar');
-
-    signOut(auth).then(() => {
-        console.log('User logged out');
-    });
+    auth.signOut()
+        .then(() => console.log('User logged out'))
+        .catch((error) => console.error("Logout error: ", error));
 });
+

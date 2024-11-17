@@ -16,6 +16,16 @@ auth.onAuthStateChanged((user) => {
     }
 });
 
+const eventCategoryImages = {
+    sports: "/images/events/sports.jpg",
+    clubs: "/images/events/clubs.jpg",
+    music: "/images/events/music.jpg",
+    art: "/images/events/art.jpg",
+    festivals: "/images/events/festivals.jpg",
+    networking: "/images/events/networking.jpg",
+    default: "/images/events/default.jpg" // Fallback image if no category matches
+};
+
 // DOMContentLoaded Listener
 document.addEventListener('DOMContentLoaded', () => {
     initializeEventHandlers();
@@ -43,11 +53,22 @@ function initializeEventHandlers() {
     document.getElementById('undoButton')?.addEventListener('click', handleUndo);
     document.getElementById('homeButton')?.addEventListener('click', () => {
         closeConfirmationPopup();
-        window.location.href = 'main.html'; // Redirect to homepage
+        window.location.href = 'main.html'; 
     });
 
     // Category dropdown and filters
     setupCategoryDropdown();
+
+    // Live preview for event image based on category selection
+    document.querySelectorAll('input[name="preferences"]').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            const selectedCategory = document.querySelector('input[name="preferences"]:checked')?.value || "default";
+            const previewImage = document.getElementById('eventPreviewImage');
+            if (previewImage) {
+                previewImage.src = eventCategoryImages[selectedCategory] || eventCategoryImages.default;
+            }
+        });
+    });
 
     // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
@@ -63,6 +84,11 @@ function initializeEventHandlers() {
 function openPopup() {
     document.getElementById('overlay').style.display = 'block';
     document.getElementById('popup').style.display = 'block';
+
+    const radios = document.querySelectorAll('input[name="preferences"]');
+    radios.forEach(radio => {
+        radio.checked = false;
+    });
 }
 
 function closePopup() {

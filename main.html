@@ -27,11 +27,9 @@
 
   <!-- Link to styles of your own -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+  <link rel="icon" type="image/png" href="images/logo.png">
 
 </head>
-
-
 
 <body>
   <header>
@@ -60,32 +58,32 @@
     <div class="container text-center">
       <h2>Find Event By Category:</h2>
       <div class="filter-container">
-          <input 
-              type="text" 
-              id="selectedCategoriesDisplay" 
-              placeholder="Select Categories" 
-              readonly 
-              class="filter-input"
-          />
-          <div id="dropdownContent" class="filter-dropdown">
-              <label><input type="checkbox" id="myevents" name="category" value="myevents"> My Events</label>
-              <label><input type="checkbox" id="mypreferences" name="category" value="mypreferences"> My Preferences</label>
-              <label><input type="checkbox" id="sports" name="category" value="Sports"> Sports</label>
-              <label><input type="checkbox" id="clubs" name="category" value="Clubs"> Clubs</label>
-              <label><input type="checkbox" id="music" name="category" value="Music"> Music</label>
-              <label><input type="checkbox" id="art" name="category" value="Art"> Art</label>
-              <label><input type="checkbox" id="festivals" name="category" value="Festivals"> Festivals</label>
-              <label><input type="checkbox" id="networking" name="category" value="Networking"> Networking</label>
-              <div class="filter-buttons">
-                  <button id="submitFilter" class="filter-submit-btn">Submit</button>
-                  <button id="cancelFilter" class="filter-cancel-btn">
-                    <i class="fa fa-times" aria-hidden="true"></i>
-                </button>
-              </div>
+        <input type="text" id="selectedCategoriesDisplay" placeholder="Select Categories" readonly
+          class="filter-input" />
+        <div id="dropdownContent" class="filter-dropdown">
+          <button id="cancelFilter" class="filter-cancel-btn">
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </button>
+
+          <label><input type="checkbox" id="myevents" name="category" value="myevents"> My Events</label>
+          <label><input type="checkbox" id="mypreferences" name="category" value="mypreferences"> My Preferences</label>
+          <label><input type="checkbox" id="sports" name="category" value="Sports"> Sports</label>
+          <label><input type="checkbox" id="clubs" name="category" value="Clubs"> Clubs</label>
+          <label><input type="checkbox" id="music" name="category" value="Music"> Music</label>
+          <label><input type="checkbox" id="art" name="category" value="Art"> Art</label>
+          <label><input type="checkbox" id="festivals" name="category" value="Festivals"> Festivals</label>
+          <label><input type="checkbox" id="networking" name="category" value="Networking"> Networking</label>
+          
+          <div class="filter-buttons">
+            <button id="submitFilter" class="filter-submit-btn">Submit</button>
           </div>
+          
+        </div>
       </div>
-  </div>
-  
+    </div>
+
+    </div>
+
 
     <div class="container">
       <button id="createButton">Create</button>
@@ -99,8 +97,8 @@
       <label for="title">Event Title:</label><br>
       <input type="text" id="title" required><br><br>
 
-      <label for="picture">Event Picture URL:</label><br>
-      <input type="url" id="picture" required><br><br>
+      <img id="eventPreviewImage" src="/images/events/default.jpg" alt="Event Preview"
+        style="width: 100%; max-height: 200px; object-fit: cover; margin-top: 10px;">
 
       <label for="description">Description:</label><br>
       <textarea id="description" required></textarea><br><br>
@@ -117,13 +115,15 @@
       </div>
       <div>
         <h4>Select category:</h4>
-        <input type="checkbox" id="sports" name="preferences" value="sports"> Sports
-        <input type="checkbox" id="clubs" name="preferences" value="clubs"> Clubs
-        <input type="checkbox" id="music" name="preferences" value="music"> Music
-        <input type="checkbox" id="art" name="preferences" value="art"> Art
-        <input type="checkbox" id="festivals" name="preferences" value="festivals"> Festivals
-        <input type="checkbox" id="networking" name="preferences" value="networking"> Networking
+        <input type="radio" id="sports" name="preferences" value="sports"> Sports
+        <input type="radio" id="clubs" name="preferences" value="clubs"> Clubs
+        <input type="radio" id="music" name="preferences" value="music"> Music
+        <input type="radio" id="art" name="preferences" value="art"> Art
+        <input type="radio" id="festivals" name="preferences" value="festivals"> Festivals
+        <input type="radio" id="networking" name="preferences" value="networking"> Networking
       </div>
+
+      
       <button type="submit" id="submitButton">Submit Event</button>
 
     </form>

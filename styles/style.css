@@ -564,14 +564,13 @@ article p {
 /* Filter Buttons Styling */
 .filter-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* Align submit button to the far right */
   align-items: center;
   margin-top: 15px;
   position: relative;
 }
 
 .filter-buttons .filter-submit-btn {
-  margin: 0 auto; 
   padding: 8px 20px;
   border: none;
   border-radius: 4px;
@@ -586,23 +585,24 @@ article p {
   background-color: #0056b3;
 }
 
-.filter-buttons .filter-cancel-btn {
+.filter-cancel-btn {
   border: none;
   background: none;
   font-size: 20px;
   color: #dc3545;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: absolute;
-  right: 0;
+  top: 10px;
+  right: 10px; 
 }
 
-.filter-buttons .filter-cancel-btn:hover {
+.filter-cancel-btn:hover {
   color: #c82333;
 }
 
 .filter-container.open .filter-dropdown {
   display: block;
+  position: relative;
+  padding-top: 20px; /* Leave space for the X icon */
 }
+

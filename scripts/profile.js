@@ -69,7 +69,7 @@ function saveProfileSettings() {
         var fname = displayName;
 
         var selectedAvatar = document.querySelector('input[name="avatar"]:checked');
-        var avatarUrl = selectedAvatar ? `/images/${selectedAvatar.value}` : "";
+        var avatarUrl = selectedAvatar ? `/images/profilePics/${selectedAvatar.value}` : "";
 
         var data = {
             website,

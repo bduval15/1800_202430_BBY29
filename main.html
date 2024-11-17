@@ -12,9 +12,9 @@
   <script src="https://kit.fontawesome.com/62f3b3a061.js" crossorigin="anonymous"></script>
   <!-- Bootstrap Library CSS CDN go here -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
     </script>
   <!-- Boostrap Library JS CDN  go here -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -27,7 +27,7 @@
 
   <!-- Link to styles of your own -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
- 
+
 
 </head>
 
@@ -59,22 +59,34 @@
 
     <div class="container text-center">
       <h2>Find Event By Category:</h2>
-      <div>
-        <input type="text" id="selectedCategoriesDisplay" placeholder="Select Categories" readonly>
-        <div id="dropdownContent"
-          style="display: none; border: 1px solid #ccc; padding: 10px; position: absolute; width: 200px; background-color: white; z-index: 1000;">
-          <input type="checkbox" id="myevents" name="category" value="myevents"> My Events<br>
-          <input type="checkbox" id="sports" name="category" value="Sports"> Sports<br>
-          <input type="checkbox" id="clubs" name="category" value="Clubs"> Clubs<br>
-          <input type="checkbox" id="music" name="category" value="Music"> Music<br>
-          <input type="checkbox" id="art" name="category" value="Art"> Art<br>
-          <input type="checkbox" id="festivals" name="category" value="Festivals"> Festivals<br>
-          <input type="checkbox" id="networking" name="category" value="Networking"> Networking<br>
-          <button id="submitFilter">Submit</button>
-          <button id="cancelFilter">Cancel</button>
-        </div>
+      <div class="filter-container">
+          <input 
+              type="text" 
+              id="selectedCategoriesDisplay" 
+              placeholder="Select Categories" 
+              readonly 
+              class="filter-input"
+          />
+          <div id="dropdownContent" class="filter-dropdown">
+              <label><input type="checkbox" id="myevents" name="category" value="myevents"> My Events</label>
+              <label><input type="checkbox" id="mypreferences" name="category" value="mypreferences"> My Preferences</label>
+              <label><input type="checkbox" id="sports" name="category" value="Sports"> Sports</label>
+              <label><input type="checkbox" id="clubs" name="category" value="Clubs"> Clubs</label>
+              <label><input type="checkbox" id="music" name="category" value="Music"> Music</label>
+              <label><input type="checkbox" id="art" name="category" value="Art"> Art</label>
+              <label><input type="checkbox" id="festivals" name="category" value="Festivals"> Festivals</label>
+              <label><input type="checkbox" id="networking" name="category" value="Networking"> Networking</label>
+              <div class="filter-buttons">
+                  <button id="submitFilter" class="filter-submit-btn">Submit</button>
+                  <button id="cancelFilter" class="filter-cancel-btn">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+              </div>
+          </div>
       </div>
-    </div>
+  </div>
+  
+
     <div class="container">
       <button id="createButton">Create</button>
     </div>
@@ -105,37 +117,38 @@
       </div>
       <div>
         <h4>Select category:</h4>
-        <input type="checkbox" name="category" value="sports"> Sports
-        <input type="checkbox" name="category" value="clubs"> Clubs
-        <input type="checkbox" name="category" value="music"> Music
-        <input type="checkbox" name="category" value="art"> Art
-        <input type="checkbox" name="category" value="festivals"> Festivals
-        <input type="checkbox" name="category" value="networking"> Networking
-
+        <input type="checkbox" id="sports" name="preferences" value="sports"> Sports
+        <input type="checkbox" id="clubs" name="preferences" value="clubs"> Clubs
+        <input type="checkbox" id="music" name="preferences" value="music"> Music
+        <input type="checkbox" id="art" name="preferences" value="art"> Art
+        <input type="checkbox" id="festivals" name="preferences" value="festivals"> Festivals
+        <input type="checkbox" id="networking" name="preferences" value="networking"> Networking
       </div>
-
-      <button type="button">Cancel</button>
       <button type="submit" id="submitButton">Submit Event</button>
 
     </form>
+  </div>
 
-    <!-- Confirmation Popup -->
-    <div class="popup" id="confirmationPopup" style="display: none;">
-      <h2>Your event has been posted!</h2>
-      <p>Your event details:</p>
-      <div class="event-details">
-        <p><strong>Title:</strong> <span id="confirmTitle"></span></p>
-        <p><strong>Picture:</strong> <span id="confirmPicture"></span></p>
-        <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
-        <p><strong>Settings:</strong> <span id="confirmSettings"></span></p>
-      </div>
-      <div class="confirmation-buttons">
-        <button id="undoButton">Undo</button>
-        <button id="homeButton">Home</button>
-      </div>
+  <!-- Confirmation Popup Modal-->
+  <div id="overlay"></div>
+  <div id="confirmationPopup" style="display: none;">
+    <h2>Your event has been posted!</h2>
+    <p>Your event details:</p>
+    <div class="event-details">
+      <p><strong>Title:</strong> <span id="confirmTitle"></span></p>
+      <p><strong>Picture:</strong> <span id="confirmPicture"></span></p>
+      <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
+      <p><strong>Settings:</strong> <span id="confirmSettings"></span></p>
     </div>
+    <div class="confirmation-buttons">
+      <button id="undoButton">Undo</button>
+      <button id="homeButton">Home</button>
+    </div>
+  </div>
 
-
+  <!-- Keep the event creation popup separate -->
+  <div id="popup">
+    <!-- Event creation form -->
   </div>
 
   <div id="eventList">

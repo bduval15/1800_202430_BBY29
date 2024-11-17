@@ -2,12 +2,13 @@
 const db = firebase.firestore();
 const auth = firebase.auth();
 let currentUser = null;
+let tempEventData = null; // Temporary storage for event data
 
 // Authentication State Listener
 auth.onAuthStateChanged((user) => {
     if (user) {
         currentUser = user;
-        console.log("User is signed in: ", user.displayName);
+        console.log("User is signed in:", user.displayName);
         updateNavbarProfilePicture();
     } else {
         currentUser = null;
@@ -15,102 +16,50 @@ auth.onAuthStateChanged((user) => {
     }
 });
 
+// DOMContentLoaded Listener
 document.addEventListener('DOMContentLoaded', () => {
-    const createButton = document.getElementById('createButton');
-    const overlay = document.getElementById('overlay');
-    const popup = document.getElementById('popup');
-    const eventForm = document.getElementById('eventForm');
-    const cancelButton = document.querySelector('.popup button[type="button"]');
-    const confirmationPopup = document.getElementById('confirmationPopup');
-
-    createButton.addEventListener('click', openPopup);
-    overlay.addEventListener('click', closePopup);
-    cancelButton.addEventListener('click', closePopup);
-    createIcon.addEventListener("click", openPopup)
-
-
-    createButton.addEventListener('click', openPopup);
-    overlay.addEventListener('click', closePopup);
-    cancelButton.addEventListener('click', closePopup);
-
-    eventForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        // Get form values
-        const title = document.getElementById('title').value;
-        const picture = document.getElementById('picture').value;
-        const description = document.getElementById('description').value;
-        const time = document.getElementById('time').value;
-        const place = document.getElementById('place').value;
-        const owner = currentUser.displayName || 'Unknown Owner';
-
-        const preferences = {
-            sports: document.getElementById('sports')?.checked || false,
-            clubs: document.getElementById('clubs')?.checked || false,
-            music: document.getElementById('music')?.checked || false,
-            art: document.getElementById('art')?.checked || false,
-            festivals: document.getElementById('festivals')?.checked || false,
-            networking: document.getElementById('networking')?.checked || false
-        };
-
-        const newEvent = {
-            title,
-            picture,
-            description,
-            time,
-            place,
-            owner,
-            preferences,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
-        try {
-            await db.collection('events').add(newEvent);
-            closePopup();
-            openConfirmationPopup(newEvent);
-            eventForm.reset();
-            setTimeout(loadEvents, 300);
-        } catch (error) {
-            console.error("Error adding document: ", error);
-        }
-    });
-
-    // Confirmation Popup Controls
-    document.getElementById('undoButton').addEventListener('click', closeConfirmationPopup);
-    document.getElementById('homeButton').addEventListener('click', () => {
-        closeConfirmationPopup();
-        window.location.href = 'main.html';
-    });
-
-    // Load initial events
+    initializeEventHandlers();
     loadEvents();
-});
 
-window.addEventListener('load', function() {
-    // Check if the "create event" form should be opened
+    // Open event creation form if flagged in localStorage
     const shouldOpenForm = localStorage.getItem('openCreateEventForm');
-    console.log("Should open form: ", shouldOpenForm); // Debug log to check the flag value
-
     if (shouldOpenForm === 'true') {
-        // Open the create event form
-        openCreateEventForm(); // This function will show the form
-        // Reset the flag after the form is shown
+        openPopup();
         localStorage.removeItem('openCreateEventForm');
     }
 });
 
-// Function to show the create event form (popup)
-function openCreateEventForm() {
-    const popup = document.getElementById('popup'); // Reference the form by its ID 'popup'
-    if (popup) {
-        popup.style.display = 'block'; // Show the popup (or use any other logic)
-        console.log("Create Event Popup is now visible.");
-    } else {
-        console.log("Create Event Popup not found!");
-    }
+// Initialization and Event Handlers
+function initializeEventHandlers() {
+    // Open/close event creation popup
+    document.getElementById('createButton')?.addEventListener('click', openPopup);
+    document.getElementById('overlay')?.addEventListener('click', closePopup);
+    document.getElementById('createIcon')?.addEventListener("click", openPopup);
+
+    // Form submission
+    document.getElementById('eventForm')?.addEventListener('submit', handleFormSubmit);
+
+    // Confirmation Popup Controls
+    document.getElementById('undoButton')?.addEventListener('click', handleUndo);
+    document.getElementById('homeButton')?.addEventListener('click', () => {
+        closeConfirmationPopup();
+        window.location.href = 'main.html'; // Redirect to homepage
+    });
+
+    // Category dropdown and filters
+    setupCategoryDropdown();
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        const dropdownContent = document.getElementById('dropdownContent');
+        const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
+        if (dropdownContent.style.display === 'block' && !dropdownContent.contains(e.target) && !selectedCategoriesDisplay.contains(e.target)) {
+            dropdownContent.style.display = 'none';
+        }
+    });
 }
 
-
+// Popup Controls
 function openPopup() {
     document.getElementById('overlay').style.display = 'block';
     document.getElementById('popup').style.display = 'block';
@@ -122,15 +71,28 @@ function closePopup() {
 }
 
 function openConfirmationPopup(eventData) {
-    document.getElementById('confirmTitle').innerText = eventData.title;
-    document.getElementById('confirmPicture').innerText = eventData.picture;
-    document.getElementById('confirmDescription').innerText = eventData.description;
-    document.getElementById('confirmSettings').innerText = Object.keys(eventData.preferences)
-        .filter(key => eventData.preferences[key])
-        .join(', ');
+    const confirmationPopup = document.getElementById('confirmationPopup');
+    const overlay = document.getElementById('overlay');
+    const confirmTitle = document.getElementById('confirmTitle');
+    const confirmPicture = document.getElementById('confirmPicture');
+    const confirmDescription = document.getElementById('confirmDescription');
+    const confirmSettings = document.getElementById('confirmSettings');
 
-    document.getElementById('confirmationPopup').style.display = 'block';
-    document.getElementById('overlay').style.display = 'block';
+    if (confirmationPopup && overlay && confirmTitle && confirmPicture && confirmDescription && confirmSettings) {
+        confirmTitle.innerText = eventData.title || 'No Title Provided';
+        confirmPicture.innerText = eventData.picture || 'No Picture URL';
+        confirmDescription.innerText = eventData.description || 'No Description';
+        confirmSettings.innerText = Object.keys(eventData.preferences)
+            .filter(key => eventData.preferences[key])
+            .join(', ') || 'No Preferences Selected';
+
+        tempEventData = eventData;
+
+        confirmationPopup.style.display = 'block';
+        overlay.style.display = 'block';
+    } else {
+        console.error("Error: One or more popup elements not found!");
+    }
 }
 
 function closeConfirmationPopup() {
@@ -138,7 +100,100 @@ function closeConfirmationPopup() {
     document.getElementById('overlay').style.display = 'none';
 }
 
-// Load Events from Firestore
+// Event Form Handling
+async function handleFormSubmit(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const title = document.getElementById('title')?.value || '';
+    const picture = document.getElementById('picture')?.value || '';
+    const description = document.getElementById('description')?.value || '';
+    const time = document.getElementById('time')?.value || '';
+    const place = document.getElementById('place')?.value || '';
+    const owner = currentUser?.displayName || 'Unknown Owner';
+
+    const preferences = {};
+    document.querySelectorAll('input[name="preferences"]').forEach((checkbox) => {
+        preferences[checkbox.value] = checkbox.checked;
+    });
+
+    const newEvent = {
+        title,
+        picture,
+        description,
+        time,
+        place,
+        owner,
+        preferences,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    try {
+        let docRef;
+        if (tempEventData && tempEventData.id) {
+            await db.collection('events').doc(tempEventData.id).set(newEvent, { merge: true });
+            console.log("Event updated in Firestore!");
+            newEvent.id = tempEventData.id;
+        } else {
+            docRef = await db.collection('events').add(newEvent);
+            console.log("Event added to Firestore with ID:", docRef.id);
+            newEvent.id = docRef.id;
+        }
+
+        closePopup();
+        openConfirmationPopup(newEvent);
+        form.reset();
+        tempEventData = newEvent;
+    } catch (error) {
+        console.error("Error adding or updating event:", error);
+    }
+}
+
+// Undo Functionality
+function handleUndo() {
+    if (!tempEventData) {
+        console.error("No event data to undo!");
+        return;
+    }
+
+    document.getElementById('title').value = tempEventData.title || '';
+    document.getElementById('picture').value = tempEventData.picture || '';
+    document.getElementById('description').value = tempEventData.description || '';
+    document.getElementById('time').value = tempEventData.time || '';
+    document.getElementById('place').value = tempEventData.place || '';
+
+    document.querySelectorAll('input[name="preferences"]').forEach((checkbox) => {
+        checkbox.checked = tempEventData.preferences?.[checkbox.value] || false;
+    });
+
+    closeConfirmationPopup();
+    openPopup();
+}
+
+// Navbar Profile Picture
+async function updateNavbarProfilePicture() {
+    if (!currentUser) return;
+
+    try {
+        const profileSettingsSnap = await db.collection('profileSettings').doc(currentUser.uid).get();
+        if (profileSettingsSnap.exists) {
+            const profileData = profileSettingsSnap.data();
+            const avatarFilePath = profileData.avatar;
+            const navbarImage = document.getElementById('navProfileImage');
+            const userIcon = document.querySelector('.dropdown i');
+
+            if (avatarFilePath) {
+                navbarImage.src = avatarFilePath;
+                navbarImage.style.display = 'block';
+                userIcon.style.display = 'none';
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching avatar:", error);
+    }
+}
+
+// Event Loading and Filtering
 async function loadEvents() {
     const eventsContainer = document.getElementById('events-container');
     eventsContainer.innerHTML = '';
@@ -150,11 +205,53 @@ async function loadEvents() {
             displayEvent(eventData, eventsContainer);
         });
     } catch (error) {
-        console.error("Error getting documents: ", error);
+        console.error("Error loading events:", error);
     }
 }
 
-// Display Single Event
+async function loadFilteredEvents(categories) {
+    const eventsContainer = document.getElementById('events-container');
+    eventsContainer.innerHTML = '';
+
+    try {
+        let userPreferences = [];
+        if (categories.includes('mypreferences') && currentUser) {
+            const profileDoc = await db.collection('profileSettings').doc(currentUser.uid).get();
+            if (profileDoc.exists) {
+                const preferencesObject = profileDoc.data().preferences || {};
+                userPreferences = Object.keys(preferencesObject).filter(pref => preferencesObject[pref]);
+            }
+        }
+
+        const snapshot = await db.collection('events').orderBy('timestamp', 'desc').get();
+        snapshot.forEach((doc) => {
+            const eventData = doc.data();
+
+            const matchesCategory = categories.some(category =>
+                eventData.preferences && eventData.preferences[category.toLowerCase()]
+            );
+
+            const matchesUserPreferences = userPreferences.some(preference =>
+                eventData.preferences && eventData.preferences[preference]
+            );
+
+            const isMyEvent = categories.includes('myevents') &&
+                eventData.owner === (currentUser?.displayName || '');
+
+            if (
+                categories.length === 0 ||
+                matchesCategory ||
+                (categories.includes('mypreferences') && matchesUserPreferences) ||
+                isMyEvent
+            ) {
+                displayEvent(eventData, eventsContainer);
+            }
+        });
+    } catch (error) {
+        console.error("Error loading filtered events:", error);
+    }
+}
+
 function displayEvent(eventData, container) {
     const eventCard = document.createElement('div');
     eventCard.className = 'col-md-4';
@@ -173,93 +270,55 @@ function displayEvent(eventData, container) {
     container.appendChild(eventCard);
 }
 
-// Display dropdown on textbox click
-const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
-const dropdownContent = document.getElementById('dropdownContent');
+// Category Dropdown and Filters
+function setupCategoryDropdown() {
+    const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
+    const dropdownContent = document.getElementById('dropdownContent');
 
-selectedCategoriesDisplay.addEventListener('click', () => {
-    dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
-});
+    selectedCategoriesDisplay?.addEventListener('click', () => {
+        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+    });
 
-// Function to update the textbox with selected categories
+    document.querySelectorAll('input[name="category"]').forEach((checkbox) => {
+        checkbox.addEventListener('change', updateSelectedCategoriesDisplay);
+    });
+
+    document.getElementById('submitFilter')?.addEventListener('click', () => {
+        const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
+        loadFilteredEvents(selectedCategories);
+        dropdownContent.style.display = 'none';
+    });
+
+    document.getElementById('cancelFilter')?.addEventListener('click', () => {
+        document.querySelectorAll('input[name="category"]').forEach(cb => cb.checked = false);
+        selectedCategoriesDisplay.value = 'Select Categories';
+        loadEvents();
+        dropdownContent.style.display = 'none';
+    });
+}
+
 function updateSelectedCategoriesDisplay() {
-    const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
-    selectedCategoriesDisplay.value = selectedCategories.join(', ') || 'Select Categories';
+    const categoryLabels = {
+        myevents: "My Events",
+        mypreferences: "My Preferences",
+        sports: "Sports",
+        clubs: "Clubs",
+        music: "Music",
+        art: "Art",
+        festivals: "Festivals",
+        networking: "Networking"
+    };
+
+    const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
+        .map(cb => categoryLabels[cb.value] || cb.value);
+
+    document.getElementById('selectedCategoriesDisplay').value = selectedCategories.join(', ') || 'Select Categories';
 }
 
-// Update textbox when checkboxes are clicked
-document.querySelectorAll('input[name="category"]').forEach((checkbox) => {
-    checkbox.addEventListener('change', updateSelectedCategoriesDisplay);
-});
-
-// Event Listener for Submit button
-document.getElementById('submitFilter').addEventListener('click', () => {
-    const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
-    loadFilteredEvents(selectedCategories); // Filter events based on selected categories
-    dropdownContent.style.display = 'none'; // Close dropdown after submitting
-});
-
-// Event Listener for Cancel button
-document.getElementById('cancelFilter').addEventListener('click', () => {
-    document.querySelectorAll('input[name="category"]').forEach(cb => cb.checked = false); // Uncheck all checkboxes
-    selectedCategoriesDisplay.value = 'Select Categories'; // Reset textbox display
-    loadEvents(); // Show all events without filters
-    dropdownContent.style.display = 'none'; // Close dropdown after cancelling
-});
-
-// Load Filtered Events
-async function loadFilteredEvents(categories) {
-    const eventsContainer = document.getElementById('events-container');
-    eventsContainer.innerHTML = '';
-
-    try {
-        const eventsQuery = db.collection('events').orderBy('timestamp', 'desc');
-        const snapshot = await eventsQuery.get();
-        
-        snapshot.forEach((doc) => {
-            const eventData = doc.data();
-            const matchesCategory = categories.some(category => eventData.preferences[category.toLowerCase()]);
-            const isMyEvent = categories.includes("myevents") && eventData.owner === (currentUser?.displayName || "");
-
-            if (categories.length === 0 || matchesCategory || isMyEvent) {
-                displayEvent(eventData, eventsContainer);
-            }
-        });
-    } catch (error) {
-        console.error("Error getting documents: ", error);
-    }
-}
-
-// Update Navbar Profile Picture
-async function updateNavbarProfilePicture() {
-    if (!currentUser) return;
-
-    try {
-        const profileSettingsRef = db.collection('profileSettings').doc(currentUser.uid);
-        const profileSettingsSnap = await profileSettingsRef.get();
-
-        if (profileSettingsSnap.exists) {
-            const profileData = profileSettingsSnap.data();
-            const avatarFilePath = profileData.avatar;
-            const navbarImage = document.getElementById('navProfileImage');
-            const userIcon = document.querySelector('.dropdown i');
-
-            if (avatarFilePath) {
-                navbarImage.src = avatarFilePath;
-                navbarImage.style.display = 'block';
-                userIcon.style.display = 'none';
-            }
-        }
-    } catch (error) {
-        console.error("Error fetching avatar: ", error);
-    }
-}
-
-// Logout Function
-document.getElementById('logoutButton').addEventListener('click', () => {
+// Logout
+document.getElementById('logoutButton')?.addEventListener('click', () => {
     localStorage.removeItem('avatar');
     auth.signOut()
         .then(() => console.log('User logged out'))
-        .catch((error) => console.error("Logout error: ", error));
+        .catch((error) => console.error("Logout error:", error));
 });
-

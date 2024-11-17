@@ -501,3 +501,108 @@ article p {
 #createButton {
   margin-top: 20px;
 }
+
+/* General Container Styling */
+.filter-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.filter-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #fff;
+}
+
+#selectedCategoriesDisplay {
+  color: #a9a9a9; 
+  font-style: italic; 
+}
+
+.filter-input:hover {
+  border-color: #007bff;
+}
+
+/* Dropdown Styling */
+.filter-dropdown {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 15px;
+}
+
+.filter-dropdown label {
+  display: block;
+  margin: 8px 0;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+
+.filter-dropdown label:hover {
+  color: #007bff;
+}
+
+.filter-dropdown input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* Filter Buttons Styling */
+.filter-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  position: relative;
+}
+
+.filter-buttons .filter-submit-btn {
+  margin: 0 auto; 
+  padding: 8px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+}
+
+.filter-buttons .filter-submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.filter-buttons .filter-cancel-btn {
+  border: none;
+  background: none;
+  font-size: 20px;
+  color: #dc3545;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+}
+
+.filter-buttons .filter-cancel-btn:hover {
+  color: #c82333;
+}
+
+.filter-container.open .filter-dropdown {
+  display: block;
+}

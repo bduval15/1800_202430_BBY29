@@ -20,8 +20,7 @@ const eventCategoryImages = {
     sports: "/images/events/sports.jpg",
     clubs: "/images/events/clubs.jpg",
     music: "/images/events/music.jpg",
-    art: "/images/events/art.jpg",
-    festivals: "/images/events/festivals.jpg",
+    art: "/images.events/art.jpg",
     networking: "/images/events/networking.jpg",
     default: "/images/events/default.jpg" // Fallback image if no category matches
 };

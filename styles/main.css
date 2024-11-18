@@ -1,0 +1,61 @@
+h2 {
+    margin-bottom: 15px; /* Adjust the value as needed for more or less spacing */
+  }
+  
+  .filter-container {
+    margin-top: 10px; /* Adds spacing above the input field container */
+  }
+
+  .popup {
+  width: 60%; /* Adjust to make it wider, try 60% or more */
+  max-width: 800px; /* Optional: set a max width for large screens */
+  margin: 0 auto; /* Center the popup */
+  padding: 20px; /* Optional: add some padding */
+  border-radius: 8px; /* Optional: rounded corners */
+  background-color: #fff; /* Ensure the popup has a clear background */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
+}
+
+@media (max-width: 768px) {
+    .popup {
+      width: 75%; /* Adjust width for smaller screens */
+    }
+  }
+  
+  .field-container {
+    display: flex;
+    flex-direction: column; /* Stack child elements vertically */
+    gap: 10px; /* Optional: Adds spacing between "Time" and "Place" */
+  }
+  
+  .field-container label {
+    font-weight: bold; /* Optional: Makes the labels more prominent */
+  }
+  
+  .field-container input {
+    width: 100%; /* Ensures the input boxes stretch to the container width */
+    padding: 8px; /* Adds padding for better user experience */
+    border: 1px solid #ccc; /* Adds a border for better visibility */
+    border-radius: 4px; /* Optional: Makes inputs look cleaner */
+  }
+
+  
+  
+  .category-container input[type="radio"] {
+    margin: 0 5px 0 0; /* Reduce spacing to the right of the radio button */
+    vertical-align: middle; /* Ensure alignment with the label text */
+  }
+  
+  .category-container label {
+    margin: 0; /* Remove any extra margin */
+    display: inline; /* Ensure it stays inline with the radio button */
+  }
+  
+  #submitButton {
+    margin-top: 20px; /* Adjust the value for more or less spacing */
+    padding: 10px 20px; /* Optional: Adds padding inside the button for a better look */
+    display: block; /* Ensures it stays on its own line */
+    text-align: center; /* Centers the text */
+  }
+  
+  

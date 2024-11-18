@@ -109,22 +109,28 @@
       <div class="field-container">
         <div>
           <label for="time">Time:</label><br>
-          <input type="datetime-local" id="time" required>
+          <input type="datetime-local" id="time" required><br>
         </div>
         <div>
           <label for="place">Place:</label><br>
-          <input type="text" id="place" required>
+          <input type="text" id="place" required><br>
         </div>
       </div>
-      <div>
-        <h4>Select category:</h4>
-        <input type="radio" id="sports" name="preferences" value="sports"> Sports
-        <input type="radio" id="clubs" name="preferences" value="clubs"> Clubs
-        <input type="radio" id="music" name="preferences" value="music"> Music
-        <input type="radio" id="art" name="preferences" value="art"> Art
-        <input type="radio" id="festivals" name="preferences" value="festivals"> Festivals
-        <input type="radio" id="networking" name="preferences" value="networking"> Networking
+      
+      <h4>Select category:</h4>
+      <div class="category-container">
+        <div class="category-row">
+          <input type="radio" id="sports" name="preferences" value="sports"> Sports
+          <input type="radio" id="clubs" name="preferences" value="clubs"> Clubs
+          <input type="radio" id="music" name="preferences" value="music"> Music
+        </div>
+        <div class="category-row">
+          <input type="radio" id="art" name="preferences" value="art"> Art
+          <input type="radio" id="festivals" name="preferences" value="festivals"> Festivals
+          <input type="radio" id="networking" name="preferences" value="networking"> Networking
+        </div>
       </div>
+      
 
       
       <button type="submit" id="submitButton">Submit Event</button>

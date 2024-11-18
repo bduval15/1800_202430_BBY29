@@ -75,6 +75,7 @@ body {
     align-items: center;
     text-align: center;
     color: rgb(255, 255, 255);
+  
   }
   
   .welcome-content {
@@ -398,7 +399,7 @@ body{
 button {
   margin-top: 20px;
   padding: 15px 30px; /* Increased padding for a bigger button */
-  background-color: teal; /* Teal color for the button */
+  background-color: #175e60; /* Teal color for the button */
   color: white;
   border: none;
   border-radius: 5px;

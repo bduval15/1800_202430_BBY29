@@ -23,6 +23,7 @@ const eventCategoryImages = {
     art: "/images/events/art.jpg",
     festivals: "/images/events/festivals.jpg",
     networking: "/images/events/networking.jpg",
+    other: "/images/events/other.jpg",
     default: "/images/events/default.jpg" // Fallback image if no category matches
 };
 
@@ -99,27 +100,31 @@ function closePopup() {
 function openConfirmationPopup(eventData) {
     const confirmationPopup = document.getElementById('confirmationPopup');
     const overlay = document.getElementById('overlay');
+
+    // Elements to populate
+    const confirmImage = document.getElementById('confirmImage');
     const confirmTitle = document.getElementById('confirmTitle');
-    const confirmPicture = document.getElementById('confirmPicture');
+    const confirmOwner = document.getElementById('confirmOwner');
+    const confirmDate = document.getElementById('confirmDate');
     const confirmDescription = document.getElementById('confirmDescription');
-    const confirmSettings = document.getElementById('confirmSettings');
 
-    if (confirmationPopup && overlay && confirmTitle && confirmPicture && confirmDescription && confirmSettings) {
+    // Check if the popup elements exist
+    if (confirmationPopup && overlay && confirmImage && confirmTitle && confirmOwner && confirmDate && confirmDescription) {
+        // Populate modal with event details
+        confirmImage.src = eventData.picture || '/images/events/default.jpg'; // Default fallback image
         confirmTitle.innerText = eventData.title || 'No Title Provided';
-        confirmPicture.innerText = eventData.picture || 'No Picture URL';
-        confirmDescription.innerText = eventData.description || 'No Description';
-        confirmSettings.innerText = Object.keys(eventData.preferences)
-            .filter(key => eventData.preferences[key])
-            .join(', ') || 'No Preferences Selected';
+        confirmOwner.innerText = eventData.owner || 'Unknown Owner';
+        confirmDate.innerText = eventData.time ? new Date(eventData.time).toLocaleString() : 'No Date Provided';
+        confirmDescription.innerText = eventData.description || 'No Description Provided';
 
-        tempEventData = eventData;
-
+        // Show the modal
         confirmationPopup.style.display = 'block';
         overlay.style.display = 'block';
     } else {
-        console.error("Error: One or more popup elements not found!");
+        console.error('Error: One or more popup elements not found!');
     }
 }
+
 
 function closeConfirmationPopup() {
     document.getElementById('confirmationPopup').style.display = 'none';
@@ -130,71 +135,88 @@ function closeConfirmationPopup() {
 async function handleFormSubmit(event) {
     event.preventDefault();
 
-    const form = event.target;
     const title = document.getElementById('title')?.value || '';
-    const picture = document.getElementById('picture')?.value || '';
     const description = document.getElementById('description')?.value || '';
     const time = document.getElementById('time')?.value || '';
     const place = document.getElementById('place')?.value || '';
     const owner = currentUser?.displayName || 'Unknown Owner';
 
-    const preferences = {};
-    document.querySelectorAll('input[name="preferences"]').forEach((checkbox) => {
-        preferences[checkbox.value] = checkbox.checked;
-    });
+    // Get the selected category and corresponding image path
+    const selectedCategory = document.querySelector('input[name="preferences"]:checked')?.value || 'default';
+    const picture = eventCategoryImages[selectedCategory] || eventCategoryImages.default;
 
+    // Create the new event object
     const newEvent = {
         title,
-        picture,
+        picture, // Store the category-based image path
         description,
         time,
         place,
         owner,
-        preferences,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        preferences: selectedCategory, // Store the selected category
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     try {
         let docRef;
         if (tempEventData && tempEventData.id) {
             await db.collection('events').doc(tempEventData.id).set(newEvent, { merge: true });
-            console.log("Event updated in Firestore!");
+            console.log('Event updated in Firestore!');
             newEvent.id = tempEventData.id;
         } else {
             docRef = await db.collection('events').add(newEvent);
-            console.log("Event added to Firestore with ID:", docRef.id);
+            console.log('Event added to Firestore with ID:', docRef.id);
             newEvent.id = docRef.id;
         }
 
         closePopup();
         openConfirmationPopup(newEvent);
-        form.reset();
+        event.target.reset(); // Reset the form for a new event
         tempEventData = newEvent;
     } catch (error) {
-        console.error("Error adding or updating event:", error);
+        console.error('Error adding or updating event:', error);
     }
 }
 
-// Undo Functionality
+
 function handleUndo() {
     if (!tempEventData) {
         console.error("No event data to undo!");
         return;
     }
 
-    document.getElementById('title').value = tempEventData.title || '';
-    document.getElementById('picture').value = tempEventData.picture || '';
-    document.getElementById('description').value = tempEventData.description || '';
-    document.getElementById('time').value = tempEventData.time || '';
-    document.getElementById('place').value = tempEventData.place || '';
+    console.log("Undoing event data:", tempEventData);
 
-    document.querySelectorAll('input[name="preferences"]').forEach((checkbox) => {
-        checkbox.checked = tempEventData.preferences?.[checkbox.value] || false;
+    // Safely populate form fields
+    const titleElement = document.getElementById('title');
+    if (titleElement) titleElement.value = tempEventData.title || '';
+
+    const pictureElement = document.getElementById('picture');
+    if (pictureElement) pictureElement.value = tempEventData.picture || '';
+
+    const descriptionElement = document.getElementById('description');
+    if (descriptionElement) descriptionElement.value = tempEventData.description || '';
+
+    const timeElement = document.getElementById('time');
+    if (timeElement) {
+        timeElement.value = tempEventData.time
+            ? new Date(tempEventData.time).toISOString().slice(0, 16)
+            : '';
+    }
+
+    const placeElement = document.getElementById('place');
+    if (placeElement) placeElement.value = tempEventData.place || '';
+
+    // Update preferences (radio buttons)
+    document.querySelectorAll('input[name="preferences"]').forEach((radio) => {
+        radio.checked = tempEventData.preferences === radio.value;
     });
 
     closeConfirmationPopup();
     openPopup();
 }
+
+
 
 // Navbar Profile Picture
 async function updateNavbarProfilePicture() {
@@ -279,11 +301,17 @@ async function loadFilteredEvents(categories) {
 }
 
 function displayEvent(eventData, container) {
+    const fallbackImage = '/images/events/default.jpg'; 
+    const imagePath = eventData.picture || fallbackImage;
+
+    console.log('Event Data:', eventData);
+    console.log('Image Path Used:', imagePath);
+
     const eventCard = document.createElement('div');
     eventCard.className = 'col-md-4';
     eventCard.innerHTML = `
         <div class="card mb-4">
-            <img src="${eventData.picture}" class="card-img-top" alt="${eventData.title}">
+            <img src="${imagePath}" class="card-img-top" alt="${eventData.title}">
             <div class="card-body">
                 <h5 class="card-title">${eventData.title}</h5>
                 <p class="card-text">${eventData.description}</p>
@@ -295,6 +323,8 @@ function displayEvent(eventData, container) {
     `;
     container.appendChild(eventCard);
 }
+
+
 
 // Category Dropdown and Filters
 function setupCategoryDropdown() {

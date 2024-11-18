@@ -606,3 +606,10 @@ article p {
   padding-top: 20px; /* Leave space for the X icon */
 }
 
+.nav-logo {
+  height: 25px; /* Adjust this value to resize the logo */
+  width: auto;  /* Maintain the logo's aspect ratio */
+  display: inline-block;
+  vertical-align: middle;
+}
+

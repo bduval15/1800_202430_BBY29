@@ -20,8 +20,10 @@ const eventCategoryImages = {
     sports: "/images/events/sports.jpg",
     clubs: "/images/events/clubs.jpg",
     music: "/images/events/music.jpg",
-    art: "/images.events/art.jpg",
+    art: "/images/events/art.jpg",
+    festivals: "/images/events/festivals.jpg",
     networking: "/images/events/networking.jpg",
+    other: "/images/events/other.jpg",
     default: "/images/events/default.jpg" // Fallback image if no category matches
 };
 
@@ -98,27 +100,31 @@ function closePopup() {
 function openConfirmationPopup(eventData) {
     const confirmationPopup = document.getElementById('confirmationPopup');
     const overlay = document.getElementById('overlay');
+
+    // Elements to populate
+    const confirmImage = document.getElementById('confirmImage');
     const confirmTitle = document.getElementById('confirmTitle');
-    const confirmPicture = document.getElementById('confirmPicture');
+    const confirmOwner = document.getElementById('confirmOwner');
+    const confirmDate = document.getElementById('confirmDate');
     const confirmDescription = document.getElementById('confirmDescription');
-    const confirmSettings = document.getElementById('confirmSettings');
 
-    if (confirmationPopup && overlay && confirmTitle && confirmPicture && confirmDescription && confirmSettings) {
+    // Check if the popup elements exist
+    if (confirmationPopup && overlay && confirmImage && confirmTitle && confirmOwner && confirmDate && confirmDescription) {
+        // Populate modal with event details
+        confirmImage.src = eventData.picture || '/images/events/default.jpg'; // Default fallback image
         confirmTitle.innerText = eventData.title || 'No Title Provided';
-        confirmPicture.innerText = eventData.picture || 'No Picture URL';
-        confirmDescription.innerText = eventData.description || 'No Description';
-        confirmSettings.innerText = Object.keys(eventData.preferences)
-            .filter(key => eventData.preferences[key])
-            .join(', ') || 'No Preferences Selected';
+        confirmOwner.innerText = eventData.owner || 'Unknown Owner';
+        confirmDate.innerText = eventData.time ? new Date(eventData.time).toLocaleString() : 'No Date Provided';
+        confirmDescription.innerText = eventData.description || 'No Description Provided';
 
-        tempEventData = eventData;
-
+        // Show the modal
         confirmationPopup.style.display = 'block';
         overlay.style.display = 'block';
     } else {
-        console.error("Error: One or more popup elements not found!");
+        console.error('Error: One or more popup elements not found!');
     }
 }
+
 
 function closeConfirmationPopup() {
     document.getElementById('confirmationPopup').style.display = 'none';
@@ -173,26 +179,44 @@ async function handleFormSubmit(event) {
 }
 
 
-// Undo Functionality
 function handleUndo() {
     if (!tempEventData) {
         console.error("No event data to undo!");
         return;
     }
 
-    document.getElementById('title').value = tempEventData.title || '';
-    document.getElementById('picture').value = tempEventData.picture || '';
-    document.getElementById('description').value = tempEventData.description || '';
-    document.getElementById('time').value = tempEventData.time || '';
-    document.getElementById('place').value = tempEventData.place || '';
+    console.log("Undoing event data:", tempEventData);
 
-    document.querySelectorAll('input[name="preferences"]').forEach((checkbox) => {
-        checkbox.checked = tempEventData.preferences?.[checkbox.value] || false;
+    // Safely populate form fields
+    const titleElement = document.getElementById('title');
+    if (titleElement) titleElement.value = tempEventData.title || '';
+
+    const pictureElement = document.getElementById('picture');
+    if (pictureElement) pictureElement.value = tempEventData.picture || '';
+
+    const descriptionElement = document.getElementById('description');
+    if (descriptionElement) descriptionElement.value = tempEventData.description || '';
+
+    const timeElement = document.getElementById('time');
+    if (timeElement) {
+        timeElement.value = tempEventData.time
+            ? new Date(tempEventData.time).toISOString().slice(0, 16)
+            : '';
+    }
+
+    const placeElement = document.getElementById('place');
+    if (placeElement) placeElement.value = tempEventData.place || '';
+
+    // Update preferences (radio buttons)
+    document.querySelectorAll('input[name="preferences"]').forEach((radio) => {
+        radio.checked = tempEventData.preferences === radio.value;
     });
 
     closeConfirmationPopup();
     openPopup();
 }
+
+
 
 // Navbar Profile Picture
 async function updateNavbarProfilePicture() {

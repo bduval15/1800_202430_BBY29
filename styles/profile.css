@@ -99,3 +99,54 @@ body {
   border-color: #28AFB0; 
 }
 
+
+footer {
+  background-color: transparent;
+  color: #fff;
+  padding: 10px 0;
+  font-family: Arial, sans-serif;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 5px 15px;
+  font-size: 0.9rem;
+  max-width: 100%;
+}
+footer {
+  background-color: #175e60; 
+}
+.footer-section {
+  text-align: left;
+}
+
+.footer-bottom {
+  text-align: left;
+  font-size: 0.8rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.social-links li {
+  display: inline;
+}
+
+.social-links a {
+  color: #fff;
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+.sticky-footer {
+  background-color: #175e60;
+}
+.nav-logo {
+  margin-bottom: 10px;
+}

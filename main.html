@@ -77,6 +77,7 @@
           <label><input type="checkbox" id="festivals" name="category" value="Festivals"> Festivals</label>
           <label><input type="checkbox" id="networking" name="category" value="Networking"> Networking</label>
           
+          
           <div class="filter-buttons">
             <button id="submitFilter" class="filter-submit-btn">Submit</button>
           </div>
@@ -124,7 +125,8 @@
         <input type="radio" id="art" name="preferences" value="art"> Art
         <input type="radio" id="festivals" name="preferences" value="festivals"> Festivals
         <input type="radio" id="networking" name="preferences" value="networking"> Networking
-      </div>
+        <input type="radio" id="other" name="preferences" value="other"> Other
+     </div>
 
       
       <button type="submit" id="submitButton">Submit Event</button>
@@ -133,21 +135,23 @@
   </div>
 
   <!-- Confirmation Popup Modal-->
-  <div id="overlay"></div>
-  <div id="confirmationPopup" style="display: none;">
+<div id="overlay"></div>
+<div id="confirmationPopup" style="display: none;">
     <h2>Your event has been posted!</h2>
     <p>Your event details:</p>
     <div class="event-details">
-      <p><strong>Title:</strong> <span id="confirmTitle"></span></p>
-      <p><strong>Picture:</strong> <span id="confirmPicture"></span></p>
-      <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
-      <p><strong>Settings:</strong> <span id="confirmSettings"></span></p>
+        <img id="confirmImage" src="" alt="Event Image" style="width: 100%; max-height: 200px; object-fit: cover; margin-bottom: 10px;">
+        <p><strong>Title:</strong> <span id="confirmTitle"></span></p>
+        <p><strong>Owner:</strong> <span id="confirmOwner"></span></p>
+        <p><strong>Date:</strong> <span id="confirmDate"></span></p>
+        <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
     </div>
     <div class="confirmation-buttons">
-      <button id="undoButton">Undo</button>
-      <button id="homeButton">Home</button>
+        <button id="undoButton">Undo</button>
+        <button id="homeButton">Home</button>
     </div>
-  </div>
+</div>
+
 
   <!-- Keep the event creation popup separate -->
   <div id="popup">

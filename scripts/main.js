@@ -129,50 +129,49 @@ function closeConfirmationPopup() {
 async function handleFormSubmit(event) {
     event.preventDefault();
 
-    const form = event.target;
     const title = document.getElementById('title')?.value || '';
-    const picture = document.getElementById('picture')?.value || '';
     const description = document.getElementById('description')?.value || '';
     const time = document.getElementById('time')?.value || '';
     const place = document.getElementById('place')?.value || '';
     const owner = currentUser?.displayName || 'Unknown Owner';
 
-    const preferences = {};
-    document.querySelectorAll('input[name="preferences"]').forEach((checkbox) => {
-        preferences[checkbox.value] = checkbox.checked;
-    });
+    // Get the selected category and corresponding image path
+    const selectedCategory = document.querySelector('input[name="preferences"]:checked')?.value || 'default';
+    const picture = eventCategoryImages[selectedCategory] || eventCategoryImages.default;
 
+    // Create the new event object
     const newEvent = {
         title,
-        picture,
+        picture, // Store the category-based image path
         description,
         time,
         place,
         owner,
-        preferences,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        preferences: selectedCategory, // Store the selected category
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     try {
         let docRef;
         if (tempEventData && tempEventData.id) {
             await db.collection('events').doc(tempEventData.id).set(newEvent, { merge: true });
-            console.log("Event updated in Firestore!");
+            console.log('Event updated in Firestore!');
             newEvent.id = tempEventData.id;
         } else {
             docRef = await db.collection('events').add(newEvent);
-            console.log("Event added to Firestore with ID:", docRef.id);
+            console.log('Event added to Firestore with ID:', docRef.id);
             newEvent.id = docRef.id;
         }
 
         closePopup();
         openConfirmationPopup(newEvent);
-        form.reset();
+        event.target.reset(); // Reset the form for a new event
         tempEventData = newEvent;
     } catch (error) {
-        console.error("Error adding or updating event:", error);
+        console.error('Error adding or updating event:', error);
     }
 }
+
 
 // Undo Functionality
 function handleUndo() {
@@ -278,11 +277,17 @@ async function loadFilteredEvents(categories) {
 }
 
 function displayEvent(eventData, container) {
+    const fallbackImage = '/images/events/default.jpg'; 
+    const imagePath = eventData.picture || fallbackImage;
+
+    console.log('Event Data:', eventData);
+    console.log('Image Path Used:', imagePath);
+
     const eventCard = document.createElement('div');
     eventCard.className = 'col-md-4';
     eventCard.innerHTML = `
         <div class="card mb-4">
-            <img src="${eventData.picture}" class="card-img-top" alt="${eventData.title}">
+            <img src="${imagePath}" class="card-img-top" alt="${eventData.title}">
             <div class="card-body">
                 <h5 class="card-title">${eventData.title}</h5>
                 <p class="card-text">${eventData.description}</p>
@@ -294,6 +299,8 @@ function displayEvent(eventData, container) {
     `;
     container.appendChild(eventCard);
 }
+
+
 
 // Category Dropdown and Filters
 function setupCategoryDropdown() {

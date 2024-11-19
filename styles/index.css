@@ -101,7 +101,7 @@ footer {
 
 .arrow {
   position: absolute;
-  top: 50%;
+  top: 40%;
   transform: translateY(-50%);
   background-color: transparent;
   color: rgba(33, 146, 147, 1);

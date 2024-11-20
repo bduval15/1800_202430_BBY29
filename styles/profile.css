@@ -189,7 +189,7 @@ footer {
     right: 20px; 
     z-index: 1055;
     padding: 0;
-    width: 270px;
+    width: 300px;
 }
 
 .toast {
@@ -218,11 +218,13 @@ footer {
 
 .toast.fade {
     opacity: 0;
-    transition: opacity 0.5s ease-in-out; 
+    transition: opacity 4.0s ease-in-out; 
 }
 
 .toast.show {
     opacity: 1;
+    transition: opacity 4.0s ease-in-out;
+    transform: translateY(20px); 
 }
 
 .tab-pane {
@@ -243,7 +245,7 @@ footer {
 
 /* Save Button */
 #saveButton {
-  background-color: #28AFB0;
+  background-color: #175e60;
   color: white;
   font-size: 16px;
   padding: 10px 20px;
@@ -255,7 +257,7 @@ footer {
 }
 
 #saveButton:hover {
-  background-color: #226d5e;
+  background-color: #33a58e;
   color: white;
   cursor: pointer;
 }

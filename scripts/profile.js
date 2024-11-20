@@ -193,7 +193,7 @@ window.addEventListener('load', function () {
     createIcon.addEventListener('click', function (event) {
         event.preventDefault();
         localStorage.setItem('openCreateEventForm', 'true');
-        window.location.href = '/main.html'; 
+        window.location.href = '/main.html';
     });
 });
 
@@ -221,9 +221,24 @@ function showToast() {
     document.addEventListener("click", function dismissToast(event) {
         if (!toastElement.contains(event.target)) {
             toast.hide();
-            document.removeEventListener("click", dismissToast); 
+            document.removeEventListener("click", dismissToast);
         }
     });
+    setTimeout(() => toast.hide(), 3000);
+}
+
+function showToast2() {
+    const toastElement = document.getElementById("deleteToast");
+    const toast = new bootstrap.Toast(toastElement);
+    toast.show();
+
+    document.addEventListener("click", function dismissToast(event) {
+        if (!toastElement.contains(event.target)) {
+            toast.hide();
+            document.removeEventListener("click", dismissToast);
+        }
+    });
+    setTimeout(() => toast.hide(), 3000);
 }
 
 // Profile Picture is saved to fireBase under user. 
@@ -233,10 +248,10 @@ function saveProfilePicture(avatarUrl) {
         const profileRef = window.db.collection("profileSettings").doc(user.uid);
 
         profileRef
-            .set({ avatar: avatarUrl }, { merge: true }) 
+            .set({ avatar: avatarUrl }, { merge: true })
             .then(() => {
                 console.log("Profile picture updated successfully!");
-                showToast(); 
+                showToast();
             })
             .catch((error) => {
                 console.error("Error updating profile picture:", error);
@@ -257,10 +272,10 @@ function loadMyEvents() {
     const user = firebase.auth().currentUser;
     if (user) {
         const profileSettingsRef = firebase.firestore().collection("profileSettings").doc(user.uid);
-        
+
         profileSettingsRef.get().then((doc) => {
             if (doc.exists) {
-                const userName = doc.data().fname; 
+                const userName = doc.data().fname;
                 console.log("Fetched user name:", userName);
 
                 const eventsRef = firebase.firestore().collection("events");
@@ -270,11 +285,12 @@ function loadMyEvents() {
                     .then((querySnapshot) => {
                         if (querySnapshot.empty) {
                             myEventsContainer.innerHTML = "<p>No events created yet.</p>";
+                            myEventsContainer.style.minHeight = "150px";
                         } else {
-                            myEventsContainer.innerHTML = ""; 
+                            myEventsContainer.innerHTML = "";
                             querySnapshot.forEach((doc) => {
                                 const eventData = doc.data();
-                                const eventId = doc.id; 
+                                const eventId = doc.id;
 
                                 const eventCard = `
                                     <div class="card mb-3 shadow-sm position-relative" id="event-${eventId}">
@@ -340,7 +356,7 @@ function deleteEvent(eventId) {
                 if (eventElement) {
                     eventElement.remove();
                 }
-                showToast("Event deleted successfully!", "success");
+                showToast2();
             })
             .catch((error) => {
                 console.error("Error deleting event:", error);
@@ -358,8 +374,4 @@ function deleteEvent(eventId) {
     }
 }
 window.deleteEvent = deleteEvent;
-
-
-
-
 

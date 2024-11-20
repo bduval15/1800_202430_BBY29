@@ -7,6 +7,7 @@
 body {
   font-family: 'Inter', sans-serif;
   background-color: #f4f6f9;
+  
 }
 
 .container {
@@ -124,6 +125,8 @@ footer {
   color: #fff;
   padding: 10px 0;
   font-family: Arial, sans-serif;
+  background-color: #175e60;
+  width: 100%;
 }
 
 .footer-container {
@@ -132,12 +135,7 @@ footer {
   align-items: center;
   padding: 5px 15px;
   font-size: 0.9rem;
-  max-width: 100%;
-}
-
-footer {
-  background-color: #175e60;
-  
+  width: 100%;
 }
 
 .footer-section {
@@ -373,3 +371,111 @@ footer {
   color: #495057;
   margin-bottom: 30px;
 }
+
+
+.card {
+  position: relative;
+  overflow: hidden; 
+}
+
+.delete-button {
+  position: absolute;
+  bottom: 10px; 
+  right: 15px; 
+  background-color: transparent; 
+  color: #4e4e4eda; 
+  border: none; 
+  font-size: 24px; 
+  cursor: pointer;
+  padding: 0; 
+  transition: color 0.3s ease;
+}
+
+.delete-button:hover {
+  color: #e21e31;
+}
+
+
+.delete-button i {
+  font-size: 20px;
+}
+
+/* Modal Overlay */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+}
+
+/* Modal Box */
+.custom-modal {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Modal Heading */
+.custom-modal h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #226d5e;
+  font-weight: bold;
+}
+
+/* Modal Paragraph */
+.custom-modal p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #495057; 
+}
+
+/* Modal Actions */
+.custom-modal-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+/* Confirm Button */
+.custom-modal .btn-danger {
+  background-color: #e63946;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-modal .btn-danger:hover {
+  background-color: #d62828; 
+}
+
+/* Cancel Button */
+.custom-modal .btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-modal .btn-secondary:hover {
+  background-color: #495057; 
+}
+

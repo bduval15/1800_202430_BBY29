@@ -212,8 +212,6 @@ document.querySelectorAll(".avatar-option").forEach((avatar) => {
     });
 });
 
-
-
 // Function to show the toast / dismiss toast
 function showToast() {
     const toastElement = document.getElementById("profileToast");
@@ -249,6 +247,7 @@ function saveProfilePicture(avatarUrl) {
     }
 }
 
+// Load my events in the My Events tab on the profile page.
 function loadMyEvents() {
     console.log("Loading My Events...");
     const myEventsContainer = document.getElementById("myEventsContainer");
@@ -263,6 +262,7 @@ function loadMyEvents() {
             if (doc.exists) {
                 const userName = doc.data().fname; 
                 console.log("Fetched user name:", userName);
+
                 const eventsRef = firebase.firestore().collection("events");
                 eventsRef
                     .where("owner", "==", userName)
@@ -271,12 +271,13 @@ function loadMyEvents() {
                         if (querySnapshot.empty) {
                             myEventsContainer.innerHTML = "<p>No events created yet.</p>";
                         } else {
-                            myEventsContainer.innerHTML = "";
+                            myEventsContainer.innerHTML = ""; 
                             querySnapshot.forEach((doc) => {
                                 const eventData = doc.data();
+                                const eventId = doc.id; 
 
                                 const eventCard = `
-                                    <div class="card mb-3 shadow-sm">
+                                    <div class="card mb-3 shadow-sm position-relative" id="event-${eventId}">
                                         <img src="${eventData.picture}" class="card-img-top" alt="${eventData.title}">
                                         <div class="card-body">
                                             <h5 class="card-title">${eventData.title}</h5>
@@ -284,6 +285,9 @@ function loadMyEvents() {
                                             <p class="card-text"><strong>Date:</strong> ${eventData.time}</p>
                                             <p class="card-text"><strong>Location:</strong> ${eventData.place}</p>
                                         </div>
+                                        <button class="delete-button" onclick="deleteEvent('${eventId}')">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </div>
                                 `;
                                 myEventsContainer.innerHTML += eventCard;
@@ -307,6 +311,53 @@ function loadMyEvents() {
         myEventsContainer.innerHTML = "<p>Please sign in to view your events.</p>";
     }
 }
+
+// Deletes page with confirmation modal popup.
+function deleteEvent(eventId) {
+    const modalHtml = `
+        <div class="custom-modal-overlay">
+            <div class="custom-modal">
+                <h3>Are you sure?</h3>
+                <p>Do you want to delete this event? This action cannot be undone.</p>
+                <div class="custom-modal-actions">
+                    <button id="confirmDelete" class="btn btn-danger">Delete</button>
+                    <button id="cancelDelete" class="btn btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML("beforeend", modalHtml);
+
+    document.getElementById("confirmDelete").addEventListener("click", () => {
+        const eventRef = firebase.firestore().collection("events").doc(eventId);
+
+        eventRef
+            .delete()
+            .then(() => {
+                console.log(`Event ${eventId} deleted successfully.`);
+                const eventElement = document.getElementById(`event-${eventId}`);
+                if (eventElement) {
+                    eventElement.remove();
+                }
+                showToast("Event deleted successfully!", "success");
+            })
+            .catch((error) => {
+                console.error("Error deleting event:", error);
+                showToast("Failed to delete event. Please try again.", "error");
+            });
+
+        closeModal();
+    });
+
+    document.getElementById("cancelDelete").addEventListener("click", closeModal);
+
+    function closeModal() {
+        const modal = document.querySelector(".custom-modal-overlay");
+        if (modal) modal.remove();
+    }
+}
+window.deleteEvent = deleteEvent;
 
 
 

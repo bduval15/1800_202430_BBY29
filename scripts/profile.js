@@ -180,6 +180,11 @@ document.querySelectorAll(".avatar-option").forEach(avatar => {
     });
 });
 
+document.getElementById("myevents-tab").addEventListener("click", () => {
+    loadMyEvents();
+});
+
+
 document.getElementById('saveButton').addEventListener('click', saveProfileSettings);
 
 window.addEventListener('load', function () {
@@ -191,3 +196,119 @@ window.addEventListener('load', function () {
         window.location.href = '/main.html'; 
     });
 });
+
+// Save profile picture immediately when a new one is selected
+document.querySelectorAll(".avatar-option").forEach((avatar) => {
+    avatar.addEventListener("click", function () {
+        const selectedAvatar = avatar.src;
+        console.log("Selected Avatar:", selectedAvatar);
+
+        // Update the profile image on the page
+        document.getElementById("profileImage").src = selectedAvatar;
+        document.getElementById("avatarModal").style.display = "none";
+
+        // Save the selected avatar to Firestore immediately
+        saveProfilePicture(selectedAvatar);
+    });
+});
+
+
+
+// Function to show the toast / dismiss toast
+function showToast() {
+    const toastElement = document.getElementById("profileToast");
+    const toast = new bootstrap.Toast(toastElement);
+    toast.show();
+
+    document.addEventListener("click", function dismissToast(event) {
+        if (!toastElement.contains(event.target)) {
+            toast.hide();
+            document.removeEventListener("click", dismissToast); 
+        }
+    });
+}
+
+// Profile Picture is saved to fireBase under user. 
+function saveProfilePicture(avatarUrl) {
+    const user = auth.currentUser;
+    if (user) {
+        const profileRef = window.db.collection("profileSettings").doc(user.uid);
+
+        profileRef
+            .set({ avatar: avatarUrl }, { merge: true }) 
+            .then(() => {
+                console.log("Profile picture updated successfully!");
+                showToast(); 
+            })
+            .catch((error) => {
+                console.error("Error updating profile picture:", error);
+                alert("Failed to update profile picture. Please try again.");
+            });
+    } else {
+        console.error("User not authenticated. Cannot save profile picture.");
+    }
+}
+
+function loadMyEvents() {
+    console.log("Loading My Events...");
+    const myEventsContainer = document.getElementById("myEventsContainer");
+
+    myEventsContainer.innerHTML = "<p>Loading your events...</p>";
+
+    const user = firebase.auth().currentUser;
+    if (user) {
+        const profileSettingsRef = firebase.firestore().collection("profileSettings").doc(user.uid);
+        
+        profileSettingsRef.get().then((doc) => {
+            if (doc.exists) {
+                const userName = doc.data().fname; 
+                console.log("Fetched user name:", userName);
+                const eventsRef = firebase.firestore().collection("events");
+                eventsRef
+                    .where("owner", "==", userName)
+                    .get()
+                    .then((querySnapshot) => {
+                        if (querySnapshot.empty) {
+                            myEventsContainer.innerHTML = "<p>No events created yet.</p>";
+                        } else {
+                            myEventsContainer.innerHTML = "";
+                            querySnapshot.forEach((doc) => {
+                                const eventData = doc.data();
+
+                                const eventCard = `
+                                    <div class="card mb-3 shadow-sm">
+                                        <img src="${eventData.picture}" class="card-img-top" alt="${eventData.title}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">${eventData.title}</h5>
+                                            <p class="card-text">${eventData.description}</p>
+                                            <p class="card-text"><strong>Date:</strong> ${eventData.time}</p>
+                                            <p class="card-text"><strong>Location:</strong> ${eventData.place}</p>
+                                        </div>
+                                    </div>
+                                `;
+                                myEventsContainer.innerHTML += eventCard;
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error loading events:", error);
+                        myEventsContainer.innerHTML = "<p>Failed to load events. Please try again later.</p>";
+                    });
+            } else {
+                console.log("No profile settings found for user.");
+                myEventsContainer.innerHTML = "<p>No events found.</p>";
+            }
+        }).catch((error) => {
+            console.error("Error fetching profile settings:", error);
+            myEventsContainer.innerHTML = "<p>Failed to load events. Please try again later.</p>";
+        });
+    } else {
+        console.log("User not signed in.");
+        myEventsContainer.innerHTML = "<p>Please sign in to view your events.</p>";
+    }
+}
+
+
+
+
+

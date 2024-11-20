@@ -58,6 +58,14 @@ body {
   overflow-y: auto;
 }
 
+#avatarModal h2 {
+  text-align: center;
+  color: #495057;
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
 .close-button {
   position: absolute;
   top: 10px;
@@ -82,6 +90,17 @@ body {
 
 .avatar-option:hover {
   transform: scale(1.1);
+}
+
+.avatar-selection input[type="radio"] {
+  position: absolute; 
+  opacity: 0;        
+  pointer-events: none; 
+}
+
+.avatar-option-container input[type="radio"]:checked + img {
+  border: 3px solid #28AFB0;
+  box-shadow: 0px 0px 10px rgba(40, 175, 176, 0.5);
 }
 
 .list-group-item {
@@ -118,6 +137,7 @@ footer {
 
 footer {
   background-color: #175e60;
+  
 }
 
 .footer-section {
@@ -149,8 +169,207 @@ footer {
 
 .sticky-footer {
   background-color: #175e60;
+  position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #175e60;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    z-index: 1000; /* Ensure it stays on top */
 }
 
 .nav-logo {
   margin-bottom: 10px;
+}
+
+/** Toast Container CSS */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px; 
+    z-index: 1055;
+    padding: 0;
+    width: 270px;
+}
+
+.toast {
+    background-color: #f8f9fa;
+    color: #495057; 
+    border: 1px solid #dee2e6; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    font-size: 14px; 
+    font-weight: 500; 
+}
+
+.toast-body {
+    padding: 12px 16px; 
+}
+
+.toast .btn-close {
+    color: #6c757d; 
+    opacity: 0.8;
+    transition: opacity 0.3s ease; 
+}
+
+.toast .btn-close:hover {
+    opacity: 1; 
+}
+
+.toast.fade {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; 
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+.tab-pane {
+  max-width: 100%; 
+  overflow-x: hidden; 
+  padding: 0 15px; 
+}
+
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.col {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Save Button */
+#saveButton {
+  background-color: #28AFB0;
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  display: block;
+  margin: 0 auto;
+}
+
+#saveButton:hover {
+  background-color: #226d5e;
+  color: white;
+  cursor: pointer;
+}
+
+/* Input Fields */
+.card input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #495057;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+.card input[type="text"]:focus {
+  border-color: #28AFB0;
+  outline: none;
+}
+
+/* Event Preferences */
+.card {
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card h5 {
+  font-size: 18px;
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 15px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.card .list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #495057;
+}
+
+.card .list-group-item:hover {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* Checkboxes */
+.card input[type="checkbox"] {
+  margin-right: 10px;
+  accent-color: #28AFB0;
+}
+
+#profileTabs {
+  margin-top: 0; 
+  margin-bottom: 10px; 
+}
+
+
+#profileTabs .nav-item {
+  flex-grow: 1;
+  text-align: center;
+}
+
+#profileTabs .nav-link {
+  font-weight: 500;
+  color: #495057;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 0;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+#profileTabs .nav-link:hover {
+  background-color: #28AFB0;
+  color: white;
+}
+
+#profileTabs .nav-link.active {
+  border-bottom: 3px solid #28AFB0;
+  color: #28AFB0;
+  font-weight: bold;
+}
+
+/* Tab Content */
+.tab-content {
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profileImage {
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#userName {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #495057;
+  margin-bottom: 30px;
 }

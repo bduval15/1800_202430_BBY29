@@ -375,3 +375,25 @@ function deleteEvent(eventId) {
 }
 window.deleteEvent = deleteEvent;
 
+function saveProfileState(profilePicture, preferences) {
+    localStorage.setItem('profilePicture', profilePicture);
+    localStorage.setItem('preferences', JSON.stringify(preferences));
+}
+
+function restoreProfileState() {
+    const profilePicture = localStorage.getItem('profilePicture');
+    const preferences = JSON.parse(localStorage.getItem('preferences'));
+
+    if (profilePicture) {
+        document.getElementById('profilePicture').src = profilePicture;
+    }
+
+    if (preferences) {
+        Object.keys(preferences).forEach(key => {
+            const field = document.querySelector(`[name="${key}"]`);
+            if (field) field.value = preferences[key];
+        });
+    }
+}
+restoreProfileState();
+

@@ -3,8 +3,8 @@
 }
 
 body {
-  background: rgb(255,255,255);
-  background: linear-gradient(180deg, rgba(255,255,255,1) 25%, rgba(33,146,147,1) 51%, rgba(16,75,69,1) 90%);
+  background: rgb(255, 255, 255);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 25%, rgba(33, 146, 147, 1) 51%, rgba(16, 75, 69, 1) 90%);
 }
 
 footer {
@@ -51,7 +51,7 @@ footer {
 }
 
 .nav-logo a {
-  color: rgba(33,146,147,1);
+  color: rgba(33, 146, 147, 1);
 }
 
 #submit {
@@ -64,11 +64,25 @@ footer {
 }
 
 @keyframes colorChange {
-  0% { color: #175e60; }
-  25% { color: rgb(46, 175, 177); }
-  50% { color: #2cdde3; }
-  75% { color: #71f2f7; }
-  100% { color: #175e60; }
+  0% {
+    color: #175e60;
+  }
+
+  25% {
+    color: rgb(46, 175, 177);
+  }
+
+  50% {
+    color: #2cdde3;
+  }
+
+  75% {
+    color: #71f2f7;
+  }
+
+  100% {
+    color: #175e60;
+  }
 }
 
 #notefy {
@@ -83,7 +97,8 @@ footer {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  height: 600px; /* Increased height to fit more content */
+  height: 600px;
+  /* Increased height to fit more content */
   width: 90%;
 }
 
@@ -96,12 +111,13 @@ footer {
   justify-content: center;
   text-align: center;
   background-color: transparent;
-  padding: 35px; /* Added padding for spacing */
+  padding: 35px;
+  /* Added padding for spacing */
 }
 
 .arrow {
   position: absolute;
-  top: 50%;
+  top: 40%;
   transform: translateY(-50%);
   background-color: transparent;
   color: rgba(33, 146, 147, 1);
@@ -126,12 +142,14 @@ footer {
 }
 
 article img {
-  width:100%;
+  width: 100%;
 }
+
 article {
   padding-top: 3rem;
   padding-bottom: 1rem;
 }
+
 article p {
   margin: 0;
 }

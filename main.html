@@ -4,36 +4,42 @@
 <head>
   <title>NotEFY</title>
   <meta name="comp1800 template" content="My 1800 App">
-
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- CSS / Styles-->
   <link rel="stylesheet" type="text/css" href="/styles/style.css" />
   <link rel="stylesheet" type="text/css" href="/styles/main.css" />
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- FontAwesome Icons -->
   <script src="https://kit.fontawesome.com/62f3b3a061.js" crossorigin="anonymous"></script>
-  <!-- Bootstrap Library CSS CDN go here -->
+
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
     </script>
-  <!-- Boostrap Library JS CDN  go here -->
+
+  <!-- Firebase -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
-  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
-  <!-- Link to styles of your own -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Favicon-->
   <link rel="icon" type="image/png" href="images/logo.png">
 
 </head>
 
 <body>
   <header>
+    <!-- Navbar -->
     <nav class="navbar">
       <div class="nav-logo">
         <a href="main.html">
@@ -56,8 +62,9 @@
       </div>
     </nav>
   </header>
-  <section class="jumbotron text-center">
 
+  <!-- Find Event Section and Create button -->
+  <section class="jumbotron text-center">
     <div class="container text-center">
       <h2>Find Event By Category:</h2>
       <div class="filter-container">
@@ -67,42 +74,36 @@
           <button id="cancelFilter" class="filter-cancel-btn">
             <i class="fa fa-times" aria-hidden="true"></i>
           </button>
-
           <label><input type="checkbox" id="myevents" name="category" value="myevents"> My Events</label>
           <label><input type="checkbox" id="mypreferences" name="category" value="mypreferences"> My Preferences</label>
-          <label><input type="checkbox" id="sports" name="category" value="Sports"> Sports</label>
-          <label><input type="checkbox" id="clubs" name="category" value="Clubs"> Clubs</label>
-          <label><input type="checkbox" id="music" name="category" value="Music"> Music</label>
-          <label><input type="checkbox" id="art" name="category" value="Art"> Art</label>
-          <label><input type="checkbox" id="festivals" name="category" value="Festivals"> Festivals</label>
-          <label><input type="checkbox" id="networking" name="category" value="Networking"> Networking</label>
-          
-          
+          <label><input type="checkbox" id="sports" name="category" value="sports"> Sports</label>
+          <label><input type="checkbox" id="clubs" name="category" value="clubs"> Clubs</label>
+          <label><input type="checkbox" id="music" name="category" value="music"> Music</label>
+          <label><input type="checkbox" id="art" name="category" value="art"> Art</label>
+          <label><input type="checkbox" id="festivals" name="category" value="festivals"> Festivals</label>
+          <label><input type="checkbox" id="networking" name="category" value="networking"> Networking</label>
           <div class="filter-buttons">
             <button id="submitFilter" class="filter-submit-btn">Submit</button>
           </div>
-          
         </div>
       </div>
     </div>
-
     </div>
-
-
     <div class="container">
       <button id="createButton">Create</button>
     </div>
   </section>
   <div class="overlay" id="overlay"></div>
 
+  <!-- Creating Event Form -->
   <div class="popup" id="popup">
     <h2>Create Event</h2>
     <form id="eventForm">
       <label for="title">Event Title:</label><br>
       <input type="text" id="title" required><br><br>
-
       <img id="eventPreviewImage" src="/images/events/default.jpg" alt="Event Preview"
         style="width: 100%; max-height: 200px; object-fit: cover; margin-top: 10px;">
+<<<<<<< HEAD
 
       <label for="description">Description:</label><br>
       <textarea id="description" required></textarea><br><br>
@@ -119,6 +120,9 @@
       </div>
       
       <h4>Select category:</h4>
+=======
+        <h4>Select category:</h4>
+>>>>>>> f7165b50b1c4b8129b53e6b3cc697403a2b65df1
       <div class="category-container">
         <div class="category-row">
           <input type="radio" id="sports" name="preferences" value="sports"> Sports
@@ -131,42 +135,56 @@
           <input type="radio" id="networking" name="preferences" value="networking"> Networking
         </div>
       </div>
+<<<<<<< HEAD
       
 
       
+=======
+      <label for="description">Description:</label><br>
+      <textarea id="description" required></textarea><br><br>
+      <div class="field-container">
+        <div>
+          <label for="time">Time:</label><br>
+          <input type="datetime-local" id="time" required><br>
+        </div>
+        <div>
+          <label for="place">Place:</label><br>
+          <input type="text" id="place" required><br>
+        </div>
+      </div>
+>>>>>>> f7165b50b1c4b8129b53e6b3cc697403a2b65df1
       <button type="submit" id="submitButton">Submit Event</button>
-
     </form>
   </div>
 
-  <!-- Confirmation Popup Modal-->
-<div id="overlay"></div>
-<div id="confirmationPopup" style="display: none;">
+  <!-- Confirmation Popup -->
+  <div id="overlay"></div>
+  <div id="confirmationPopup" style="display: none;">
     <h2>Your event has been posted!</h2>
     <p>Your event details:</p>
     <div class="event-details">
-        <img id="confirmImage" src="" alt="Event Image" style="width: 100%; max-height: 200px; object-fit: cover; margin-bottom: 10px;">
-        <p><strong>Title:</strong> <span id="confirmTitle"></span></p>
-        <p><strong>Owner:</strong> <span id="confirmOwner"></span></p>
-        <p><strong>Date:</strong> <span id="confirmDate"></span></p>
-        <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
+      <img id="confirmImage" src="" alt="Event Image"
+        style="width: 100%; max-height: 200px; object-fit: cover; margin-bottom: 10px;">
+      <p><strong>Title:</strong> <span id="confirmTitle"></span></p>
+      <p><strong>Owner:</strong> <span id="confirmOwner"></span></p>
+      <p><strong>Date:</strong> <span id="confirmDate"></span></p>
+      <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
     </div>
     <div class="confirmation-buttons">
-        <button id="undoButton">Undo</button>
-        <button id="homeButton">Home</button>
+      <button id="undoButton">Undo</button>
+      <button id="homeButton">Home</button>
     </div>
-</div>
+  </div>
 
-
-  <!-- Keep the event creation popup separate -->
+  <!-- Event creation popup -->
   <div id="popup">
     <!-- Event creation form -->
   </div>
 
+  <!-- Events section -->
   <div id="eventList">
     <h2 id="upcoming">Upcoming Events:</h2>
   </div>
-
   <div class="album py-5 bg-light">
     <div class="container">
       <div class="row" id="events-container">
@@ -175,33 +193,33 @@
     </div>
   </div>
 
-
+  <!-- Footer -->
   <footer>
     <div class="footer-container">
-        <div class="footer-section">
-            <h4>About NotEFY</h4>
-            <p>NotEFY helps you discover exciting events and make new friends. Join us and never miss out!</p>
-        </div>
-        <div class="footer-section">
-            <ul class="social-links">
-                <li><a href="instagram"><i aria-hidden="true" class="fa-brands fa-instagram"></i><span
-                            class="fa-sr-only">Instagram</span></a></li>
-                <li><a href="x"><i aria-hidden="true" class="fa-brands fa-x-twitter"></i><span
-                            class="fa-sr-only">Twitter</span></a></li>
-                <li><a href="pinterest"><i aria-hidden="true" class="fa-brands fa-pinterest-p"></i><span
-                            class="fa-sr-only">Pinterest</span></a></li>
-                <li><a href="youtube"><i aria-hidden="true" class="fa-brands fa-youtube"></i><span
-                            class="fa-sr-only">Youtube</span></a></li>
-            </ul>
-        </div>
+      <div class="footer-section">
+        <h4>About NotEFY</h4>
+        <p>NotEFY helps you discover exciting events and make new friends. Join us and never miss out!</p>
+      </div>
+      <div class="footer-section">
+        <ul class="social-links">
+          <li><a href="instagram"><i aria-hidden="true" class="fa-brands fa-instagram"></i><span
+                class="fa-sr-only">Instagram</span></a></li>
+          <li><a href="x"><i aria-hidden="true" class="fa-brands fa-x-twitter"></i><span
+                class="fa-sr-only">Twitter</span></a></li>
+          <li><a href="pinterest"><i aria-hidden="true" class="fa-brands fa-pinterest-p"></i><span
+                class="fa-sr-only">Pinterest</span></a></li>
+          <li><a href="youtube"><i aria-hidden="true" class="fa-brands fa-youtube"></i><span
+                class="fa-sr-only">Youtube</span></a></li>
+        </ul>
+      </div>
 
-        <div class="footer-bottom">
-            <p>&copy; 2024 NotEFY. All Rights Reserved.</p>
-        </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 NotEFY. All Rights Reserved.</p>
+      </div>
     </div>
-</footer>
+  </footer>
 
-
+  <!-- Sticky Footer -->
   <div class="sticky-footer">
     <div class="footer-icons">
       <a href="main.html" class="footer-icon">
@@ -216,10 +234,9 @@
     </div>
   </div>
 
+  <!-- Scripts -->
   <script type="module" src="./scripts/firebaseAPI_TEAM29.js"></script>
   <script type="module" src="./scripts/main.js"></script>
 
-
 </body>
-
 </html>

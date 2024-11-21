@@ -114,7 +114,20 @@ function openConfirmationPopup(eventData) {
         confirmImage.src = eventData.picture || '/images/events/default.jpg'; // Default fallback image
         confirmTitle.innerText = eventData.title || 'No Title Provided';
         confirmOwner.innerText = eventData.owner || 'Unknown Owner';
-        confirmDate.innerText = eventData.time ? new Date(eventData.time).toLocaleString() : 'No Date Provided';
+
+        // Format the date based on its type
+        let eventDate = 'No Date Provided';
+        if (eventData.time) {
+            if (eventData.time.toDate) {
+                // Firestore Timestamp
+                eventDate = eventData.time.toDate().toLocaleString();
+            } else {
+                // String or Date object
+                eventDate = new Date(eventData.time).toLocaleString();
+            }
+        }
+        confirmDate.innerText = eventDate;
+
         confirmDescription.innerText = eventData.description || 'No Description Provided';
 
         // Show the modal
@@ -124,6 +137,7 @@ function openConfirmationPopup(eventData) {
         console.error('Error: One or more popup elements not found!');
     }
 }
+
 
 
 function closeConfirmationPopup() {
@@ -137,7 +151,7 @@ async function handleFormSubmit(event) {
 
     const title = document.getElementById('title')?.value || '';
     const description = document.getElementById('description')?.value || '';
-    const time = document.getElementById('time')?.value || '';
+    const time = document.getElementById('time')?.value ? firebase.firestore.Timestamp.fromDate(new Date(document.getElementById('time').value)) : null;
     const place = document.getElementById('place')?.value || '';
     const owner = currentUser?.displayName || 'Unknown Owner';
 
@@ -301,7 +315,7 @@ async function loadFilteredEvents(categories) {
 }
 
 function displayEvent(eventData, container) {
-    const fallbackImage = '/images/events/default.jpg'; 
+    const fallbackImage = '/images/events/default.jpg';
     const imagePath = eventData.picture || fallbackImage;
 
     console.log('Event Data:', eventData);
@@ -309,6 +323,14 @@ function displayEvent(eventData, container) {
 
     const eventCard = document.createElement('div');
     eventCard.className = 'col-md-4';
+
+    // Handle time formatting
+    let formattedTime = 'No Date Provided';
+    if (eventData.time) {
+        const eventDate = eventData.time.toDate ? eventData.time.toDate() : new Date(eventData.time);
+        formattedTime = eventDate.toLocaleString();
+    }
+
     eventCard.innerHTML = `
         <div class="card mb-4">
             <img src="${imagePath}" class="card-img-top" alt="${eventData.title}">
@@ -316,13 +338,14 @@ function displayEvent(eventData, container) {
                 <h5 class="card-title">${eventData.title}</h5>
                 <p class="card-text">${eventData.description}</p>
                 <p class="card-text"><strong>Owner:</strong> ${eventData.owner || 'Unknown Owner'}</p>
-                <p class="card-text"><strong>Time:</strong> ${new Date(eventData.time).toLocaleString()}</p>
+                <p class="card-text"><strong>Time:</strong> ${formattedTime}</p>
                 <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
             </div>
         </div>
     `;
     container.appendChild(eventCard);
 }
+
 
 
 
@@ -380,33 +403,41 @@ document.getElementById('logoutButton')?.addEventListener('click', () => {
 });
 
 // this function is called automatically each time the page loads to clean up firestore of old events
-var THRESHOLD = 30;
+var THRESHOLD_HOURS = 1; // Set the threshold to 1 hour
 function removeOldEvents() {
     db.collection("events")
         .get()
         .then(function (list) {
             list.forEach(function (doc) {
-                //get current time
+                // Get the current time
                 let d1 = new Date();
-                //get the document's timestamp, convert to JS data object
-                let d2 = doc.data().last_updated.toDate();
+                // Get the event's scheduled time (time of the event) and convert it to JS Date object
+                let d2 = doc.data().time.toDate(); 
 
-                //calculate the "days" difference
+                // Calculate the "time difference" between the current time and event's scheduled time
                 const timeDifference = Math.abs(d1 - d2);
-                const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
 
-                if (daysDifference > THRESHOLD) {
+                // Convert milliseconds to hours
+                const hoursDifference = timeDifference / (1000 * 60 * 60);
+
+                // Check if the time difference is greater than the threshold (1 hour) 
+                // and if the event's scheduled time has already passed
+                if (hoursDifference > THRESHOLD_HOURS && d1 > d2) {
                     db.collection("events").doc(doc.id).delete()
                         .then(() => {
                             console.log(`Deleted event: ${doc.id}`);
-                            //refresh the page after deletion
+                            // Optionally, refresh the page after deletion
                             location.reload();
                         })
-                        .catch((error) => console.error(`Error deleting events ${doc.id}:`, error));
+                        .catch((error) => console.error(`Error deleting event ${doc.id}:`, error));
                 }
             });
         })
         .catch((error) => console.error("Error fetching events: ", error));
 }
 
+
+
 removeOldEvents();
+
+

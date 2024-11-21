@@ -378,3 +378,35 @@ document.getElementById('logoutButton')?.addEventListener('click', () => {
         .then(() => console.log('User logged out'))
         .catch((error) => console.error("Logout error:", error));
 });
+
+// this function is called automatically each time the page loads to clean up firestore of old events
+var THRESHOLD = 30;
+function removeOldEvents() {
+    db.collection("events")
+        .get()
+        .then(function (list) {
+            list.forEach(function (doc) {
+                //get current time
+                let d1 = new Date();
+                //get the document's timestamp, convert to JS data object
+                let d2 = doc.data().last_updated.toDate();
+
+                //calculate the "days" difference
+                const timeDifference = Math.abs(d1 - d2);
+                const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+                if (daysDifference > THRESHOLD) {
+                    db.collection("events").doc(doc.id).delete()
+                        .then(() => {
+                            console.log(`Deleted event: ${doc.id}`);
+                            //refresh the page after deletion
+                            location.reload();
+                        })
+                        .catch((error) => console.error(`Error deleting events ${doc.id}:`, error));
+                }
+            });
+        })
+        .catch((error) => console.error("Error fetching events: ", error));
+}
+
+removeOldEvents();

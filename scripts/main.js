@@ -213,6 +213,7 @@ function handleUndo() {
 
     const timeElement = document.getElementById('time');
     if (timeElement) {
+        // Ensure the time is in the correct ISO format (YYYY-MM-DDTHH:mm)
         timeElement.value = tempEventData.time
             ? new Date(tempEventData.time).toISOString().slice(0, 16)
             : '';

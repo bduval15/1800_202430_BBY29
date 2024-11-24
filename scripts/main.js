@@ -344,7 +344,98 @@ function displayEvent(eventData, container) {
         </div>
     `;
     container.appendChild(eventCard);
+
+    eventCard.addEventListener('click', () => {
+        openEventDetailPopup(eventData);
+    });
+    
 }
+
+function openEventDetailPopup(eventData) {
+    const popup = document.getElementById('eventDetailPopup');
+    document.getElementById('eventTitle').innerText = eventData.title || 'No Title';
+    document.getElementById('eventImage').src = eventData.picture || '/images/events/default.jpg';
+    document.getElementById('eventDescription').innerText = eventData.description || 'No Description';
+    document.getElementById('eventTime').innerText = new Date(eventData.time).toLocaleString() || 'No Time';
+    document.getElementById('eventPlace').innerText = eventData.place || 'No Place';
+    document.getElementById('eventCategory').innerText = eventData.preferences || 'No Category';
+    document.getElementById('eventOwner').innerText = eventData.owner || 'Unknown Owner';
+
+    // Manage attendance
+    const attendeeCount = eventData.attendees?.length || 0;
+    document.getElementById('eventAttendeesCount').innerText = attendeeCount;
+
+    const joinButton = document.getElementById('joinEventButton');
+    const leaveButton = document.getElementById('leaveEventButton');
+    if (eventData.attendees?.includes(currentUser.uid)) {
+        joinButton.style.display = 'none';
+        leaveButton.style.display = 'block';
+    } else {
+        joinButton.style.display = 'block';
+        leaveButton.style.display = 'none';
+    }
+
+    joinButton.onclick = () => handleAttendance(eventData, true);
+    leaveButton.onclick = () => handleAttendance(eventData, false);
+
+    // Load additional pictures
+    const gallery = document.getElementById('eventGallery');
+    gallery.innerHTML = ''; // Clear existing images
+    (eventData.pictures || []).forEach((pic) => {
+        const img = document.createElement('img');
+        img.src = pic;
+        gallery.appendChild(img);
+    });
+
+    // Load comments
+    const commentsSection = document.getElementById('commentsSection');
+    commentsSection.innerHTML = ''; // Clear existing comments
+    (eventData.comments || []).forEach((comment) => {
+        const commentElement = document.createElement('p');
+        commentElement.innerText = `${comment.user}: ${comment.text}`;
+        commentsSection.appendChild(commentElement);
+    });
+
+    const postButton = document.getElementById('postCommentButton');
+    postButton.onclick = () => postComment(eventData);
+
+    popup.style.display = 'block';
+}
+
+function handleAttendance(eventData, isJoining) {
+    const eventRef = db.collection('events').doc(eventData.id);
+    eventRef.update({
+        attendees: isJoining
+            ? firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+            : firebase.firestore.FieldValue.arrayRemove(currentUser.uid),
+    }).then(() => {
+        console.log(isJoining ? 'Joined event' : 'Left event');
+        openEventDetailPopup({ ...eventData, attendees: isJoining 
+            ? [...(eventData.attendees || []), currentUser.uid] 
+            : (eventData.attendees || []).filter(uid => uid !== currentUser.uid) });
+    }).catch(console.error);
+}
+
+function postComment(eventData) {
+    const commentInput = document.getElementById('commentInput');
+    const comment = commentInput.value.trim();
+    if (!comment) return;
+
+    const eventRef = db.collection('events').doc(eventData.id);
+    eventRef.update({
+        comments: firebase.firestore.FieldValue.arrayUnion({
+            user: currentUser.displayName,
+            text: comment,
+        }),
+    }).then(() => {
+        commentInput.value = '';
+        openEventDetailPopup({
+            ...eventData,
+            comments: [...(eventData.comments || []), { user: currentUser.displayName, text: comment }],
+        });
+    }).catch(console.error);
+}
+
 
 
 

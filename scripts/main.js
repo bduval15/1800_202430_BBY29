@@ -509,30 +509,32 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.row .col-3').forEach((category) => {
         category.addEventListener('click', () => {
             const selectedCategory = category.querySelector('p').textContent.trim().toLowerCase().replace(' ', '');
-
             const categoryKey = selectedCategory === 'foryou' ? 'mypreferences' : selectedCategory;
 
+            // Toggle active state
+            if (activeFilters.has(categoryKey)) {
+                activeFilters.delete(categoryKey);
+                category.classList.remove('active');
+                console.log(`Deactivated Filter: ${categoryKey}`);
+            } else {
+                activeFilters.add(categoryKey);
+                category.classList.add('active');
+                console.log(`Activated Filter: ${categoryKey}`);
+            }
 
-            // Category Dropdown and Filters
-            function setupCategoryDropdown() {
-                const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
-                const dropdownContent = document.getElementById('dropdownContent');
-
-                if (activeFilters.has(categoryKey)) {
-                    activeFilters.delete(categoryKey);
-                    category.classList.remove('active');
-                    console.log(`Deactivated Filter: ${categoryKey}`);
-                } else {
-                    activeFilters.add(categoryKey);
-                    category.classList.add('active');
-                    console.log(`Activated Filter: ${categoryKey}`);
-                }
-
-
-                loadFilteredEvents([...activeFilters]);
-            });
+            // Load events based on active filters
+            loadFilteredEvents([...activeFilters]);
+        });
     });
+
+    // Optional: Define setupCategoryDropdown if it’s used elsewhere
+    function setupCategoryDropdown() {
+        const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
+        const dropdownContent = document.getElementById('dropdownContent');
+        // Logic for setting up the dropdown (not shown here)
+    }
 });
+
 
 function updateSelectedCategoriesDisplay() {
     const categoryLabels = {

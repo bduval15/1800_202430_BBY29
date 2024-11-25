@@ -174,3 +174,107 @@ textarea#commentInput {
 #commentsSection {
   margin-top: 10px;
 }
+
+#eventOwnerContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+#eventOwnerContainer img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
+#eventDescriptionContainer {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+#eventAttendanceContainer {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+#eventAttendanceContainer div {
+  display: flex;
+  gap: 10px;
+}
+
+#eventAttendanceContainer button {
+  flex: 1;
+}
+
+textarea#commentInput {
+  width: 100%;
+  height: 60px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button#postCommentButton {
+  margin-top: 10px;
+}
+
+#eventAttendanceContainer {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+#eventAttendanceContainer div {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+#leaveEventButton, #joinEventButton {
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#leaveEventButton {
+  background-color: #ff4b5c;
+  color: white;
+}
+
+#joinEventButton {
+  background-color: #175e60;
+  color: white;
+}
+
+#likeButton {
+  font-size: 32px; /* Increase size for prominence */
+  color: #ffa3a3;
+  cursor: pointer;
+  margin-left: auto; /* Push it to the far right */
+}
+
+#postCommentButton {
+  font-size: 16px; /* Adjust size for balance */
+  width: 50%; /* Half-width button */
+  padding: 8px 12px;
+  background-color: #175e60; /* Ensure consistent theme */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#postCommentButton:hover {
+  background-color: #226d5e; /* Optional hover effect */
+}
+

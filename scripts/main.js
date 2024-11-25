@@ -45,7 +45,7 @@ function initializeEventHandlers() {
     // Open/close event creation popup
     document.getElementById('createButton')?.addEventListener('click', openPopup);
     document.getElementById('overlay')?.addEventListener('click', closePopup);
-    document.getElementById('createIcon')?.addEventListener("click", openPopup);
+    document.getElementById('createIcon')?.addEventListener('click', openPopup);
 
     // Form submission
     document.getElementById('eventForm')?.addEventListener('submit', handleFormSubmit);
@@ -54,7 +54,7 @@ function initializeEventHandlers() {
     document.getElementById('undoButton')?.addEventListener('click', handleUndo);
     document.getElementById('homeButton')?.addEventListener('click', () => {
         closeConfirmationPopup();
-        window.location.href = 'main.html'; 
+        window.location.href = 'main.html';
     });
 
     // Category dropdown and filters
@@ -79,7 +79,17 @@ function initializeEventHandlers() {
             dropdownContent.style.display = 'none';
         }
     });
+
+    // **Close Event Detail Popup**
+    const closePopupButton = document.getElementById('closeEventPopup');
+    if (closePopupButton) {
+        closePopupButton.addEventListener('click', () => {
+            document.getElementById('eventDetailPopup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none'; // Optional: also hide the overlay
+        });
+    }
 }
+
 
 // Popup Controls
 function openPopup() {
@@ -354,21 +364,32 @@ function displayEvent(eventData, container) {
 
 function openEventDetailPopup(eventData) {
     const popup = document.getElementById('eventDetailPopup');
+    
+    // Title and Image
     document.getElementById('eventTitle').innerText = eventData.title || 'No Title';
     document.getElementById('eventImage').src = eventData.picture || '/images/events/default.jpg';
-    document.getElementById('eventDescription').innerText = eventData.description || 'No Description';
-    document.getElementById('eventTime').innerText = new Date(eventData.time).toLocaleString() || 'No Time';
-    document.getElementById('eventPlace').innerText = eventData.place || 'No Place';
-    document.getElementById('eventCategory').innerText = eventData.preferences || 'No Category';
+
+    // Owner Information
+    document.getElementById('ownerProfileImage').src = eventData.ownerProfileImage || '/images/default-profile.png';
     document.getElementById('eventOwner').innerText = eventData.owner || 'Unknown Owner';
 
-    // Manage attendance
+    // Description
+    document.getElementById('eventDescription').innerText = eventData.description || 'No Description';
+
+    // Time and Place
+    document.getElementById('eventTime').innerText = eventData.time
+        ? new Date(eventData.time).toLocaleString()
+        : 'No Time Provided';
+    document.getElementById('eventPlace').innerText = eventData.place || 'No Place';
+
+    // Attendance Management
     const attendeeCount = eventData.attendees?.length || 0;
     document.getElementById('eventAttendeesCount').innerText = attendeeCount;
 
     const joinButton = document.getElementById('joinEventButton');
     const leaveButton = document.getElementById('leaveEventButton');
-    if (eventData.attendees?.includes(currentUser.uid)) {
+
+    if (eventData.attendees?.includes(currentUser?.uid)) {
         joinButton.style.display = 'none';
         leaveButton.style.display = 'block';
     } else {
@@ -379,63 +400,89 @@ function openEventDetailPopup(eventData) {
     joinButton.onclick = () => handleAttendance(eventData, true);
     leaveButton.onclick = () => handleAttendance(eventData, false);
 
-    // Load additional pictures
-    const gallery = document.getElementById('eventGallery');
-    gallery.innerHTML = ''; // Clear existing images
-    (eventData.pictures || []).forEach((pic) => {
-        const img = document.createElement('img');
-        img.src = pic;
-        gallery.appendChild(img);
-    });
-
-    // Load comments
+    // Comments Section
     const commentsSection = document.getElementById('commentsSection');
     commentsSection.innerHTML = ''; // Clear existing comments
     (eventData.comments || []).forEach((comment) => {
         const commentElement = document.createElement('p');
-        commentElement.innerText = `${comment.user}: ${comment.text}`;
+        commentElement.innerHTML = `<strong>${comment.user}:</strong> ${comment.text}`;
         commentsSection.appendChild(commentElement);
     });
 
+    // Post Comment Button
     const postButton = document.getElementById('postCommentButton');
     postButton.onclick = () => postComment(eventData);
 
+    // Like Button
+    const likeButton = document.getElementById('likeButton');
+    likeButton.onclick = () => {
+        console.log('Liked the event');
+        likeButton.style.color = likeButton.style.color === '#ffa3a3' ? '#ccc' : '#ffa3a3'; // Toggle color
+    };
+
+    // Show the popup
     popup.style.display = 'block';
+    document.getElementById('overlay').style.display = 'block'; // Optional: overlay
 }
 
 function handleAttendance(eventData, isJoining) {
-    const eventRef = db.collection('events').doc(eventData.id);
-    eventRef.update({
-        attendees: isJoining
-            ? firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
-            : firebase.firestore.FieldValue.arrayRemove(currentUser.uid),
+    const userId = currentUser?.uid;
+    if (!userId) return;
+
+    if (isJoining) {
+        // Add user to attendees
+        if (!eventData.attendees) eventData.attendees = [];
+        if (!eventData.attendees.includes(userId)) {
+            eventData.attendees.push(userId);
+        }
+    } else {
+        // Remove user from attendees
+        if (eventData.attendees && eventData.attendees.includes(userId)) {
+            eventData.attendees = eventData.attendees.filter((id) => id !== userId);
+        }
+    }
+
+    // Update the database (e.g., Firestore)
+    db.collection('events').doc(eventData.id).update({
+        attendees: eventData.attendees,
     }).then(() => {
         console.log(isJoining ? 'Joined event' : 'Left event');
-        openEventDetailPopup({ ...eventData, attendees: isJoining 
-            ? [...(eventData.attendees || []), currentUser.uid] 
-            : (eventData.attendees || []).filter(uid => uid !== currentUser.uid) });
-    }).catch(console.error);
+        openEventDetailPopup(eventData); // Refresh the popup
+    }).catch((error) => {
+        console.error('Error updating attendance:', error);
+    });
 }
+
 
 function postComment(eventData) {
     const commentInput = document.getElementById('commentInput');
-    const comment = commentInput.value.trim();
-    if (!comment) return;
+    const commentText = commentInput.value.trim();
+
+    if (!commentText) {
+        alert("Comment cannot be empty!");
+        return;
+    }
+
+    const userComment = {
+        user: currentUser?.displayName || 'Anonymous',
+        text: commentText,
+        timestamp: new Date().toISOString(),
+    };
 
     const eventRef = db.collection('events').doc(eventData.id);
+
     eventRef.update({
-        comments: firebase.firestore.FieldValue.arrayUnion({
-            user: currentUser.displayName,
-            text: comment,
-        }),
+        comments: firebase.firestore.FieldValue.arrayUnion(userComment),
     }).then(() => {
-        commentInput.value = '';
-        openEventDetailPopup({
-            ...eventData,
-            comments: [...(eventData.comments || []), { user: currentUser.displayName, text: comment }],
-        });
-    }).catch(console.error);
+        console.log("Comment added successfully");
+        commentInput.value = ''; // Clear the input
+        eventData.comments = [...(eventData.comments || []), userComment];
+        openEventDetailPopup(eventData); // Refresh popup to show the new comment
+    }).catch((error) => {
+        console.error("Error adding comment:", error);
+    });
 }
+
 
 
 

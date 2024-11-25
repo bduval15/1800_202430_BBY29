@@ -194,32 +194,35 @@
   </div>
 
   <!-- Event Detail Popup -->
-<div id="eventDetailPopup" class="popup" style="display: none;">
-  <button id="closeEventPopup" class="close-popup">X</button>
-  <h2 id="eventTitle"></h2>
-  <img id="eventImage" alt="Event Image" style="width: 100%; max-height: 200px; object-fit: cover; margin-bottom: 10px;">
-  <p><strong>Description:</strong> <span id="eventDescription"></span></p>
-  <p><strong>Time:</strong> <span id="eventTime"></span></p>
-  <p><strong>Place:</strong> <span id="eventPlace"></span></p>
-  <p><strong>Category:</strong> <span id="eventCategory"></span></p>
-  <p><strong>Owner:</strong> <span id="eventOwner"></span></p>
+  <div id="eventDetailPopup" class="popup" style="display: none;">
+    <button id="closeEventPopup" class="close-popup">X</button>
+    <h2 id="eventTitle"></h2>
+    <img id="eventImage" alt="Event Image"
+      style="width: 100%; max-height: 200px; object-fit: cover; margin-bottom: 10px;">
+    <p><strong>Description:</strong> <span id="eventDescription"></span></p>
+    <p><strong>Time:</strong> <span id="eventTime"></span></p>
+    <p><strong>Place:</strong> <span id="eventPlace"></span></p>
+    <p><strong>Category:</strong> <span id="eventCategory"></span></p>
+    <p><strong>Owner:</strong> <span id="eventOwner"></span></p>
+    <p><strong>Price:</strong> <span id="eventPrice"></span></p>
 
-  <!-- Attendance Section -->
-  <h4>Attendance</h4>
-  <p><span id="eventAttendeesCount">0</span> people are attending</p>
-  <button id="joinEventButton">Join Event</button>
-  <button id="leaveEventButton" style="display: none;">Leave Event</button>
+    <!-- Attendance Section -->
+    <h4>Attendance</h4>
+    <p><span id="eventAttendeesCount">0</span> people are attending</p>
+    <button id="joinEventButton">Join Event</button>
+    <button id="leaveEventButton" style="display: none;">Leave Event</button>
 
-  <!-- Additional Pictures Section -->
-  <h4>Gallery</h4>
-  <div id="eventGallery" class="gallery"></div>
+    <!-- Additional Pictures Section -->
+    <h4>Gallery</h4>
+    <div id="eventGallery" class="gallery"></div>
 
-  <!-- Comments Section -->
-  <h4>Questions & Comments</h4>
-  <textarea id="commentInput" placeholder="Ask a question or leave a comment"></textarea>
-  <button id="postCommentButton">Post Comment</button>
-  <div id="commentsSection"></div>
-</div>
+    <!-- Comments Section -->
+    <h4>Questions & Comments</h4>
+    <textarea id="commentInput" placeholder="Ask a question or leave a comment"></textarea>
+    <button id="postCommentButton">Post Comment</button>
+    <div id="commentsSection"></div>
+  </div>
+
 
   <!-- Events section -->
   <div id="eventList">

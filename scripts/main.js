@@ -435,9 +435,6 @@ function removeOldEvents() {
         })
         .catch((error) => console.error("Error fetching events: ", error));
 }
-
-
-
 removeOldEvents();
 
 

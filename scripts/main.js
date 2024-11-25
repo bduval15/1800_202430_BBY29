@@ -271,31 +271,50 @@ async function loadEvents() {
         console.error("Error loading events:", error);
     }
 }
+// Map "For You" to "mypreferences"
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.row .col-3').forEach((category) => {
+        category.addEventListener('click', () => {
+            const selectedCategory = category.querySelector('p').textContent.trim().toLowerCase().replace(' ', '');
+
+            const categoryKey = selectedCategory === 'foryou' ? 'mypreferences' : selectedCategory;
+
+            console.log(`Selected Category: ${categoryKey}`);
+            loadFilteredEvents([categoryKey]);
+        });
+    });
+});
+
 
 async function loadFilteredEvents(categories) {
     const eventsContainer = document.getElementById('events-container');
-    eventsContainer.innerHTML = '';
+    eventsContainer.innerHTML = ''; 
 
     try {
         let userPreferences = [];
+
         if (categories.includes('mypreferences') && currentUser) {
             const profileDoc = await db.collection('profileSettings').doc(currentUser.uid).get();
             if (profileDoc.exists) {
                 const preferencesObject = profileDoc.data().preferences || {};
-                userPreferences = Object.keys(preferencesObject).filter(pref => preferencesObject[pref]);
+                userPreferences = Object.keys(preferencesObject).filter(key => preferencesObject[key]);
+                console.log("User Preferences for 'mypreferences':", userPreferences);
+            } else {
+                console.warn("No preferences found for the user.");
             }
         }
 
         const snapshot = await db.collection('events').orderBy('timestamp', 'desc').get();
         snapshot.forEach((doc) => {
             const eventData = doc.data();
+            console.log("Event Data:", eventData);
 
             const matchesCategory = categories.some(category =>
-                eventData.preferences && eventData.preferences[category.toLowerCase()]
+                eventData.preferences && eventData.preferences.toLowerCase() === category
             );
 
             const matchesUserPreferences = userPreferences.some(preference =>
-                eventData.preferences && eventData.preferences[preference]
+                eventData.preferences && eventData.preferences.toLowerCase() === preference.toLowerCase()
             );
 
             const isMyEvent = categories.includes('myevents') &&
@@ -314,6 +333,10 @@ async function loadFilteredEvents(categories) {
         console.error("Error loading filtered events:", error);
     }
 }
+
+
+
+
 
 function displayEvent(eventData, container) {
     const fallbackImage = '/images/events/default.jpg';
@@ -459,19 +482,47 @@ function setupCategoryDropdown() {
         loadFilteredEvents(selectedCategories);
         dropdownContent.style.display = 'none';
     });
-
+    
     document.getElementById('cancelFilter')?.addEventListener('click', () => {
         document.querySelectorAll('input[name="category"]').forEach(cb => cb.checked = false);
         selectedCategoriesDisplay.value = 'Select Categories';
-        loadEvents();
+        loadEvents(); 
         dropdownContent.style.display = 'none';
     });
+    
 }
+// Keep Track of Active Filters 
+document.addEventListener('DOMContentLoaded', () => {
+    const activeFilters = new Set(); 
+
+    document.querySelectorAll('.row .col-3').forEach((category) => {
+        category.addEventListener('click', () => {
+            const selectedCategory = category.querySelector('p').textContent.trim().toLowerCase().replace(' ', '');
+
+            const categoryKey = selectedCategory === 'foryou' ? 'mypreferences' : selectedCategory;
+
+            if (activeFilters.has(categoryKey)) {
+                activeFilters.delete(categoryKey);
+                category.classList.remove('active');
+                console.log(`Deactivated Filter: ${categoryKey}`);
+            } else {
+                activeFilters.add(categoryKey);
+                category.classList.add('active');
+                console.log(`Activated Filter: ${categoryKey}`);
+            }
+
+            loadFilteredEvents([...activeFilters]);
+        });
+    });
+});
+
+
+
 
 function updateSelectedCategoriesDisplay() {
     const categoryLabels = {
         myevents: "My Events",
-        mypreferences: "My Preferences",
+        mypreferences: "For You",
         sports: "Sports",
         clubs: "Clubs",
         music: "Music",
@@ -527,9 +578,6 @@ function removeOldEvents() {
         })
         .catch((error) => console.error("Error fetching events: ", error));
 }
-
-
-
 removeOldEvents();
 
 function togglePriceInput() {

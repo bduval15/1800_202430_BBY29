@@ -66,32 +66,55 @@
   <!-- Find Event Section and Create button -->
   <section class="jumbotron text-center">
     <div class="container text-center">
-      <div class="filter-container">
-        <input type="text" id="selectedCategoriesDisplay" placeholder="Find by category" readonly
-          class="filter-input" />
-        <div id="dropdownContent" class="filter-dropdown">
-          <button id="cancelFilter" class="filter-cancel-btn">
-            <i class="fa fa-times" aria-hidden="true"></i>
-          </button>
-          <label><input type="checkbox" id="myevents" name="category" value="myevents"> My Events</label>
-          <label><input type="checkbox" id="mypreferences" name="category" value="mypreferences"> My Preferences</label>
-          <label><input type="checkbox" id="sports" name="category" value="sports"> Sports</label>
-          <label><input type="checkbox" id="clubs" name="category" value="clubs"> Clubs</label>
-          <label><input type="checkbox" id="music" name="category" value="music"> Music</label>
-          <label><input type="checkbox" id="art" name="category" value="art"> Art</label>
-          <label><input type="checkbox" id="festivals" name="category" value="festivals"> Festivals</label>
-          <label><input type="checkbox" id="networking" name="category" value="networking"> Networking</label>
-          <div class="filter-buttons">
-            <button id="submitFilter" class="filter-submit-btn">Submit</button>
-          </div>
+      <!-- Categories Section -->
+      <div class="row justify-content-center mb-4">
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-calendar-alt category-icon"></i>
+          <p>My Events</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-heart category-icon"></i>
+          <p>For You</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-football-ball category-icon"></i>
+          <p>Sports</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-users category-icon"></i>
+          <p>Clubs</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-music category-icon"></i>
+          <p>Music</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-paint-brush category-icon"></i>
+          <p>Art</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-theater-masks category-icon"></i>
+          <p>Festivals</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-handshake category-icon"></i>
+          <p>Networking</p>
+        </div>
+      </div>
+  
+      <!-- Filters Section -->
+      <div class="filter-section text-center">
+        <div class="filter-tabs mt-3">
+          <button class="filter-btn">Most Popular</button>
+          <button class="filter-btn">Newest</button>
+          <button class="filter-btn">Today</button>
+          <button class="filter-btn">This Weekend</button>
+          <button class="filter-btn">Free</button>
         </div>
       </div>
     </div>
-    </div>
-    <div class="container">
-      <button id="createButton">Create New Event</button>
-    </div>
   </section>
+  
   <div class="overlay" id="overlay"></div>
 
   <!-- Creating Event Form -->

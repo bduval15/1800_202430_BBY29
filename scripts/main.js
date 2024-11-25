@@ -532,4 +532,17 @@ function removeOldEvents() {
 
 removeOldEvents();
 
+function togglePriceInput() {
+    const freeOption = document.getElementById('free');
+    const priceInput = document.getElementById('priceInput');
+
+    if (freeOption.checked) {
+        priceInput.disabled = true; // Disable the input if "Free" is selected
+        priceInput.value = ''; // Clear the input value
+    } else {
+        priceInput.disabled = false; // Enable the input if "Paid" is selected
+    }
+}
+
+
 

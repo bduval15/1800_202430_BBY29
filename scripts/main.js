@@ -382,66 +382,81 @@ function displayEvent(eventData, container) {
 
 function openEventDetailPopup(eventData) {
     const popup = document.getElementById('eventDetailPopup');
+    const overlay = document.getElementById('overlay');
 
-    // Title and Image
-    document.getElementById('eventTitle').innerText = eventData.title || 'No Title';
-    document.getElementById('eventImage').src = eventData.picture || '/images/events/default.jpg';
+    if (!popup || !overlay) {
+        console.error("Popup or overlay elements are missing!");
+        return;
+    }
 
-    // Owner Information
-    document.getElementById('ownerProfileImage').src = eventData.ownerProfileImage || '/images/default-profile.png';
-    document.getElementById('eventOwner').innerText = eventData.owner || 'Unknown Owner';
+    const eventTitle = document.getElementById('eventTitle');
+    if (eventTitle) eventTitle.innerText = eventData.title || 'No Title';
 
-    // Description
-    document.getElementById('eventDescription').innerText = eventData.description || 'No Description';
+    const eventImage = document.getElementById('eventImage');
+    if (eventImage) eventImage.src = eventData.picture || '/images/events/default.jpg';
 
-    // Time and Place
-    document.getElementById('eventTime').innerText = eventData.time
+    const ownerProfileImage = document.getElementById('ownerProfileImage');
+    if (ownerProfileImage) ownerProfileImage.src = eventData.ownerProfileImage || '/images/default-profile.png';
+
+    const eventOwner = document.getElementById('eventOwner');
+    if (eventOwner) eventOwner.innerText = eventData.owner || 'Unknown Owner';
+
+    const eventDescription = document.getElementById('eventDescription');
+    if (eventDescription) eventDescription.innerText = eventData.description || 'No Description';
+
+    const eventTime = document.getElementById('eventTime');
+    if (eventTime) eventTime.innerText = eventData.time
         ? new Date(eventData.time).toLocaleString()
         : 'No Time Provided';
-    document.getElementById('eventPlace').innerText = eventData.place || 'No Place';
 
-    // Attendance Management
-    const attendeeCount = eventData.attendees?.length || 0;
-    document.getElementById('eventAttendeesCount').innerText = attendeeCount;
+    const eventPlace = document.getElementById('eventPlace');
+    if (eventPlace) eventPlace.innerText = eventData.place || 'No Place';
+
+    const attendeesCount = document.getElementById('eventAttendeesCount');
+    if (attendeesCount) attendeesCount.innerText = eventData.attendees?.length || 0;
 
     const joinButton = document.getElementById('joinEventButton');
     const leaveButton = document.getElementById('leaveEventButton');
 
-    if (eventData.attendees?.includes(currentUser?.uid)) {
-        joinButton.style.display = 'none';
-        leaveButton.style.display = 'block';
-    } else {
-        joinButton.style.display = 'block';
-        leaveButton.style.display = 'none';
+    if (joinButton && leaveButton) {
+        if (eventData.attendees?.includes(currentUser?.uid)) {
+            joinButton.style.display = 'none';
+            leaveButton.style.display = 'block';
+        } else {
+            joinButton.style.display = 'block';
+            leaveButton.style.display = 'none';
+        }
+
+        joinButton.onclick = () => handleAttendance(eventData, true);
+        leaveButton.onclick = () => handleAttendance(eventData, false);
     }
 
-    joinButton.onclick = () => handleAttendance(eventData, true);
-    leaveButton.onclick = () => handleAttendance(eventData, false);
-
-    // Comments Section
     const commentsSection = document.getElementById('commentsSection');
-    commentsSection.innerHTML = ''; // Clear existing comments
-    (eventData.comments || []).forEach((comment) => {
-        const commentElement = document.createElement('p');
-        commentElement.innerHTML = `<strong>${comment.user}:</strong> ${comment.text}`;
-        commentsSection.appendChild(commentElement);
-    });
+    if (commentsSection) {
+        commentsSection.innerHTML = '';
+        (eventData.comments || []).forEach((comment) => {
+            const commentElement = document.createElement('p');
+            commentElement.innerHTML = `<strong>${comment.user}:</strong> ${comment.text}`;
+            commentsSection.appendChild(commentElement);
+        });
+    }
 
-    // Post Comment Button
     const postButton = document.getElementById('postCommentButton');
-    postButton.onclick = () => postComment(eventData);
+    if (postButton) postButton.onclick = () => postComment(eventData);
 
-    // Like Button
     const likeButton = document.getElementById('likeButton');
-    likeButton.onclick = () => {
-        console.log('Liked the event');
-        likeButton.style.color = likeButton.style.color === '#ffa3a3' ? '#ccc' : '#ffa3a3'; // Toggle color
-    };
+    if (likeButton) {
+        likeButton.onclick = () => {
+            console.log('Liked the event');
+            likeButton.style.color = likeButton.style.color === '#ffa3a3' ? '#ccc' : '#ffa3a3';
+        };
+    }
 
     // Show the popup
     popup.style.display = 'block';
-    document.getElementById('overlay').style.display = 'block'; // Optional: overlay
+    overlay.style.display = 'block';
 }
+
 
 function handleAttendance(eventData, isJoining) {
     const userId = currentUser?.uid;

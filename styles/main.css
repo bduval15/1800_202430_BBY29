@@ -175,6 +175,16 @@ textarea#commentInput {
   margin-top: 10px;
 }
 
+
+label {
+  font-weight: bold;
+}
+.small-input {
+  width: 120px; /* Adjust as needed */
+  padding: 5px; /* Optional: For better alignment */
+  font-size: 14px; /* Optional: Adjust text size */
+}
+
 /* Categories Section */
 .categories-section {
   margin: 20px 0;
@@ -280,6 +290,3 @@ textarea#commentInput {
 .col-3:hover p {
   color: #2ab3b8;
 }
-
-
-

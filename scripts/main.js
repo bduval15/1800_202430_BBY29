@@ -1,10 +1,9 @@
-// Firebase Firestore and Authentication Setup
+// ========================== AUTHENTICATION ==========================
 const db = firebase.firestore();
 const auth = firebase.auth();
 let currentUser = null;
-let tempEventData = null; // Temporary storage for event data
+let tempEventData = null;
 
-// Authentication State Listener
 auth.onAuthStateChanged((user) => {
     if (user) {
         currentUser = user;
@@ -30,7 +29,7 @@ const eventCategoryImages = {
 // DOMContentLoaded Listener
 document.addEventListener('DOMContentLoaded', () => {
     initializeEventHandlers();
-    loadEvents();
+    loadFilteredEvents();
 
     // Open event creation form if flagged in localStorage
     const shouldOpenForm = localStorage.getItem('openCreateEventForm');
@@ -57,9 +56,6 @@ function initializeEventHandlers() {
         window.location.href = 'main.html';
     });
 
-    // Category dropdown and filters
-    setupCategoryDropdown();
-
     // Live preview for event image based on category selection
     document.querySelectorAll('input[name="preferences"]').forEach((checkbox) => {
         checkbox.addEventListener('change', () => {
@@ -70,6 +66,7 @@ function initializeEventHandlers() {
             }
         });
     });
+
 
     // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
@@ -88,6 +85,7 @@ function initializeEventHandlers() {
             document.getElementById('overlay').style.display = 'none'; // Optional: also hide the overlay
         });
     }
+
 }
 
 
@@ -241,8 +239,6 @@ function handleUndo() {
     openPopup();
 }
 
-
-
 // Navbar Profile Picture
 async function updateNavbarProfilePicture() {
     if (!currentUser) return;
@@ -266,53 +262,74 @@ async function updateNavbarProfilePicture() {
     }
 }
 
-// Event Loading and Filtering
-async function loadEvents() {
+async function loadFilteredEvents(categories = []) {
     const eventsContainer = document.getElementById('events-container');
-    eventsContainer.innerHTML = '';
-
-    try {
-        const snapshot = await db.collection('events').orderBy('timestamp', 'desc').get();
-        snapshot.forEach((doc) => {
-            const eventData = doc.data();
-            displayEvent(eventData, eventsContainer);
-        });
-    } catch (error) {
-        console.error("Error loading events:", error);
-    }
-}
-
-async function loadFilteredEvents(categories) {
-    const eventsContainer = document.getElementById('events-container');
-    eventsContainer.innerHTML = '';
+    const upcomingHeader = document.getElementById('upcoming');
+    eventsContainer.innerHTML = ''; // Clear existing events
 
     try {
         let userPreferences = [];
+
+        // Check if "mypreferences" (For You) is included
         if (categories.includes('mypreferences') && currentUser) {
             const profileDoc = await db.collection('profileSettings').doc(currentUser.uid).get();
             if (profileDoc.exists) {
                 const preferencesObject = profileDoc.data().preferences || {};
-                userPreferences = Object.keys(preferencesObject).filter(pref => preferencesObject[pref]);
+                userPreferences = Object.keys(preferencesObject).filter(key => preferencesObject[key]);
+                console.log("User Preferences:", userPreferences);
+            } else {
+                console.warn("No preferences found for the user.");
             }
         }
 
+        // Default to "All Events" if no categories are active
+        if (categories.length === 0) {
+            upcomingHeader.innerText = "All Events"; // Default header
+        } else {
+            const categoryLabels = {
+                myevents: "My Events",
+                mypreferences: "Recommended for You",
+                sports: "Sports",
+                clubs: "Clubs",
+                music: "Music",
+                art: "Art",
+                festivals: "Festivals",
+                networking: "Networking"
+            };
+
+            // Generate a header string for active filters
+            const activeCategoryLabels = categories.map(cat => categoryLabels[cat] || cat);
+            upcomingHeader.innerText = activeCategoryLabels.join(" / ");
+        }
+
+        // Fetch events from Firestore
         const snapshot = await db.collection('events').orderBy('timestamp', 'desc').get();
+
+        if (snapshot.empty) {
+            console.warn("No events found in the database.");
+            return;
+        }
+
         snapshot.forEach((doc) => {
             const eventData = doc.data();
 
+            // Check if the event matches any selected category
             const matchesCategory = categories.some(category =>
-                eventData.preferences && eventData.preferences[category.toLowerCase()]
+                eventData.preferences && eventData.preferences.toLowerCase() === category
             );
 
+            // Check if the event matches user preferences (For You)
             const matchesUserPreferences = userPreferences.some(preference =>
-                eventData.preferences && eventData.preferences[preference]
+                eventData.preferences && eventData.preferences.toLowerCase() === preference.toLowerCase()
             );
 
+            // Check if the event belongs to the current user (My Events filter)
             const isMyEvent = categories.includes('myevents') &&
                 eventData.owner === (currentUser?.displayName || '');
 
+            // Display the event if it matches any filter or if no filters are active
             if (
-                categories.length === 0 ||
+                categories.length === 0 || // Show all events if no filters are active
                 matchesCategory ||
                 (categories.includes('mypreferences') && matchesUserPreferences) ||
                 isMyEvent
@@ -324,6 +341,7 @@ async function loadFilteredEvents(categories) {
         console.error("Error loading filtered events:", error);
     }
 }
+
 
 function displayEvent(eventData, container) {
     const fallbackImage = '/images/events/default.jpg';
@@ -359,12 +377,12 @@ function displayEvent(eventData, container) {
     eventCard.addEventListener('click', () => {
         openEventDetailPopup(eventData);
     });
-    
+
 }
 
 function openEventDetailPopup(eventData) {
     const popup = document.getElementById('eventDetailPopup');
-    
+
     // Title and Image
     document.getElementById('eventTitle').innerText = eventData.title || 'No Title';
     document.getElementById('eventImage').src = eventData.picture || '/images/events/default.jpg';
@@ -484,41 +502,42 @@ function postComment(eventData) {
 }
 
 
+// Keep Track of Active Filters 
+document.addEventListener('DOMContentLoaded', () => {
+    const activeFilters = new Set();
+
+    document.querySelectorAll('.row .col-3').forEach((category) => {
+        category.addEventListener('click', () => {
+            const selectedCategory = category.querySelector('p').textContent.trim().toLowerCase().replace(' ', '');
+
+            const categoryKey = selectedCategory === 'foryou' ? 'mypreferences' : selectedCategory;
 
 
+            // Category Dropdown and Filters
+            function setupCategoryDropdown() {
+                const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
+                const dropdownContent = document.getElementById('dropdownContent');
+
+                if (activeFilters.has(categoryKey)) {
+                    activeFilters.delete(categoryKey);
+                    category.classList.remove('active');
+                    console.log(`Deactivated Filter: ${categoryKey}`);
+                } else {
+                    activeFilters.add(categoryKey);
+                    category.classList.add('active');
+                    console.log(`Activated Filter: ${categoryKey}`);
+                }
 
 
-// Category Dropdown and Filters
-function setupCategoryDropdown() {
-    const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
-    const dropdownContent = document.getElementById('dropdownContent');
-
-    selectedCategoriesDisplay?.addEventListener('click', () => {
-        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+                loadFilteredEvents([...activeFilters]);
+            });
     });
-
-    document.querySelectorAll('input[name="category"]').forEach((checkbox) => {
-        checkbox.addEventListener('change', updateSelectedCategoriesDisplay);
-    });
-
-    document.getElementById('submitFilter')?.addEventListener('click', () => {
-        const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
-        loadFilteredEvents(selectedCategories);
-        dropdownContent.style.display = 'none';
-    });
-
-    document.getElementById('cancelFilter')?.addEventListener('click', () => {
-        document.querySelectorAll('input[name="category"]').forEach(cb => cb.checked = false);
-        selectedCategoriesDisplay.value = 'Select Categories';
-        loadEvents();
-        dropdownContent.style.display = 'none';
-    });
-}
+});
 
 function updateSelectedCategoriesDisplay() {
     const categoryLabels = {
         myevents: "My Events",
-        mypreferences: "My Preferences",
+        mypreferences: "For You",
         sports: "Sports",
         clubs: "Clubs",
         music: "Music",
@@ -551,7 +570,7 @@ function removeOldEvents() {
                 // Get the current time
                 let d1 = new Date();
                 // Get the event's scheduled time (time of the event) and convert it to JS Date object
-                let d2 = doc.data().time.toDate(); 
+                let d2 = doc.data().time.toDate();
 
                 // Calculate the "time difference" between the current time and event's scheduled time
                 const timeDifference = Math.abs(d1 - d2);
@@ -574,9 +593,19 @@ function removeOldEvents() {
         })
         .catch((error) => console.error("Error fetching events: ", error));
 }
-
-
-
 removeOldEvents();
+
+function togglePriceInput() {
+    const freeOption = document.getElementById('free');
+    const priceInput = document.getElementById('priceInput');
+
+    if (freeOption.checked) {
+        priceInput.disabled = true; // Disable the input if "Free" is selected
+        priceInput.value = ''; // Clear the input value
+    } else {
+        priceInput.disabled = false; // Enable the input if "Paid" is selected
+    }
+}
+
 
 

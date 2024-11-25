@@ -66,60 +66,69 @@
   <!-- Find Event Section and Create button -->
   <section class="jumbotron text-center">
     <div class="container text-center">
-      <div class="filter-container">
-        <input type="text" id="selectedCategoriesDisplay" placeholder="Find by category" readonly
-          class="filter-input" />
-        <div id="dropdownContent" class="filter-dropdown">
-          <button id="cancelFilter" class="filter-cancel-btn">
-            <i class="fa fa-times" aria-hidden="true"></i>
-          </button>
-          <label><input type="checkbox" id="myevents" name="category" value="myevents"> My Events</label>
-          <label><input type="checkbox" id="mypreferences" name="category" value="mypreferences"> My Preferences</label>
-          <label><input type="checkbox" id="sports" name="category" value="sports"> Sports</label>
-          <label><input type="checkbox" id="clubs" name="category" value="clubs"> Clubs</label>
-          <label><input type="checkbox" id="music" name="category" value="music"> Music</label>
-          <label><input type="checkbox" id="art" name="category" value="art"> Art</label>
-          <label><input type="checkbox" id="festivals" name="category" value="festivals"> Festivals</label>
-          <label><input type="checkbox" id="networking" name="category" value="networking"> Networking</label>
-          <div class="filter-buttons">
-            <button id="submitFilter" class="filter-submit-btn">Submit</button>
-          </div>
+      <!-- Categories Section -->
+      <div class="row justify-content-center mb-4">
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-calendar-alt category-icon"></i>
+          <p>My Events</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-heart category-icon"></i>
+          <p>For You</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-football-ball category-icon"></i>
+          <p>Sports</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-users category-icon"></i>
+          <p>Clubs</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-music category-icon"></i>
+          <p>Music</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-paint-brush category-icon"></i>
+          <p>Art</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-theater-masks category-icon"></i>
+          <p>Festivals</p>
+        </div>
+        <div class="col-3 col-md-2 text-center">
+          <i class="fas fa-handshake category-icon"></i>
+          <p>Networking</p>
         </div>
       </div>
-    </div>
-    </div>
-    <div class="container">
-      <button id="createButton">Create New Event</button>
+  
+      <!-- Filters Section -->
+      <div class="filter-section text-center">
+        <div class="filter-tabs mt-3">
+          <button class="filter-btn">Most Popular</button>
+          <button class="filter-btn">Newest</button>
+          <button class="filter-btn">Today</button>
+          <button class="filter-btn">This Weekend</button>
+          <button class="filter-btn">Free</button>
+        </div>
+      </div>
     </div>
   </section>
   <div class="overlay" id="overlay"></div>
 
   <!-- Creating Event Form -->
   <div class="popup" id="popup">
-    <h2>Create Event</h2>
+    <h2>Create New Event</h2>
     <form id="eventForm">
-      <label for="title">Event Title:</label><br>
-      <input type="text" id="title" required><br><br>
+      <label for="title">Event Title:</label>
+      <input type="text" id="title" required placeholder="Christmas Comedy, Karaoke, etc..."><br>
       <img id="eventPreviewImage" src="/images/events/default.jpg" alt="Event Preview"
         style="width: 100%; max-height: 200px; object-fit: cover; margin-top: 10px;">
 
-      <label for="description">Description:</label><br>
-      <textarea id="description" required></textarea><br><br>
-
-      <div class="field-container">
-        <div>
-          <label for="time">Time:</label><br>
-          <input type="datetime-local" id="time" required><br>
-        </div>
-        <div>
-          <label for="place">Place:</label><br>
-          <input type="text" id="place" required><br>
-        </div>
-      </div>
-      
-      <h4>Select category:</h4>
+        
       <div class="category-container">
         <div class="category-row">
+          <label for="category">Category:</label><br>
           <input type="radio" id="sports" name="preferences" value="sports"> Sports
           <input type="radio" id="clubs" name="preferences" value="clubs"> Clubs
           <input type="radio" id="music" name="preferences" value="music"> Music
@@ -130,7 +139,32 @@
           <input type="radio" id="networking" name="preferences" value="networking"> Networking
         </div>
       </div>
-      <button type="submit" id="submitButton">Submit Event</button>
+      <label for="description">Description:</label><br>
+      <textarea id="description" required placeholder="This is an event where you can see our new Christmas Comedy with popular actors."></textarea>
+
+      <div class="price-container">
+        <label for="price">Price:</label><br>
+        <input type="radio" id="free" name="priceOption" value="free" onclick="togglePriceInput()"> Free
+        <input type="radio" id="paid" name="priceOption" value="paid" onclick="togglePriceInput()"> Paid
+        <span class="dollar-sign"> $</span>
+        <input type="number" id="priceInput" name="price" placeholder="Enter amount" min="0" step="1" class="small-input">
+    </div>
+    
+      
+      <div class="field-container">
+        <div>
+          <label for="time">Time:</label>
+          <input type="datetime-local" id="time" required class="small-input" >
+        </div>
+      </div>
+        <div class="place">
+          <div>
+            <label for="place">Place:</label><br>
+            <input type="radio" id="vancouver" name="location" value="vancouver"> Vancouver
+            <input type="radio" id="bcit" name="location" value="bcit"> BCIT
+          </div>
+        </div>
+      <button type="submit" id="submitButton">Submit New Event</button>
     </form>
   </div>
 
@@ -146,6 +180,8 @@
       <p><strong>Owner:</strong> <span id="confirmOwner"></span></p>
       <p><strong>Date:</strong> <span id="confirmDate"></span></p>
       <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
+      <p><strong>Price:</strong> <span id="confirmPrice"></span></p>
+    
     </div>
     <div class="confirmation-buttons">
       <button id="undoButton">Undo</button>
@@ -161,65 +197,39 @@
 
   <!-- Event Detail Popup -->
 <div id="eventDetailPopup" class="popup" style="display: none;">
-  <!-- Close Button -->
   <button id="closeEventPopup" class="close-popup">X</button>
-
-  <!-- Title -->
   <h2 id="eventTitle"></h2>
-  
-  <!-- Event Image -->
   <img id="eventImage" alt="Event Image" style="width: 100%; max-height: 200px; object-fit: cover; margin-bottom: 10px;">
-  
-  <!-- Owner Information -->
-  <div id="eventOwnerContainer" style="display: flex; align-items: center; gap: 10px; margin: 20px 0;">
-    <img id="ownerProfileImage" alt="Owner Profile Image" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ccc;">
-    <span id="eventOwner" style="font-weight: bold;"></span>
-  </div>
+  <p><strong>Description:</strong> <span id="eventDescription"></span></p>
+  <p><strong>Time:</strong> <span id="eventTime"></span></p>
+  <p><strong>Place:</strong> <span id="eventPlace"></span></p>
+  <p><strong>Category:</strong> <span id="eventCategory"></span></p>
+  <p><strong>Owner:</strong> <span id="eventOwner"></span></p>
 
-  <!-- Time and Place -->
-  <div style="display: flex; justify-content: space-between; margin: 10px 0;">
-    <p style="flex: 1;"><strong>Time:</strong> <span id="eventTime"></span></p>
-    <p style="flex: 1; text-align: right;"><strong>Place:</strong> <span id="eventPlace"></span></p>
-  </div>
-
-  <!-- Description -->
-  <div id="eventDescriptionContainer" style="border: 1px solid #ccc; padding: 10px; margin: 20px 0; border-radius: 5px;">
-    <p style="margin: 0;" id="eventDescription"></p>
-  </div>
-
-<!-- Attendance Section -->
-<div id="eventAttendanceContainer" style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin: 20px 0;">
+  <!-- Attendance Section -->
   <h4>Attendance</h4>
   <p><span id="eventAttendeesCount">0</span> people are attending</p>
-  <div style="display: flex; gap: 10px; justify-content: space-between;">
-    <button id="leaveEventButton" style="flex: 1; display: none;">Leave Event</button>
-    <button id="joinEventButton" style="flex: 1;">Join Event</button>
-  </div>
-</div>
+  <button id="joinEventButton">Join Event</button>
+  <button id="leaveEventButton" style="display: none;">Leave Event</button>
 
+  <!-- Additional Pictures Section -->
+  <h4>Gallery</h4>
+  <div id="eventGallery" class="gallery"></div>
 
-
-  <!-- Questions & Comments -->
+  <!-- Comments Section -->
   <h4>Questions & Comments</h4>
-  <textarea id="commentInput" placeholder="Ask a question or leave a comment" style="width: 100%; height: 60px;"></textarea>
-  <div style="display: flex; gap: 10px; margin-top: 10px;">
-  <button id="postCommentButton" style="flex: none; width: 50%;">Post Comment</button>
-    
-  <!-- Like and Save Buttons -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;"></div>
-  <i id="likeButton" class="fa-regular fa-heart" style="color: #ffa3a3; font-size: 32px; cursor: pointer; margin-left: auto;"></i>
-  </div>
+  <textarea id="commentInput" placeholder="Ask a question or leave a comment"></textarea>
+  <button id="postCommentButton">Post Comment</button>
   <div id="commentsSection"></div>
 </div>
 
   <!-- Events section -->
   <div id="eventList">
-    <h2 id="upcoming">Upcoming Events:</h2>
+    <h2 id="upcoming"></h2>
   </div>
   <div class="album py-5 bg-light">
     <div class="container">
       <div class="row" id="events-container">
-        <!-- Event cards will be inserted here dynamically -->
       </div>
     </div>
   </div>
@@ -270,4 +280,5 @@
   <script type="module" src="./scripts/main.js"></script>
 
 </body>
+
 </html>

@@ -174,3 +174,112 @@ textarea#commentInput {
 #commentsSection {
   margin-top: 10px;
 }
+
+/* Categories Section */
+.categories-section {
+  margin: 20px 0;
+}
+
+.category-icon {
+  font-size: 2rem;
+  color: #175e60;
+  margin-bottom: 5px;
+}
+
+.categories-section p {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+}
+
+/* Filters Section */
+.filter-section {
+  font-size: 1.1rem;
+  margin-top: 20px;
+}
+
+.location-dropdown {
+  font-weight: bold;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.filter-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.filter-btn {
+  padding: 8px 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background-color: #f8f9fa;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  background-color: #175e60;
+  color: white;
+}
+
+
+/* Dtyling for filters */
+.col-3 {
+  position: relative; 
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.col-3 .category-icon {
+  font-size: 2.5rem;
+  color: #175e60; 
+  transition: color 0.3s ease;
+}
+
+.col-3 p {
+  font-weight: normal;
+  color: #333; 
+  transition: color 0.3s ease;
+}
+
+.col-3.active {
+  color: #d6e5e6; 
+}
+
+.col-3.active .category-icon {
+  color: #175e60; 
+}
+
+.col-3.active::after {
+  content: '';
+  position: absolute;
+  top: 40%;
+  left: 51%;
+  width: 90px; 
+  height: 90px; 
+  border: 3px;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  background-color: #e6f2ff; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  transition: all 0.3s ease;
+}
+
+.col-3:hover .category-icon {
+  color: #2ab3b8; 
+}
+
+.col-3:hover p {
+  color: #2ab3b8;
+}
+
+
+

@@ -145,11 +145,9 @@ function populateEmail(uid) {
             var data = docSnap.data();
             if (data.email) {
                 console.log("Email fetched from users collection:", data.email);
-
-                // Ensure the email input field exists before setting its value
                 const emailInput = document.getElementById("emailInput");
                 if (emailInput) {
-                    emailInput.value = data.email; // Set email in the non-editable input
+                    emailInput.value = data.email; 
                 } else {
                     console.error("emailInput element not found in the DOM.");
                 }
@@ -336,8 +334,8 @@ function deleteEvent(eventId) {
                 <h3>Are you sure?</h3>
                 <p>Do you want to delete this event? This action cannot be undone.</p>
                 <div class="custom-modal-actions">
-                    <button id="confirmDelete" class="btn btn-danger">Delete</button>
                     <button id="cancelDelete" class="btn btn-secondary">Cancel</button>
+                    <button id="confirmDelete" class="btn btn-danger">Delete</button>
                 </div>
             </div>
         </div>

@@ -384,7 +384,6 @@ function displayEvent(eventData, container) {
     const eventCard = document.createElement('div');
     eventCard.className = 'col-md-4';
 
-    // Handle time formatting
     let formattedTime = 'No Date Provided';
     if (eventData.time) {
         formattedTime = formatTimestamp(eventData.time.toDate ? eventData.time.toDate() : eventData.time);

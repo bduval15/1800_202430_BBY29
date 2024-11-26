@@ -15,6 +15,21 @@ auth.onAuthStateChanged((user) => {
     }
 });
 
+// ========================== HELPER FUNCTIONS ==========================
+function formatTimestamp(timestamp) {
+    if (!timestamp) return "No Time Provided";
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const options = { year: "numeric", month: "long", day: "numeric", hour: "numeric", minute: "numeric", hour12: true };
+    return date.toLocaleString("en-US", options);
+}
+
+
+function formatPrice(price) {
+    if (!price || price === "Free" || price === 0) return "Free";
+    return `${new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(price)} / Person`;
+}
+
+
 const eventCategoryImages = {
     sports: "/images/events/sports.jpg",
     clubs: "/images/events/clubs.jpg",
@@ -38,6 +53,20 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('openCreateEventForm');
     }
 });
+
+// Like Button Event Listener
+const likeButton = document.getElementById("likeButton");
+
+likeButton.addEventListener("click", () => {
+    if (likeButton.classList.contains("fa-regular")) {
+        likeButton.classList.remove("fa-regular");
+        likeButton.classList.add("fa-solid");
+    } else {
+        likeButton.classList.remove("fa-solid");
+        likeButton.classList.add("fa-regular");
+    }
+});
+
 
 // Initialization and Event Handlers
 function initializeEventHandlers() {
@@ -67,15 +96,6 @@ function initializeEventHandlers() {
         });
     });
 
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        const dropdownContent = document.getElementById('dropdownContent');
-        const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
-        if (dropdownContent.style.display === 'block' && !dropdownContent.contains(e.target) && !selectedCategoriesDisplay.contains(e.target)) {
-            dropdownContent.style.display = 'none';
-        }
-    });
 
     // **Close Event Detail Popup**
     const closePopupButton = document.getElementById('closeEventPopup');
@@ -115,28 +135,35 @@ function openConfirmationPopup(eventData) {
     const confirmOwner = document.getElementById('confirmOwner');
     const confirmDate = document.getElementById('confirmDate');
     const confirmDescription = document.getElementById('confirmDescription');
+    const confirmPrice = document.getElementById('confirmPrice');
+    const confirmPlace = document.getElementById('confirmPlace');
 
     // Check if the popup elements exist
-    if (confirmationPopup && overlay && confirmImage && confirmTitle && confirmOwner && confirmDate && confirmDescription) {
+    if (confirmationPopup && overlay && confirmImage && confirmTitle && confirmOwner && confirmDate && confirmDescription && confirmPrice && confirmPlace) {
         // Populate modal with event details
-        confirmImage.src = eventData.picture || '/images/events/default.jpg'; // Default fallback image
+        confirmImage.src = eventData.picture || '/images/events/default.jpg';
         confirmTitle.innerText = eventData.title || 'No Title Provided';
         confirmOwner.innerText = eventData.owner || 'Unknown Owner';
 
-        // Format the date based on its type
+        // Format the date
         let eventDate = 'No Date Provided';
         if (eventData.time) {
-            if (eventData.time.toDate) {
-                // Firestore Timestamp
-                eventDate = eventData.time.toDate().toLocaleString();
-            } else {
-                // String or Date object
-                eventDate = new Date(eventData.time).toLocaleString();
-            }
+            eventDate = eventData.time.toDate
+                ? formatTimestamp(eventData.time.toDate())
+                : formatTimestamp(eventData.time);
         }
         confirmDate.innerText = eventDate;
 
         confirmDescription.innerText = eventData.description || 'No Description Provided';
+
+        const formattedPrice = formatPrice(eventData.price);
+        confirmPrice.innerText = formattedPrice;
+
+        confirmPrice.innerText = formattedPrice;
+
+
+        // Display the place
+        confirmPlace.innerText = eventData.place || 'No Place Selected';
 
         // Show the modal
         confirmationPopup.style.display = 'block';
@@ -145,6 +172,7 @@ function openConfirmationPopup(eventData) {
         console.error('Error: One or more popup elements not found!');
     }
 }
+
 
 
 
@@ -160,10 +188,11 @@ async function handleFormSubmit(event) {
     const title = document.getElementById('title')?.value || '';
     const description = document.getElementById('description')?.value || '';
     const time = document.getElementById('time')?.value ? firebase.firestore.Timestamp.fromDate(new Date(document.getElementById('time').value)) : null;
-    const place = document.getElementById('place')?.value || '';
     const owner = currentUser?.displayName || 'Unknown Owner';
+    const priceOption = document.querySelector('input[name="priceOption"]:checked')?.value || 'free';
+    const price = priceOption === 'free' ? 'Free' : document.getElementById('priceInput')?.value || '0';
 
-    // Get the selected category and corresponding image path
+    const place = document.querySelector('input[name="place"]:checked')?.value || 'No Place Selected';
     const selectedCategory = document.querySelector('input[name="preferences"]:checked')?.value || 'default';
     const picture = eventCategoryImages[selectedCategory] || eventCategoryImages.default;
 
@@ -175,7 +204,9 @@ async function handleFormSubmit(event) {
         time,
         place,
         owner,
-        preferences: selectedCategory, // Store the selected category
+        ownerId: currentUser?.uid || 'Unknown Owner ID',
+        preferences: selectedCategory,
+        price,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
@@ -356,9 +387,9 @@ function displayEvent(eventData, container) {
     // Handle time formatting
     let formattedTime = 'No Date Provided';
     if (eventData.time) {
-        const eventDate = eventData.time.toDate ? eventData.time.toDate() : new Date(eventData.time);
-        formattedTime = eventDate.toLocaleString();
+        formattedTime = formatTimestamp(eventData.time.toDate ? eventData.time.toDate() : eventData.time);
     }
+    const formattedPrice = formatPrice(eventData.price);
 
     eventCard.innerHTML = `
         <div class="card mb-4">
@@ -369,6 +400,7 @@ function displayEvent(eventData, container) {
                 <p class="card-text"><strong>Owner:</strong> ${eventData.owner || 'Unknown Owner'}</p>
                 <p class="card-text"><strong>Time:</strong> ${formattedTime}</p>
                 <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
+                <p class="card-text"><strong>Price:</strong> ${formattedPrice || 'Not specified'}</p>
             </div>
         </div>
     `;
@@ -380,7 +412,7 @@ function displayEvent(eventData, container) {
 
 }
 
-function openEventDetailPopup(eventData) {
+async function openEventDetailPopup(eventData) {
     const popup = document.getElementById('eventDetailPopup');
     const overlay = document.getElementById('overlay');
 
@@ -392,11 +424,29 @@ function openEventDetailPopup(eventData) {
     const eventTitle = document.getElementById('eventTitle');
     if (eventTitle) eventTitle.innerText = eventData.title || 'No Title';
 
+    const formattedPrice = formatPrice(eventData.price);
+    const eventPrice = document.getElementById('eventPrice');
+    if (eventPrice) eventPrice.innerText = formattedPrice;
+
     const eventImage = document.getElementById('eventImage');
     if (eventImage) eventImage.src = eventData.picture || '/images/events/default.jpg';
 
     const ownerProfileImage = document.getElementById('ownerProfileImage');
-    if (ownerProfileImage) ownerProfileImage.src = eventData.ownerProfileImage || '/images/default-profile.png';
+    if (ownerProfileImage) {
+        try {
+            // Fetch the profile document based on the event owner's ID
+            const profileDoc = await db.collection('profileSettings').doc(eventData.ownerId).get();
+            if (profileDoc.exists) {
+                const profileData = profileDoc.data();
+                ownerProfileImage.src = profileData.avatar || '/images/default-profile.png';
+            } else {
+                ownerProfileImage.src = '/images/default-profile.png';
+            }
+        } catch (error) {
+            console.error("Error fetching profile image:", error);
+            ownerProfileImage.src = '/images/default-profile.png';
+        }
+    }
 
     const eventOwner = document.getElementById('eventOwner');
     if (eventOwner) eventOwner.innerText = eventData.owner || 'Unknown Owner';
@@ -405,9 +455,9 @@ function openEventDetailPopup(eventData) {
     if (eventDescription) eventDescription.innerText = eventData.description || 'No Description';
 
     const eventTime = document.getElementById('eventTime');
-    if (eventTime) eventTime.innerText = eventData.time
-        ? new Date(eventData.time).toLocaleString()
-        : 'No Time Provided';
+    if (eventTime) {
+        eventTime.innerText = formatTimestamp(eventData.time);
+    }
 
     const eventPlace = document.getElementById('eventPlace');
     if (eventPlace) eventPlace.innerText = eventData.place || 'No Place';
@@ -452,10 +502,21 @@ function openEventDetailPopup(eventData) {
         };
     }
 
+    const closePopupOnOverlayClick = (e) => {
+        if (e.target === overlay) {
+            popup.style.display = 'none';
+            overlay.style.display = 'none';
+            overlay.removeEventListener('click', closePopupOnOverlayClick);
+        }
+    };
+
+    overlay.addEventListener('click', closePopupOnOverlayClick);
+
     // Show the popup
     popup.style.display = 'block';
     overlay.style.display = 'block';
 }
+
 
 
 function handleAttendance(eventData, isJoining) {
@@ -541,13 +602,6 @@ document.addEventListener('DOMContentLoaded', () => {
             loadFilteredEvents([...activeFilters]);
         });
     });
-
-    // Optional: Define setupCategoryDropdown if it’s used elsewhere
-    function setupCategoryDropdown() {
-        const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
-        const dropdownContent = document.getElementById('dropdownContent');
-        // Logic for setting up the dropdown (not shown here)
-    }
 });
 
 
@@ -617,12 +671,9 @@ function togglePriceInput() {
     const priceInput = document.getElementById('priceInput');
 
     if (freeOption.checked) {
-        priceInput.disabled = true; // Disable the input if "Free" is selected
-        priceInput.value = ''; // Clear the input value
+        priceInput.disabled = true;
+        priceInput.value = '';
     } else {
-        priceInput.disabled = false; // Enable the input if "Paid" is selected
+        priceInput.disabled = false;
     }
 }
-
-
-

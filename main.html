@@ -143,7 +143,6 @@
       <textarea id="description" required placeholder="This is an event where you can see our new Christmas Comedy with popular actors."></textarea>
 
       <div class="price-container">
-        <label for="price">Price:</label><br>
         <input type="radio" id="free" name="priceOption" value="free" onclick="togglePriceInput()"> Free
         <input type="radio" id="paid" name="priceOption" value="paid" onclick="togglePriceInput()"> Paid
         <span class="dollar-sign"> $</span>
@@ -159,9 +158,9 @@
       </div>
         <div class="place">
           <div>
-            <label for="place">Place:</label><br>
-            <input type="radio" id="vancouver" name="location" value="vancouver"> Vancouver
-            <input type="radio" id="bcit" name="location" value="bcit"> BCIT
+            <label for="place">Location:</label><br>
+            <input type="radio" id="vancouver" name="place" value="Vancouver"> Vancouver
+            <input type="radio" id="bcit" name="place" value="BCIT"> BCIT
           </div>
         </div>
       <button type="submit" id="submitButton">Submit New Event</button>
@@ -181,7 +180,7 @@
       <p><strong>Date:</strong> <span id="confirmDate"></span></p>
       <p><strong>Description:</strong> <span id="confirmDescription"></span></p>
       <p><strong>Price:</strong> <span id="confirmPrice"></span></p>
-    
+      <p><strong>Location:</strong> <span id="confirmPlace"></span></p>
     </div>
     <div class="confirmation-buttons">
       <button id="undoButton">Undo</button>
@@ -189,56 +188,71 @@
     </div>
   </div>
 
-  <!-- Event creation popup -->
-  <div id="popup">
-  </div>
-
-    <!-- Event Detail Popup -->
+<!-- Event Detail Popup -->
 <div id="eventDetailPopup" class="popup" style="display: none;">
   <!-- Close Button -->
   <button id="closeEventPopup" class="close-popup">X</button>
+  
   <!-- Title -->
   <h2 id="eventTitle"></h2>
   
   <!-- Event Image -->
-  <img id="eventImage" alt="Event Image" style="width: 100%; max-height: 200px; object-fit: cover; margin-bottom: 10px;">  
-  <!-- Owner Information -->
-  <div id="eventOwnerContainer" style="display: flex; align-items: center; gap: 10px; margin: 20px 0;">
-    <img id="ownerProfileImage" alt="Owner Profile Image" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ccc;">
-    <span id="eventOwner" style="font-weight: bold;"></span>
-  </div>
-  <!-- Time and Place -->
-  <div style="display: flex; justify-content: space-between; margin: 10px 0;">
-    <p style="flex: 1;"><strong>Time:</strong> <span id="eventTime"></span></p>
-    <p style="flex: 1; text-align: right;"><strong>Place:</strong> <span id="eventPlace"></span></p>
-  </div>
-  <!-- Description -->
-  <div id="eventDescriptionContainer" style="border: 1px solid #ccc; padding: 10px; margin: 20px 0; border-radius: 5px;">
-    <p style="margin: 0;" id="eventDescription"></p>
+  <img id="eventImage" alt="Event Image" />
+
+  <!-- Event Details -->
+  <div class="event-details">
+    <!-- Owner Info and Price -->
+    <div class="owner-and-price">
+      <div class="owner-info">
+        <img id="ownerProfileImage" src="/images/default-profile.png" alt="Owner Profile">
+        <span id="eventOwner"></span>
+      </div>
+      <div id="eventPrice"></div>
+    </div>
+
+    <!-- Time and Place -->
+    <div class="time-place">
+      <p><strong>Time:</strong> <span id="eventTime"></span></p>
+      <p><strong>Location:</strong> <span id="eventPlace"></span></p>
+    </div>
   </div>
 
-<!-- Attendance Section -->
-<div id="eventAttendanceContainer" style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin: 20px 0;">
-  <h4>Attendance</h4>
-  <p><span id="eventAttendeesCount">0</span> people are attending</p>
-  <div style="display: flex; gap: 10px; justify-content: space-between;">
-    <button id="leaveEventButton" style="flex: 1; display: none;">Leave Event</button>
-    <button id="joinEventButton" style="flex: 1;">Join Event</button>
+  <!-- Description -->
+  <div id="eventDescriptionContainer">
+    <p id="eventDescription"></p>
+  </div>
+
+  <!-- Attendance Section -->
+  <div id="eventAttendanceContainer" style="padding: 10px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9; margin-top: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <p style="margin: 0; font-weight: bold;">
+        Attending: <span id="eventAttendeesCount">0</span>
+      </p>
+      <button id="joinEventButton">Join Event</button>
+    </div>
+  </div>
+  
+  
+
+<!-- Comments Section -->
+<h4>Questions & Comments</h4>
+<div class="comment-container">
+  <div class="textarea-container">
+    <textarea id="commentInput" placeholder="Ask a question or leave a comment"></textarea>
+    <button id="postCommentButton">Post Comment</button>
+  </div>
+  <div class="like-container">
+    <i id="likeButton" class="fa-regular fa-heart"></i>
   </div>
 </div>
 
-  <!-- Questions & Comments -->
-  <h4>Questions & Comments</h4>
-  <textarea id="commentInput" placeholder="Ask a question or leave a comment" style="width: 100%; height: 60px;"></textarea>
-  <div style="display: flex; gap: 10px; margin-top: 10px;">
-  <button id="postCommentButton" style="flex: none; width: 50%;">Post Comment</button>
-    
-  <!-- Like and Save Buttons -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;"></div>
-  <i id="likeButton" class="fa-regular fa-heart" style="color: #ffa3a3; font-size: 32px; cursor: pointer; margin-left: auto;"></i>
-  </div>
+
+
+
+  <!-- Comments -->
   <div id="commentsSection"></div>
 </div>
+
 
 
   <!-- Events section -->

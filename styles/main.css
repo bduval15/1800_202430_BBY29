@@ -131,59 +131,209 @@ footer {
   margin-bottom: 10px;
 }
 
-#eventDetailPopup {
+/* Popup Container */
+.popup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;
+  width: 90%;
   max-width: 600px;
   max-height: 90%;
   overflow-y: auto;
-  background-color: #ffffff;
+  background: #fff;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
   padding: 20px;
   z-index: 1000;
 }
 
-#eventDetailPopup .close-popup {
+/* Close Button */
+.popup .close-popup {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
+  top: 20px; 
+  right: 20px; 
+  background-color: #ff6b6b; 
+  color: white;
+  font-size: 14px;
+  border: none; 
+  border-radius: 50px; 
+  width: 25px; 
+  height: 25px; 
+  cursor: pointer; 
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  transition: background-color 0.3s ease;
 }
 
-.gallery img {
-  max-width: 100px;
-  margin: 5px;
-  border-radius: 5px;
+.popup .close-popup:hover {
+  background-color: #c0392b; 
 }
 
-textarea#commentInput {
+/* Event Image */
+.popup img#eventImage {
   width: 100%;
-  padding: 8px;
-  margin: 10px 0;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-#commentsSection {
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 15px;
   margin-top: 10px;
 }
 
+/* Event Details */
+.event-details {
+  margin-top: 10px;
+}
 
-label {
+.owner-and-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.owner-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#ownerProfileImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#eventOwner {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+#eventPrice {
+  font-size: 16px;
+  color: #000;
   font-weight: bold;
 }
-.small-input {
-  width: 120px; /* Adjust as needed */
-  padding: 5px; /* Optional: For better alignment */
-  font-size: 14px; /* Optional: Adjust text size */
+
+/* Time and Place */
+.time-place {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
+
+.time-place p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Description */
+#eventDescriptionContainer {
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+/* Attendance Section */
+#eventAttendanceContainer {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px; 
+  background-color: #f9f9f9; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  margin-bottom: 20px;
+}
+
+#joinEventButton {
+  background-color: #1b777a;
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  padding: 6px 15px; 
+  font-size: 14px; 
+  cursor: pointer; 
+}
+
+#joinEventButton:hover {
+  background-color: #145a5e; 
+}
+
+/* Comments Section */
+.comment-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.textarea-container {
+  display: flex;
+  flex-direction: column; 
+  flex: 1; 
+}
+
+textarea#commentInput {
+  height: 60px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  resize: none;
+}
+
+#postCommentButton {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #1b777a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#postCommentButton:hover {
+  background-color: #145a5e; 
+}
+
+.like-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  padding: 10px;
+  text-align: center;
+  gap: 8px;
+}
+
+.like-label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+#likeButton {
+  margin-top: 15px;
+  font-size: 50px;
+  cursor: pointer;
+  color: #c0392b;
+}
+
+
+#likeButton.fa-solid {
+  color: #cf2916 !important;
+}
+
+#likeButton.fa-regular {
+  color: #e62b2b !important;
+}
+
 
 /* Categories Section */
 .categories-section {
@@ -207,13 +357,6 @@ label {
 .filter-section {
   font-size: 1.1rem;
   margin-top: 20px;
-}
-
-.location-dropdown {
-  font-weight: bold;
-  color: #007bff;
-  text-decoration: underline;
-  cursor: pointer;
 }
 
 .filter-tabs {
@@ -240,7 +383,7 @@ label {
 }
 
 
-/* Dtyling for filters */
+/* Styling for filters */
 .col-3 {
   position: relative; 
   padding: 10px;
@@ -290,3 +433,9 @@ label {
 .col-3:hover p {
   color: #2ab3b8;
 }
+
+.price-free {
+  color: #175e60;
+  font-weight: bold;
+}
+

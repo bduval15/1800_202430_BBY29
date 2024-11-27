@@ -21,6 +21,20 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// ========================== HELPER FUNCTIONS ==========================
+function formatTimestamp(timestamp) {
+    if (!timestamp) return "No Time Provided";
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const options = { year: "numeric", month: "long", day: "numeric", hour: "numeric", minute: "numeric", hour12: true };
+    return date.toLocaleString("en-US", options);
+}
+
+
+function formatPrice(price) {
+    if (!price || price === "Free" || price === 0) return "Free";
+    return `${new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(price)} / Person`;
+}
+
 function loadProfileSettings(uid) {
     var profileRef = window.db.collection("profileSettings").doc(uid);
     profileRef.get().then((docSnap) => {
@@ -147,7 +161,7 @@ function populateEmail(uid) {
                 console.log("Email fetched from users collection:", data.email);
                 const emailInput = document.getElementById("emailInput");
                 if (emailInput) {
-                    emailInput.value = data.email; 
+                    emailInput.value = data.email;
                 } else {
                     console.error("emailInput element not found in the DOM.");
                 }
@@ -180,6 +194,16 @@ document.querySelectorAll(".avatar-option").forEach(avatar => {
 
 document.getElementById("myevents-tab").addEventListener("click", () => {
     loadMyEvents();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const likesTab = document.getElementById("likes-tab");
+
+    if (likesTab) {
+        likesTab.addEventListener("click", () => {
+            displayUserLikedEvents();
+        });
+    }
 });
 
 
@@ -301,19 +325,28 @@ function loadMyEvents() {
                                 const eventId = doc.id;
 
                                 const eventCard = `
-                                    <div class="card mb-3 shadow-sm position-relative" id="event-${eventId}">
-                                        <img src="${eventData.picture}" class="card-img-top" alt="${eventData.title}">
-                                        <div class="card-body">
-                                            <h5 class="card-title">${eventData.title}</h5>
-                                            <p class="card-text">${eventData.description}</p>
-                                            <p class="card-text"><strong>Date:</strong> ${eventData.time}</p>
-                                            <p class="card-text"><strong>Location:</strong> ${eventData.place}</p>
+                                <div class="card mb-4" id="event-${eventId}" style="border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; max-width: 400px; margin: auto;">
+                                    <img src="${eventData.picture || '/images/events/default.jpg'}" 
+                                         class="card-img-top" alt="${eventData.title}" style="height: 200px; object-fit: cover;">
+                                    <div class="card-body">
+                                        <!-- Title and Delete Button -->
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h5 class="card-title" style="font-weight: bold; font-size: 1.5rem; margin-bottom: 0;">${eventData.title}</h5>
+                                            <button class="btn btn-danger btn-sm" style="border-radius: 50%;" onclick="deleteEvent('${eventId}')">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
                                         </div>
-                                        <button class="delete-button" onclick="deleteEvent('${eventId}')">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
+                                        <!-- Description -->
+                                        <p class="card-text" style="color: #555;">${eventData.description}</p>
+                                        <!-- Time and Place -->
+                                        <p class="card-text" style="font-size: 0.9rem; color: #555;"><strong>Time:</strong> ${formatTimestamp(eventData.time)}</p>
+                                        <p class="card-text" style="font-size: 0.9rem; color: #555;"><strong>Place:</strong> ${eventData.place || 'No Location Provided'}</p>
+                                        <!-- Price -->
+                                        <p class="card-text" style="font-size: 0.9rem; font-weight: bold; color: black;">${formatPrice(eventData.price)}</p>
                                     </div>
-                                `;
+                                </div>
+                            `;
+                            
                                 myEventsContainer.innerHTML += eventCard;
                             });
                         }
@@ -409,5 +442,112 @@ function restoreProfileState() {
 
 // Restore state on page load
 restoreProfileState();
+
+async function displayUserLikedEvents() {
+    const likedEventsContainer = document.getElementById("likedEventsContainer");
+
+    if (!likedEventsContainer) {
+        console.error("Liked Events container not found.");
+        return;
+    }
+
+    likedEventsContainer.innerHTML = "<p>Loading liked events...</p>";
+
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        likedEventsContainer.innerHTML = "<p>Please sign in to view your liked events.</p>";
+        return;
+    }
+
+    try {
+        // Get the liked events for the current user
+        const userRef = firebase.firestore().collection("users").doc(user.uid);
+        const userDoc = await userRef.get();
+
+        if (!userDoc.exists) {
+            likedEventsContainer.innerHTML = "<p>No liked events found.</p>";
+            return;
+        }
+
+        let likedEventIds = userDoc.data().likedEvents || [];
+
+        if (likedEventIds.length === 0) {
+            likedEventsContainer.innerHTML = "<p>You haven't liked any events yet.</p>";
+            return;
+        }
+
+        // Reverse the order to show the most recently liked events first
+        likedEventIds = likedEventIds.reverse();
+
+        likedEventsContainer.innerHTML = ""; // Clear the loading message
+
+        const eventsRef = firebase.firestore().collection("events");
+        const profileSettingsRef = firebase.firestore().collection("profileSettings");
+
+        const promises = likedEventIds.map(async (eventId) => {
+            const eventDoc = await eventsRef.doc(eventId).get();
+            if (!eventDoc.exists) return null;
+
+            const eventData = eventDoc.data();
+            const ownerId = eventData.ownerId || null;
+
+            // Fetch the owner's avatar from the `profileSettings` collection
+            let ownerAvatar = "/images/default-profile.png"; // Default avatar
+            if (ownerId) {
+                const ownerProfileDoc = await profileSettingsRef.doc(ownerId).get();
+                if (ownerProfileDoc.exists) {
+                    ownerAvatar = ownerProfileDoc.data().avatar || "/images/default-profile.png";
+                }
+            }
+
+            return { id: eventId, ...eventData, ownerAvatar };
+        });
+
+        const eventDataList = (await Promise.all(promises)).filter((event) => event !== null);
+
+        if (eventDataList.length === 0) {
+            likedEventsContainer.innerHTML = "<p>No liked events available.</p>";
+            return;
+        }
+
+        // Render each liked event
+        eventDataList.forEach((eventData) => {
+            const formattedTime = eventData.time ? formatTimestamp(eventData.time) : "No Date Provided";
+            const formattedPrice = formatPrice(eventData.price);
+
+            const eventCard = `
+                <div class="card mb-4" id="liked-event-${eventData.id}" style="border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; max-width: 400px; margin: auto;">
+                    <img src="${eventData.picture || '/images/events/default.jpg'}" 
+                         class="card-img-top" alt="${eventData.title}" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <!-- Title and Like Button -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title" style="font-weight: bold; font-size: 1.5rem; margin-bottom: 0;">${eventData.title}</h5>
+                            <i class="fa-solid fa-heart" 
+                               style="cursor: pointer; font-size: 1.5rem; color: #dc3545;" 
+                               onclick="unlikeEvent('${eventData.id}')"></i>
+                        </div>
+                        <!-- Owner Info -->
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="${eventData.ownerAvatar}" 
+                                 alt="Owner Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+                            <span style="font-weight: bold; font-size: 1rem;">${eventData.owner || 'Unknown Owner'}</span>
+                        </div>
+                        <!-- Time and Place -->
+                        <p class="card-text" style="font-size: 0.9rem; color: #555;"><strong>Time:</strong> ${formattedTime}</p>
+                        <p class="card-text" style="font-size: 0.9rem; color: #555;"><strong>Place:</strong> ${eventData.place || 'No Place Provided'}</p>
+                        <!-- Price -->
+                        <p class="card-text" style="font-size: 0.9rem; font-weight: bold; color: black;">${formattedPrice}</p>
+                    </div>
+                </div>
+            `;
+
+            likedEventsContainer.innerHTML += eventCard;
+        });
+    } catch (error) {
+        console.error("Error fetching liked events:", error);
+        likedEventsContainer.innerHTML = "<p>Failed to load liked events. Please try again later.</p>";
+    }
+}
 
 

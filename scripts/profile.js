@@ -199,16 +199,24 @@ window.addEventListener('load', function () {
 document.querySelectorAll(".avatar-option").forEach((avatar) => {
     avatar.addEventListener("click", function () {
         const selectedAvatar = avatar.src;
-        console.log("Selected Avatar:", selectedAvatar);
+
+        // Convert full URL to relative path
+        const baseUrl = window.location.origin;
+        const relativePath = selectedAvatar.startsWith(baseUrl)
+            ? selectedAvatar.replace(baseUrl, "") // Strip base URL if it exists
+            : selectedAvatar; // Use the relative path directly
 
         // Update the profile image on the page
-        document.getElementById("profileImage").src = selectedAvatar;
+        document.getElementById("profileImage").src = relativePath;
+
+        // Close the avatar modal
         document.getElementById("avatarModal").style.display = "none";
 
-        // Save the selected avatar to Firestore immediately
-        saveProfilePicture(selectedAvatar);
+        // Save the selected avatar to Firestore
+        saveProfilePicture(relativePath);
     });
 });
+
 
 // Function to show the toast / dismiss toast
 function showToast() {
@@ -238,6 +246,8 @@ function showToast2() {
     });
     setTimeout(() => toast.hide(), 3000);
 }
+
+
 
 // Profile Picture is saved to fireBase under user. 
 function saveProfilePicture(avatarUrl) {
@@ -374,24 +384,30 @@ function deleteEvent(eventId) {
 window.deleteEvent = deleteEvent;
 
 function saveProfileState(profilePicture, preferences) {
-    localStorage.setItem('profilePicture', profilePicture);
+    const existingProfilePicture = localStorage.getItem('profilePicture');
+    const finalProfilePicture = profilePicture || existingProfilePicture;
+
+    localStorage.setItem('profilePicture', finalProfilePicture);
     localStorage.setItem('preferences', JSON.stringify(preferences));
 }
 
 function restoreProfileState() {
     const profilePicture = localStorage.getItem('profilePicture');
     const preferences = JSON.parse(localStorage.getItem('preferences'));
-
     if (profilePicture) {
         document.getElementById('profilePicture').src = profilePicture;
     }
 
+    // Restore preferences
     if (preferences) {
-        Object.keys(preferences).forEach(key => {
+        Object.keys(preferences).forEach((key) => {
             const field = document.querySelector(`[name="${key}"]`);
             if (field) field.value = preferences[key];
         });
     }
 }
+
+// Restore state on page load
 restoreProfileState();
+
 

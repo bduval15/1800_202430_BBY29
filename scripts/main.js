@@ -396,21 +396,46 @@ function displayEvent(eventData, container) {
     const likeButtonId = `likeButton-${eventData.id}`;
 
     eventCard.innerHTML = `
-        <div class="card mb-4">
-            <img src="${imagePath}" class="card-img-top" alt="${eventData.title}">
+        <div class="card mb-4" style="border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
+            <img src="${imagePath}" class="card-img-top" alt="${eventData.title}" style="height: 200px; object-fit: cover;">
             <div class="card-body">
-                <h5 class="card-title">${eventData.title}</h5>
-                <p class="card-text">${eventData.description}</p>
-                <p class="card-text"><strong>Owner:</strong> ${eventData.owner || 'Unknown Owner'}</p>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title" style="font-weight: bold; font-size: 1.5rem; margin-bottom: 0;">${eventData.title}</h5>
+                    <i id="${likeButtonId}" class="fa-regular fa-heart" style="cursor: pointer; font-size: 1.5rem; color: #dc3545;"></i>
+                </div>
+                <div class="d-flex align-items-center mb-3" id="owner-container-${eventData.id}">
+                    <!-- Avatar and owner name will be loaded dynamically here -->
+                </div>
                 <p class="card-text"><strong>Time:</strong> ${formattedTime}</p>
-                <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
-                <p class="card-text"><strong>Price:</strong> ${formattedPrice || 'Not specified'}</p>
-                <i id="${likeButtonId}" class="fa-regular fa-heart"></i>
+                <p class="card-text"><strong>Place:</strong> ${eventData.place || 'No Place Provided'}</p>
+                <p class="card-text" style="font-size: 1.1rem; font-weight: bold; color: black;">${formattedPrice}</p>
             </div>
         </div>
     `;
 
     container.appendChild(eventCard);
+
+    const ownerContainer = document.getElementById(`owner-container-${eventData.id}`);
+    if (ownerContainer) {
+        const profileRef = db.collection('profileSettings').doc(eventData.ownerId);
+        profileRef.get().then((doc) => {
+            const profileData = doc.data();
+            const avatar = profileData?.avatar || fallbackProfileImage;
+            const ownerName = profileData?.name || eventData.owner || 'Unknown';
+
+            ownerContainer.innerHTML = `
+                <img src="${avatar}" alt="${ownerName}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+                <span>${ownerName}</span>
+            `;
+        }).catch((error) => {
+            console.error("Error fetching profile settings:", error);
+            const ownerName = eventData.owner || 'Unknown';
+            ownerContainer.innerHTML = `
+                <img src="${fallbackProfileImage}" alt="${ownerName}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+                <span>${ownerName}</span>
+            `;
+        });
+    }
 
     const likeButton = document.getElementById(likeButtonId);
 

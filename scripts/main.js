@@ -4,16 +4,31 @@ const auth = firebase.auth();
 let currentUser = null;
 let tempEventData = null;
 
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(async (user) => {
     if (user) {
         currentUser = user;
         console.log("User is signed in:", user.displayName);
-        updateNavbarProfilePicture();
+
+        const userRef = db.collection("users").doc(user.uid);
+        const userSnap = await userRef.get();
+
+       
+        if (!userSnap.exists) {
+            await userRef.set({
+                name: user.displayName || "Anonymous",
+                email: user.email,
+                likedEvents: [],
+            });
+            console.log("User document created!");
+        }
+
+        updateNavbarProfilePicture(); 
     } else {
         currentUser = null;
         console.log("No user is signed in");
     }
 });
+
 
 // ========================== HELPER FUNCTIONS ==========================
 function formatTimestamp(timestamp) {
@@ -51,19 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (shouldOpenForm === 'true') {
         openPopup();
         localStorage.removeItem('openCreateEventForm');
-    }
-});
-
-// Like Button Event Listener
-const likeButton = document.getElementById("likeButton");
-
-likeButton.addEventListener("click", () => {
-    if (likeButton.classList.contains("fa-regular")) {
-        likeButton.classList.remove("fa-regular");
-        likeButton.classList.add("fa-solid");
-    } else {
-        likeButton.classList.remove("fa-solid");
-        likeButton.classList.add("fa-regular");
     }
 });
 
@@ -296,12 +298,10 @@ async function updateNavbarProfilePicture() {
 async function loadFilteredEvents(categories = []) {
     const eventsContainer = document.getElementById('events-container');
     const upcomingHeader = document.getElementById('upcoming');
-    eventsContainer.innerHTML = ''; // Clear existing events
+    eventsContainer.innerHTML = ''; 
 
     try {
         let userPreferences = [];
-
-        // Check if "mypreferences" (For You) is included
         if (categories.includes('mypreferences') && currentUser) {
             const profileDoc = await db.collection('profileSettings').doc(currentUser.uid).get();
             if (profileDoc.exists) {
@@ -342,7 +342,7 @@ async function loadFilteredEvents(categories = []) {
         }
 
         snapshot.forEach((doc) => {
-            const eventData = doc.data();
+            const eventData = { id: doc.id, ...doc.data() };
 
             // Check if the event matches any selected category
             const matchesCategory = categories.some(category =>
@@ -368,6 +368,11 @@ async function loadFilteredEvents(categories = []) {
                 displayEvent(eventData, eventsContainer);
             }
         });
+
+        snapshot.forEach((doc) => {
+            const eventData = { id: doc.id, ...doc.data() }; // Include Firestore document ID here
+            displayEvent(eventData, eventsContainer);
+        });
     } catch (error) {
         console.error("Error loading filtered events:", error);
     }
@@ -378,9 +383,6 @@ function displayEvent(eventData, container) {
     const fallbackImage = '/images/events/default.jpg';
     const imagePath = eventData.picture || fallbackImage;
 
-    console.log('Event Data:', eventData);
-    console.log('Image Path Used:', imagePath);
-
     const eventCard = document.createElement('div');
     eventCard.className = 'col-md-4';
 
@@ -389,6 +391,9 @@ function displayEvent(eventData, container) {
         formattedTime = formatTimestamp(eventData.time.toDate ? eventData.time.toDate() : eventData.time);
     }
     const formattedPrice = formatPrice(eventData.price);
+
+    // Create a unique ID for the like button
+    const likeButtonId = `likeButton-${eventData.id}`;
 
     eventCard.innerHTML = `
         <div class="card mb-4">
@@ -400,18 +405,73 @@ function displayEvent(eventData, container) {
                 <p class="card-text"><strong>Time:</strong> ${formattedTime}</p>
                 <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
                 <p class="card-text"><strong>Price:</strong> ${formattedPrice || 'Not specified'}</p>
+                <i id="${likeButtonId}" class="fa-regular fa-heart" style="cursor: pointer;"></i>
             </div>
         </div>
     `;
+
     container.appendChild(eventCard);
 
+    const likeButton = document.getElementById(likeButtonId);
+
+    // Fetch and apply the liked state for this event
+    if (likeButton) {
+        const userRef = db.collection("users").doc(currentUser.uid);
+
+        db.collection("users")
+            .doc(currentUser.uid)
+            .get()
+            .then((doc) => {
+                const likedEvents = doc.data()?.likedEvents || [];
+                if (likedEvents.includes(eventData.id)) {
+                    likeButton.classList.remove("fa-regular");
+                    likeButton.classList.add("fa-solid");
+                }
+            });
+
+        // Attach event listener to the like button
+        likeButton.addEventListener("click", async (e) => {
+            e.stopPropagation(); // Prevent triggering the card click event
+            try {
+                if (!eventData || !eventData.id) {
+                    console.error("Event data is missing or invalid.");
+                    return;
+                }
+
+                if (likeButton.classList.contains("fa-regular")) {
+                    // Like the event
+                    likeButton.classList.remove("fa-regular");
+                    likeButton.classList.add("fa-solid");
+
+                    await userRef.update({
+                        likedEvents: firebase.firestore.FieldValue.arrayUnion(eventData.id),
+                    });
+                    console.log(`Event ${eventData.id} liked.`);
+                } else {
+                    // Unlike the event
+                    likeButton.classList.remove("fa-solid");
+                    likeButton.classList.add("fa-regular");
+
+                    await userRef.update({
+                        likedEvents: firebase.firestore.FieldValue.arrayRemove(eventData.id),
+                    });
+                    console.log(`Event ${eventData.id} unliked.`);
+                }
+            } catch (error) {
+                console.error("Error updating liked events:", error);
+            }
+        });
+    }
+
+    // Add click listener to open event details
     eventCard.addEventListener('click', () => {
         openEventDetailPopup(eventData);
     });
-
 }
 
+
 async function openEventDetailPopup(eventData) {
+    console.log("Received eventData:", eventData);
     const popup = document.getElementById('eventDetailPopup');
     const overlay = document.getElementById('overlay');
 
@@ -420,6 +480,72 @@ async function openEventDetailPopup(eventData) {
         return;
     }
 
+    // Store the current event data for global use
+    tempEventData = eventData;
+
+    let userDoc;
+    try {
+        const userRef = db.collection('users').doc(currentUser.uid);
+        const userSnap = await userRef.get();
+
+        if (userSnap.exists) {
+            userDoc = userSnap.data();
+        } else {
+            console.warn("User document does not exist!");
+            userDoc = { likedEvents: [] };
+        }
+    } catch (error) {
+        console.error("Error fetching user document:", error);
+        return;
+    }
+
+    // Update like button state and functionality
+    const likeButton = document.getElementById('likeButton');
+    if (likeButton) {
+        const likedEvents = userDoc.likedEvents || [];
+        if (likedEvents.includes(eventData.id)) {
+            likeButton.classList.remove("fa-regular");
+            likeButton.classList.add("fa-solid");
+        } else {
+            likeButton.classList.remove("fa-solid");
+            likeButton.classList.add("fa-regular");
+        }
+
+        // Attach click listener to the like button
+        likeButton.onclick = async () => {
+            if (!eventData || !eventData.id) {
+                console.error("Event data is missing or invalid.");
+                return;
+            }
+        
+            const userRef = db.collection('users').doc(currentUser.uid);
+        
+            try {
+                if (likeButton.classList.contains("fa-regular")) {
+                    likeButton.classList.remove("fa-regular");
+                    likeButton.classList.add("fa-solid");
+        
+                    await userRef.update({
+                        likedEvents: firebase.firestore.FieldValue.arrayUnion(eventData.id),
+                    });
+                    console.log(`Event ${eventData.id} liked.`);
+                } else {
+                    likeButton.classList.remove("fa-solid");
+                    likeButton.classList.add("fa-regular");
+        
+                    await userRef.update({
+                        likedEvents: firebase.firestore.FieldValue.arrayRemove(eventData.id),
+                    });
+                    console.log(`Event ${eventData.id} unliked.`);
+                }
+            } catch (error) {
+                console.error("Error updating liked events:", error);
+            }
+        };
+        
+    }
+
+    // Populate modal content with event details
     const eventTitle = document.getElementById('eventTitle');
     if (eventTitle) eventTitle.innerText = eventData.title || 'No Title';
 
@@ -433,7 +559,6 @@ async function openEventDetailPopup(eventData) {
     const ownerProfileImage = document.getElementById('ownerProfileImage');
     if (ownerProfileImage) {
         try {
-            // Fetch the profile document based on the event owner's ID
             const profileDoc = await db.collection('profileSettings').doc(eventData.ownerId).get();
             if (profileDoc.exists) {
                 const profileData = profileDoc.data();
@@ -464,6 +589,7 @@ async function openEventDetailPopup(eventData) {
     const attendeesCount = document.getElementById('eventAttendeesCount');
     if (attendeesCount) attendeesCount.innerText = eventData.attendees?.length || 0;
 
+    // Handle Join/Leave buttons
     const joinButton = document.getElementById('joinEventButton');
     const leaveButton = document.getElementById('leaveEventButton');
 
@@ -480,6 +606,7 @@ async function openEventDetailPopup(eventData) {
         leaveButton.onclick = () => handleAttendance(eventData, false);
     }
 
+    // Load comments
     const commentsSection = document.getElementById('commentsSection');
     if (commentsSection) {
         commentsSection.innerHTML = '';
@@ -493,14 +620,7 @@ async function openEventDetailPopup(eventData) {
     const postButton = document.getElementById('postCommentButton');
     if (postButton) postButton.onclick = () => postComment(eventData);
 
-    const likeButton = document.getElementById('likeButton');
-    if (likeButton) {
-        likeButton.onclick = () => {
-            console.log('Liked the event');
-            likeButton.style.color = likeButton.style.color === '#ffa3a3' ? '#ccc' : '#ffa3a3';
-        };
-    }
-
+    // Close popup on overlay click
     const closePopupOnOverlayClick = (e) => {
         if (e.target === overlay) {
             popup.style.display = 'none';
@@ -515,7 +635,6 @@ async function openEventDetailPopup(eventData) {
     popup.style.display = 'block';
     overlay.style.display = 'block';
 }
-
 
 
 function handleAttendance(eventData, isJoining) {
@@ -546,7 +665,6 @@ function handleAttendance(eventData, isJoining) {
     });
 }
 
-
 function postComment(eventData) {
     const commentInput = document.getElementById('commentInput');
     const commentText = commentInput.value.trim();
@@ -576,7 +694,6 @@ function postComment(eventData) {
     });
 }
 
-
 // Keep Track of Active Filters 
 document.addEventListener('DOMContentLoaded', () => {
     const activeFilters = new Set();
@@ -602,7 +719,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
 
 function updateSelectedCategoriesDisplay() {
     const categoryLabels = {
@@ -676,3 +792,4 @@ function togglePriceInput() {
         priceInput.disabled = false;
     }
 }
+

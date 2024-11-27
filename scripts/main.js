@@ -397,7 +397,7 @@ function displayEvent(eventData, container) {
 
     eventCard.innerHTML = `
         <div class="card mb-4" style="border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
-            <img src="${imagePath}" class="card-img-top" alt="${eventData.title}" style="height: 200px; object-fit: cover;">
+            <img src="${imagePath}" class="card-img-top" alt="${eventData.title}" style="height: 250px; object-fit: cover;">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title" style="font-weight: bold; font-size: 1.5rem; margin-bottom: 0;">${eventData.title}</h5>

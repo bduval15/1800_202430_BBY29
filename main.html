@@ -101,7 +101,7 @@
           <p>Networking</p>
         </div>
       </div>
-  
+
       <!-- Filters Section -->
       <div class="filter-section text-center">
         <div class="filter-tabs mt-3">
@@ -125,7 +125,7 @@
       <img id="eventPreviewImage" src="/images/events/default.jpg" alt="Event Preview"
         style="width: 100%; max-height: 200px; object-fit: cover; margin-top: 10px;">
 
-        
+
       <div class="category-container">
         <div class="category-row">
           <label for="category">Category:</label><br>
@@ -140,29 +140,31 @@
         </div>
       </div>
       <label for="description">Description:</label><br>
-      <textarea id="description" required placeholder="This is an event where you can see our new Christmas Comedy with popular actors."></textarea>
+      <textarea id="description" required
+        placeholder="This is an event where you can see our new Christmas Comedy with popular actors."></textarea>
 
       <div class="price-container">
         <input type="radio" id="free" name="priceOption" value="free" onclick="togglePriceInput()"> Free
         <input type="radio" id="paid" name="priceOption" value="paid" onclick="togglePriceInput()"> Paid
         <span class="dollar-sign"> $</span>
-        <input type="number" id="priceInput" name="price" placeholder="Enter amount" min="0" step="1" class="small-input">
-    </div>
-    
-      
+        <input type="number" id="priceInput" name="price" placeholder="Enter amount" min="0" step="1"
+          class="small-input">
+      </div>
+
+
       <div class="field-container">
         <div>
           <label for="time">Time:</label>
-          <input type="datetime-local" id="time" required class="small-input" >
+          <input type="datetime-local" id="time" required class="small-input">
         </div>
       </div>
-        <div class="place">
-          <div>
-            <label for="place">Location:</label><br>
-            <input type="radio" id="vancouver" name="place" value="Vancouver"> Vancouver
-            <input type="radio" id="bcit" name="place" value="BCIT"> BCIT
-          </div>
+      <div class="place">
+        <div>
+          <label for="place">Location:</label><br>
+          <input type="radio" id="vancouver" name="place" value="Vancouver"> Vancouver
+          <input type="radio" id="bcit" name="place" value="BCIT"> BCIT
         </div>
+      </div>
       <button type="submit" id="submitButton">Submit New Event</button>
     </form>
   </div>
@@ -188,69 +190,73 @@
     </div>
   </div>
 
-<!-- Event Detail Popup -->
-<div id="eventDetailPopup" class="popup" style="display: none;">
-  <!-- Close Button -->
-  <button id="closeEventPopup" class="close-popup">X</button>
-  
-  <!-- Title -->
-  <h2 id="eventTitle"></h2>
-  
-  <!-- Event Image -->
-  <img id="eventImage" alt="Event Image" />
+  <!-- Event Detail Popup -->
+  <div id="eventDetailPopup" class="popup" style="display: none;">
+    <!-- Close Button -->
+    <button id="closeEventPopup" class="close-popup">X</button>
 
-  <!-- Event Details -->
-  <div class="event-details">
-    <!-- Owner Info and Price -->
-    <div class="owner-and-price">
-      <div class="owner-info">
-        <img id="ownerProfileImage" src="/images/default-profile.png" alt="Owner Profile">
-        <span id="eventOwner"></span>
+    <!-- Title -->
+    <h2 id="eventTitle"></h2>
+
+    <!-- Event Image -->
+    <img id="eventImage" alt="Event Image" />
+
+    <!-- Event Details -->
+    <div class="event-details">
+      <!-- Owner Info and Heart -->
+      <div class="owner-heart-container">
+        <div class="owner-info">
+          <img id="ownerProfileImage" src="/images/default-profile.png" alt="Owner Profile">
+          <span id="eventOwner"></span>
+        </div>
+        <div class="heart-container">
+          <i id="likeButton" class="fa-regular fa-heart"></i>
+        </div>
       </div>
-      <div id="eventPrice"></div>
+    
+      <!-- Time -->
+      <div class="time-location-container">
+        <div class="time-container">
+          <p><strong>Time:</strong> <span id="eventTime"></span></p>
+        </div>
+        <div class="location-container">
+          <p><strong>Location:</strong> <span id="eventPlace" class="location"></span></p>
+        </div>
+      </div>
+      
+    
+      <!-- Event Description -->
+      <div id="eventDescriptionContainer">
+        <p id="eventDescription"></p>
+      </div>
     </div>
 
-    <!-- Time and Place -->
-    <div class="time-place">
-      <p><strong>Time:</strong> <span id="eventTime"></span></p>
-      <p><strong>Location:</strong> <span id="eventPlace"></span></p>
+    <div id="eventAttendanceContainer">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <p style="margin: 0; font-weight: bold; font-size: 13px;">
+          Attending: <span id="eventAttendeesCount">0</span>
+        </p>
+        <button id="joinEventButton">Join Event</button>
+      </div>
     </div>
-  </div>
-
-  <!-- Description -->
-  <div id="eventDescriptionContainer">
-    <p id="eventDescription"></p>
-  </div>
-
-  <!-- Attendance Section -->
-  <div id="eventAttendanceContainer" style="padding: 10px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9; margin-top: 20px;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <p style="margin: 0; font-weight: bold; font-size: 13px;">
-        Attending: <span id="eventAttendeesCount">0</span>
-      </p>
-      <button id="joinEventButton">Join Event</button>
+    
+    
+    <!-- Price and Questions Section -->
+    <div class="price-comments-container">
+      <h5>Questions & Comments</h5>
+      <div id="eventPrice" class="price"></div>
     </div>
-  </div>
-  
-  
-
-<!-- Comments Section -->
-<h5>Questions & Comments</h5>
-<div class="comment-container">
-  <div class="textarea-container">
-    <textarea id="commentInput" placeholder="Ask a question or leave a comment"></textarea>
-    <button id="postCommentButton">Post Comment</button>
-  </div>
-  <div class="like-container">
-    <i id="likeButton" class="fa-regular fa-heart"></i>
-  </div>
-</div>
-
-
-
-
-  <!-- Comments -->
-  <div id="commentsSection"></div>
+    
+    <!-- Comment Input -->
+    <div class="comment-container">
+      <textarea id="commentInput" placeholder="Ask a question or leave a comment"></textarea>
+      <button id="postCommentButton">Post Comment</button>
+    </div>
+    
+    <!-- Comments Section -->
+    <div id="commentsSection"></div>
+    
+    
 </div>
 
 

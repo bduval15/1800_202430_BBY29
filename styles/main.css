@@ -187,11 +187,12 @@ footer {
   margin-top: 10px;
 }
 
-.owner-and-price {
+/* Owner and Heart Section */
+.owner-heart-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  align-items: center; 
+  margin-bottom: 10px;
 }
 
 .owner-info {
@@ -210,43 +211,72 @@ footer {
 #eventOwner {
   font-weight: bold;
   font-size: 14px;
-}
-
-#eventPrice {
-  font-size: 14px;
   color: #000;
-  font-weight: bold;
 }
 
-/* Time and Place */
-.time-place {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+#likeButton {
+  font-size: 24px;
+  color: #c0392b;
+  cursor: pointer;
 }
 
-.time-place p {
-  margin: 0;
+#likeButton.fa-solid {
+  color: #cf2916 !important;
+}
+
+#likeButton.fa-regular {
+  color: #e62b2b !important;
+}
+
+.location {
   font-size: 14px;
+  color: #555;
+  text-align: right;
 }
 
-/* Description */
+
+.time-location-container {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.time-container p,
+.location-container p {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+  text-align: left; 
+}
+
+.location-container {
+  text-align: right; 
+}
+
+
+/* Event Description */
 #eventDescriptionContainer {
+  min-height: 100px;
   padding: 10px;
-  background: #f9f9f9;
+  background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-bottom: 20px;
+  display: flex; 
+  align-items: flex-start; 
+  overflow-wrap: break-word; 
 }
 
 /* Attendance Section */
 #eventAttendanceContainer {
   padding: 15px;
   border: 1px solid #ccc;
-  border-radius: 8px; 
+  border-radius: 8px;
   background-color: #f9f9f9; 
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 #joinEventButton {
@@ -263,20 +293,35 @@ footer {
   background-color: #145a5e; 
 }
 
-/* Comments Section */
-.comment-container {
+/* Questions, Comments, and Price Section */
+.price-comments-container {
   display: flex;
-  align-items: flex-start;
-  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-.textarea-container {
+.price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
+}
+
+.price-comments-container h5 {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Comment Input Section */
+.comment-container {
   display: flex;
-  flex-direction: column; 
-  flex: 1; 
+  flex-direction: column;
+  gap: 0px;
 }
 
 textarea#commentInput {
+  width: 100%;
   height: 60px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -298,41 +343,9 @@ textarea#commentInput {
 }
 
 #postCommentButton:hover {
-  background-color: #145a5e; 
+  background-color: #145a5e;
 }
 
-.like-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 120px;
-  padding: 10px;
-  text-align: center;
-  gap: 8px;
-}
-
-.like-label {
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
-}
-
-#likeButton {
-  margin-top: 15px;
-  font-size: 50px;
-  cursor: pointer;
-  color: #c0392b;
-}
-
-
-#likeButton.fa-solid {
-  color: #cf2916 !important;
-}
-
-#likeButton.fa-regular {
-  color: #e62b2b !important;
-}
 
 
 /* Categories Section */

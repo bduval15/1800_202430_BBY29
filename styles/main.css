@@ -439,3 +439,12 @@ textarea#commentInput {
   font-weight: bold;
 }
 
+#events-container .card {
+  cursor: pointer; 
+}
+
+#events-container .card:hover {
+  transform: scale(1.01); 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
+}
+

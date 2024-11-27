@@ -405,7 +405,7 @@ function displayEvent(eventData, container) {
                 <p class="card-text"><strong>Time:</strong> ${formattedTime}</p>
                 <p class="card-text"><strong>Place:</strong> ${eventData.place}</p>
                 <p class="card-text"><strong>Price:</strong> ${formattedPrice || 'Not specified'}</p>
-                <i id="${likeButtonId}" class="fa-regular fa-heart" style="cursor: pointer;"></i>
+                <i id="${likeButtonId}" class="fa-regular fa-heart"></i>
             </div>
         </div>
     `;
@@ -428,39 +428,6 @@ function displayEvent(eventData, container) {
                     likeButton.classList.add("fa-solid");
                 }
             });
-
-        // Attach event listener to the like button
-        likeButton.addEventListener("click", async (e) => {
-            e.stopPropagation(); // Prevent triggering the card click event
-            try {
-                if (!eventData || !eventData.id) {
-                    console.error("Event data is missing or invalid.");
-                    return;
-                }
-
-                if (likeButton.classList.contains("fa-regular")) {
-                    // Like the event
-                    likeButton.classList.remove("fa-regular");
-                    likeButton.classList.add("fa-solid");
-
-                    await userRef.update({
-                        likedEvents: firebase.firestore.FieldValue.arrayUnion(eventData.id),
-                    });
-                    console.log(`Event ${eventData.id} liked.`);
-                } else {
-                    // Unlike the event
-                    likeButton.classList.remove("fa-solid");
-                    likeButton.classList.add("fa-regular");
-
-                    await userRef.update({
-                        likedEvents: firebase.firestore.FieldValue.arrayRemove(eventData.id),
-                    });
-                    console.log(`Event ${eventData.id} unliked.`);
-                }
-            } catch (error) {
-                console.error("Error updating liked events:", error);
-            }
-        });
     }
 
     // Add click listener to open event details
@@ -468,6 +435,7 @@ function displayEvent(eventData, container) {
         openEventDetailPopup(eventData);
     });
 }
+
 
 
 async function openEventDetailPopup(eventData) {
@@ -500,49 +468,65 @@ async function openEventDetailPopup(eventData) {
     }
 
     // Update like button state and functionality
-    const likeButton = document.getElementById('likeButton');
-    if (likeButton) {
-        const likedEvents = userDoc.likedEvents || [];
-        if (likedEvents.includes(eventData.id)) {
-            likeButton.classList.remove("fa-regular");
-            likeButton.classList.add("fa-solid");
-        } else {
-            likeButton.classList.remove("fa-solid");
-            likeButton.classList.add("fa-regular");
-        }
+    const likeButton = document.getElementById("likeButton");
 
-        // Attach click listener to the like button
-        likeButton.onclick = async () => {
-            if (!eventData || !eventData.id) {
+    if (likeButton) {
+        // Remove all existing event listeners from the button
+        const newLikeButton = likeButton.cloneNode(true);
+        likeButton.parentNode.replaceChild(newLikeButton, likeButton);
+
+        // Add new event listener to the like button
+        newLikeButton.addEventListener("click", async () => {
+            if (!currentUser) {
+                alert("You need to be logged in to like events!");
+                return;
+            }
+
+            if (!tempEventData || !tempEventData.id) {
                 console.error("Event data is missing or invalid.");
                 return;
             }
-        
-            const userRef = db.collection('users').doc(currentUser.uid);
-        
+
+            const eventId = tempEventData.id;
+            const userRef = db.collection("users").doc(currentUser.uid);
+
             try {
-                if (likeButton.classList.contains("fa-regular")) {
-                    likeButton.classList.remove("fa-regular");
-                    likeButton.classList.add("fa-solid");
-        
+                if (newLikeButton.classList.contains("fa-regular")) {
+                    // Like the event
+                    newLikeButton.classList.remove("fa-regular");
+                    newLikeButton.classList.add("fa-solid");
+
                     await userRef.update({
-                        likedEvents: firebase.firestore.FieldValue.arrayUnion(eventData.id),
+                        likedEvents: firebase.firestore.FieldValue.arrayUnion(eventId),
                     });
-                    console.log(`Event ${eventData.id} liked.`);
+                    console.log(`Event ${eventId} liked.`);
                 } else {
-                    likeButton.classList.remove("fa-solid");
-                    likeButton.classList.add("fa-regular");
-        
+                    // Unlike the event
+                    newLikeButton.classList.remove("fa-solid");
+                    newLikeButton.classList.add("fa-regular");
+
                     await userRef.update({
-                        likedEvents: firebase.firestore.FieldValue.arrayRemove(eventData.id),
+                        likedEvents: firebase.firestore.FieldValue.arrayRemove(eventId),
                     });
-                    console.log(`Event ${eventData.id} unliked.`);
+                    console.log(`Event ${eventId} unliked.`);
                 }
+
+                // Synchronize the main feed
+                updateMainFeedHeart(eventId);
             } catch (error) {
                 console.error("Error updating liked events:", error);
             }
-        };
-        
+        });
+
+        // Set the correct initial state for the like button
+        const likedEvents = userDoc.likedEvents || [];
+        if (likedEvents.includes(eventData.id)) {
+            newLikeButton.classList.remove("fa-regular");
+            newLikeButton.classList.add("fa-solid");
+        } else {
+            newLikeButton.classList.remove("fa-solid");
+            newLikeButton.classList.add("fa-regular");
+        }
     }
 
     // Populate modal content with event details
@@ -634,6 +618,46 @@ async function openEventDetailPopup(eventData) {
     // Show the popup
     popup.style.display = 'block';
     overlay.style.display = 'block';
+}
+
+
+function updateMainFeedHeart(eventId) {
+    // Find the corresponding event card in the main feed
+    const likeButtonInFeed = document.querySelector(`#likeButton-${eventId}`);
+
+    if (likeButtonInFeed) {
+        const userRef = db.collection("users").doc(currentUser.uid);
+
+        userRef.get().then((doc) => {
+            const likedEvents = doc.data()?.likedEvents || [];
+            if (likedEvents.includes(eventId)) {
+                likeButtonInFeed.classList.remove("fa-regular");
+                likeButtonInFeed.classList.add("fa-solid");
+            } else {
+                likeButtonInFeed.classList.remove("fa-solid");
+                likeButtonInFeed.classList.add("fa-regular");
+            }
+        });
+    }
+}
+
+function updatePopupHeartIcon(eventId) {
+    const likeButton = document.getElementById("likeButton");
+
+    if (likeButton) {
+        const userRef = db.collection("users").doc(currentUser.uid);
+
+        userRef.get().then((doc) => {
+            const likedEvents = doc.data()?.likedEvents || [];
+            if (likedEvents.includes(eventId)) {
+                likeButton.classList.remove("fa-regular");
+                likeButton.classList.add("fa-solid");
+            } else {
+                likeButton.classList.remove("fa-solid");
+                likeButton.classList.add("fa-regular");
+            }
+        });
+    }
 }
 
 

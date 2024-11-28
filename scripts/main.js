@@ -502,6 +502,35 @@ async function openEventDetailPopup(eventData) {
         return;
     }
 
+      // Ensure eventData has an attendees array
+      if (!eventData.attendees) {
+        eventData.attendees = [];
+    }
+
+    // Update the attendance count and button state
+    updateAttendance(eventData);
+
+    // Add event listener for the Join/Leave button
+    joinEventButton.onclick = async () => {
+        if (!currentUser) {
+            alert("You need to be logged in to join an event!");
+            return;
+        }
+
+        if (!eventData.id) {
+            console.error("Event data is missing or invalid.");
+            return;
+        }
+
+        const isAttending = eventData.attendees.includes(currentUser.uid);
+
+        if (isAttending) {
+            await leaveEvent(eventData);  // Leave the event if already attending
+        } else {
+            await joinEvent(eventData);   // Join the event if not attending
+        }
+    };
+
     // Update like button state and functionality
     const likeButton = document.getElementById("likeButton");
 
@@ -605,25 +634,8 @@ async function openEventDetailPopup(eventData) {
     const eventPlace = document.getElementById('eventPlace');
     if (eventPlace) eventPlace.innerText = eventData.place || 'No Place';
 
-    const attendeesCount = document.getElementById('eventAttendeesCount');
+    const attendeesCount = document.getElementById('attendeesCount');
     if (attendeesCount) attendeesCount.innerText = eventData.attendees?.length || 0;
-
-    // Handle Join/Leave buttons
-    const joinButton = document.getElementById('joinEventButton');
-    const leaveButton = document.getElementById('leaveEventButton');
-
-    if (joinButton && leaveButton) {
-        if (eventData.attendees?.includes(currentUser?.uid)) {
-            joinButton.style.display = 'none';
-            leaveButton.style.display = 'block';
-        } else {
-            joinButton.style.display = 'block';
-            leaveButton.style.display = 'none';
-        }
-
-        joinButton.onclick = () => handleAttendance(eventData, true);
-        leaveButton.onclick = () => handleAttendance(eventData, false);
-    }
 
     // Load comments
     const commentsSection = document.getElementById('commentsSection');
@@ -695,34 +707,6 @@ function updatePopupHeartIcon(eventId) {
     }
 }
 
-
-function handleAttendance(eventData, isJoining) {
-    const userId = currentUser?.uid;
-    if (!userId) return;
-
-    if (isJoining) {
-        // Add user to attendees
-        if (!eventData.attendees) eventData.attendees = [];
-        if (!eventData.attendees.includes(userId)) {
-            eventData.attendees.push(userId);
-        }
-    } else {
-        // Remove user from attendees
-        if (eventData.attendees && eventData.attendees.includes(userId)) {
-            eventData.attendees = eventData.attendees.filter((id) => id !== userId);
-        }
-    }
-
-    // Update the database (e.g., Firestore)
-    db.collection('events').doc(eventData.id).update({
-        attendees: eventData.attendees,
-    }).then(() => {
-        console.log(isJoining ? 'Joined event' : 'Left event');
-        openEventDetailPopup(eventData); // Refresh the popup
-    }).catch((error) => {
-        console.error('Error updating attendance:', error);
-    });
-}
 
 function postComment(eventData) {
     const commentInput = document.getElementById('commentInput');
@@ -852,3 +836,94 @@ function togglePriceInput() {
     }
 }
 
+// Function to update the attendees count and button state
+function updateAttendance(eventData) {
+    const attendeesCount = document.getElementById('attendeesCount');
+    const joinEventButton = document.getElementById('joinEventButton');
+    
+    if (!attendeesCount || !joinEventButton) {
+        console.error("Join Event Button or Attendees Count element is missing!");
+        return;
+    }
+
+    // Ensure attendees array exists
+    if (!eventData.attendees) {
+        eventData.attendees = [];
+    }
+
+    // Update the attendees count
+    attendeesCount.innerText = eventData.attendees.length || 0;
+
+    // Check if the current user is attending
+    const isAttending = eventData.attendees.includes(currentUser.uid);
+
+    // Update button text based on user's attendance status
+    if (isAttending) {
+        joinEventButton.innerText = 'Leave Event';
+    } else {
+        joinEventButton.innerText = 'Join Event';
+    }
+}
+
+// Function to handle the "Join Event" action
+async function joinEvent(eventData) {
+    if (!currentUser) {
+        alert("You need to be logged in to join an event!");
+        return;
+    }
+
+    if (!eventData.id) {
+        console.error("Event data is missing or invalid.");
+        return;
+    }
+
+    try {
+        // Add the current user to the attendees list
+        const eventRef = db.collection("events").doc(eventData.id);
+        await eventRef.update({
+            attendees: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+        });
+
+        // Update the event data
+        eventData.attendees.push(currentUser.uid); // Add the user to local event data
+
+        // Update the attendance count and button state
+        updateAttendance(eventData);
+        console.log(`User ${currentUser.uid} joined the event ${eventData.id}`);
+    } catch (error) {
+        console.error("Error joining event:", error);
+    }
+}
+
+// Function to handle the "Leave Event" action
+async function leaveEvent(eventData) {
+    if (!currentUser) {
+        alert("You need to be logged in to leave an event!");
+        return;
+    }
+
+    if (!eventData.id) {
+        console.error("Event data is missing or invalid.");
+        return;
+    }
+
+    try {
+        // Remove the current user from the attendees list
+        const eventRef = db.collection("events").doc(eventData.id);
+        await eventRef.update({
+            attendees: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+        });
+
+        // Update the event data
+        const index = eventData.attendees.indexOf(currentUser.uid);
+        if (index > -1) {
+            eventData.attendees.splice(index, 1); // Remove the user from local event data
+        }
+
+        // Update the attendance count and button state
+        updateAttendance(eventData);
+        console.log(`User ${currentUser.uid} left the event ${eventData.id}`);
+    } catch (error) {
+        console.error("Error leaving event:", error);
+    }
+}

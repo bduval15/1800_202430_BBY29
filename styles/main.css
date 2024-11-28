@@ -562,6 +562,7 @@ textarea#commentInput {
 
 #eventFormContainer .price-container input[type="radio"] {
   margin-right: 4px; 
+  accent-color: #175e60; 
 }
 
 #eventFormContainer .price-container .dollar-sign {
@@ -590,6 +591,7 @@ textarea#commentInput {
 
 #eventFormContainer .place input[type="radio"] {
   margin-right: 4px;
+  accent-color: #175e60; 
 }
 
 #eventFormContainer .place input[type="radio"] + label {

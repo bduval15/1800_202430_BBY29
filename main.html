@@ -118,55 +118,62 @@
 
   <!-- Creating Event Form -->
   <div class="popup" id="popup">
-    <h2>Create New Event</h2>
-    <form id="eventForm">
-      <label for="title">Event Title:</label>
-      <input type="text" id="title" required placeholder="Christmas Comedy, Karaoke, etc..."><br>
-      <img id="eventPreviewImage" src="/images/events/default.jpg" alt="Event Preview"
-        style="width: 100%; max-height: 200px; object-fit: cover; margin-top: 10px;">
-
-
-      <div class="category-container">
-        <div class="category-row">
-          <label for="category">Category:</label><br>
-          <input type="radio" id="sports" name="preferences" value="sports"> Sports
-          <input type="radio" id="clubs" name="preferences" value="clubs"> Clubs
-          <input type="radio" id="music" name="preferences" value="music"> Music
+    <div id="eventFormContainer">
+      <button id="closeEventPopup" class="close-popup">X</button> 
+      <h2>Create New Event</h2>   
+      <form id="eventForm">
+        <label for="title">Event Title:</label>
+        <input type="text" id="title" required placeholder="Christmas Comedy, Karaoke, etc...">
+        <img id="eventPreviewImage" src="/images/events/default.jpg" alt="Event Preview">
+        <div class="category-container">
+          <label for="category">Category:</label>
+          <div class="category-container">
+            <div class="category-item">
+              <input type="radio" id="sports" name="preferences" value="sports">
+              <label for="sports">Sports</label>
+            </div>
+            <div class="category-item">
+              <input type="radio" id="clubs" name="preferences" value="clubs">
+              <label for="clubs">Clubs</label>
+            </div>
+            <div class="category-item">
+              <input type="radio" id="music" name="preferences" value="music">
+              <label for="music">Music</label>
+            </div>
+            <div class="category-item">
+              <input type="radio" id="art" name="preferences" value="art">
+              <label for="art">Art</label>
+            </div>
+            <div class="category-item">
+              <input type="radio" id="festivals" name="preferences" value="festivals">
+              <label for="festivals">Festivals</label>
+            </div>
+            <div class="category-item">
+              <input type="radio" id="networking" name="preferences" value="networking">
+              <label for="networking">Networking</label>
+            </div>
+          </div>          
         </div>
-        <div class="category-row">
-          <input type="radio" id="art" name="preferences" value="art"> Art
-          <input type="radio" id="festivals" name="preferences" value="festivals"> Festivals
-          <input type="radio" id="networking" name="preferences" value="networking"> Networking
+        <label for="description">Description:</label>
+        <textarea id="description" required placeholder="Describe your event here..."></textarea>
+        <div class="price-container">
+          <input type="radio" id="free" name="priceOption" value="free" onclick="togglePriceInput()"> Free
+          <input type="radio" id="paid" name="priceOption" value="paid" onclick="togglePriceInput()"> Paid
+          <span class="dollar-sign">$</span>
+          <input type="number" id="priceInput" name="price" placeholder="Enter amount" min="0" step="1" class="small-input">
         </div>
-      </div>
-      <label for="description">Description:</label><br>
-      <textarea id="description" required
-        placeholder="This is an event where you can see our new Christmas Comedy with popular actors."></textarea>
-
-      <div class="price-container">
-        <input type="radio" id="free" name="priceOption" value="free" onclick="togglePriceInput()"> Free
-        <input type="radio" id="paid" name="priceOption" value="paid" onclick="togglePriceInput()"> Paid
-        <span class="dollar-sign"> $</span>
-        <input type="number" id="priceInput" name="price" placeholder="Enter amount" min="0" step="1"
-          class="small-input">
-      </div>
-
-
-      <div class="field-container">
-        <div>
+        <div class="field-container">
           <label for="time">Time:</label>
           <input type="datetime-local" id="time" required class="small-input">
         </div>
-      </div>
-      <div class="place">
-        <div>
-          <label for="place">Location:</label><br>
+        <div class="place">
+          <label for="place">Location:</label>
           <input type="radio" id="vancouver" name="place" value="Vancouver"> Vancouver
           <input type="radio" id="bcit" name="place" value="BCIT"> BCIT
         </div>
-      </div>
-      <button type="submit" id="submitButton">Submit New Event</button>
-    </form>
+        <button type="submit" id="submitButton">Submit New Event</button>
+      </form>
+    </div>
   </div>
 
   <!-- Confirmation Popup -->

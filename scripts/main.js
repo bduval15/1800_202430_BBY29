@@ -110,7 +110,6 @@ function initializeEventHandlers() {
 
 }
 
-
 // Popup Controls
 function openPopup() {
     document.getElementById('overlay').style.display = 'block';
@@ -122,10 +121,24 @@ function openPopup() {
     });
 }
 
-function closePopup() {
-    document.getElementById('overlay').style.display = 'none';
-    document.getElementById('popup').style.display = 'none';
-}
+// Generalized close function to handle multiple popups
+function closePopup(event) {
+    const button = event.target; 
+    const parentPopup = button.closest('.popup'); 
+    if (parentPopup) {
+      parentPopup.style.display = 'none';
+    }
+  
+    const overlay = document.getElementById('overlay');
+    if (overlay) {
+      overlay.style.display = 'none';
+    }
+  }
+  document.querySelectorAll('.close-popup').forEach((button) => {
+    button.addEventListener('click', closePopup);
+  });
+  
+  
 
 function openConfirmationPopup(eventData) {
     const confirmationPopup = document.getElementById('confirmationPopup');
@@ -174,8 +187,6 @@ function openConfirmationPopup(eventData) {
         console.error('Error: One or more popup elements not found!');
     }
 }
-
-
 
 
 function closeConfirmationPopup() {
@@ -460,7 +471,6 @@ function displayEvent(eventData, container) {
         openEventDetailPopup(eventData);
     });
 }
-
 
 
 async function openEventDetailPopup(eventData) {

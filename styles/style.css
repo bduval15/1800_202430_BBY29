@@ -27,50 +27,74 @@ body {
   padding-left: 20px;
 }
 
+/* Dropdown Button */
 .dropdown a {
-  display: flex;
-  align-items: center;
+  display: flex !important;
+  align-items: center !important;
+  background-color: #175e60 !important;
+  border: none !important;
+  margin-right: 10px !important;
+  color: white !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
 }
 
-.dropdown a {
-  background-color: #175e60;
-  border: #28AFB0;
-  margin-right: 70px;
-}
-
-.dropdown i {
-  font-size: 1.5rem;
-  border-radius: 50%;
-  color: white;
-}
-
-/* Targets dropdown items in the dropdown menu */
-.dropdown-menu .dropdown-item {
-  color: white;
-}
-
-
+/* Dropdown Button Hover Effect */
 .dropdown a:hover {
-  opacity: 0.8;
-  background-color: #175e60;
+  opacity: 0.8 !important;
+  background-color: #175e60 !important;
 }
 
+/* Dropdown Menu */
 .dropdown-menu {
-  position: absolute;
-  left: 0;
-  color: #175e60;
+  position: absolute !important;
+  top: 50px !important;
+  right: 0 !important; 
+  left: auto !important; 
+  background-color: #175e60 !important; 
+  color: white !important;
+  border: none !important; 
+  border-radius: 8px !important;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1) !important; 
+  padding: 0 !important; 
+  margin: 0 !important; 
+  min-width: unset !important; 
+  width: auto !important; 
+  z-index: 1000 !important; 
 }
+
+/* Dropdown Items */
+.dropdown-menu .dropdown-item {
+  padding: 8px 15px !important; 
+  font-size: 1rem !important; 
+  color: white !important; 
+  text-decoration: none !important; 
+  display: block !important; 
+  transition: all 0.3s ease !important; 
+  margin: 0 !important; 
+  border: none !important; 
+}
+
+
+/* Hover Effect for Items */
+.dropdown-menu .dropdown-item:hover {
+  background-color: #28AFB0 !important; 
+  color: white !important;
+}
+
+/* Remove Borders for Items */
+.dropdown-menu .dropdown-item:last-child {
+  border-bottom: none !important;
+}
+
+
+
 
 /* Responsive Navbar */
 @media (max-width: 768px) {
   .nav-links {
     display: none;
   }
-
-  .dropdown {
-    margin-left: auto;
-  }
-}
 
 .welcome-banner {
   padding: 100px 20px;
@@ -659,4 +683,5 @@ article p {
   /* Maintain the logo's aspect ratio */
   display: inline-block;
   vertical-align: middle;
+}
 }

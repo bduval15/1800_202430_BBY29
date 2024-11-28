@@ -327,7 +327,7 @@ function loadMyEvents() {
                                 const eventCard = `
                                 <div class="card mb-4" id="event-${eventId}" style="border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden; max-width: 400px; margin: auto;">
                                     <img src="${eventData.picture || '/images/events/default.jpg'}" 
-                                         class="card-img-top" alt="${eventData.title}" style="height: 200px; object-fit: cover;">
+                                        class="card-img-top" alt="${eventData.title}" style="height: 200px; object-fit: cover;">
                                     <div class="card-body">
                                         <!-- Title and Delete Button -->
                                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -341,12 +341,18 @@ function loadMyEvents() {
                                         <!-- Time and Place -->
                                         <p class="card-text" style="font-size: 0.9rem; color: #555;"><strong>Time:</strong> ${formatTimestamp(eventData.time)}</p>
                                         <p class="card-text" style="font-size: 0.9rem; color: #555;"><strong>Place:</strong> ${eventData.place || 'No Location Provided'}</p>
-                                        <!-- Price -->
-                                        <p class="card-text" style="font-size: 0.9rem; font-weight: bold; color: black;">${formatPrice(eventData.price)}</p>
+                                        <!-- Price and Edit Button -->
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <span style="font-size: 0.9rem; font-weight: bold; color: black;">${formatPrice(eventData.price)}</span>
+                                            <button class="edit-button" style="border-radius: 50%; font-size: 1.2rem; margin-top: -5px; right: 23px;" onclick="editEvent('${eventId}')">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            `;
-                            
+                                `;
+
+
                                 myEventsContainer.innerHTML += eventCard;
                             });
                         }
@@ -417,7 +423,7 @@ function deleteEvent(eventId) {
 window.deleteEvent = deleteEvent;
 
 function saveProfileState(profilePicture, preferences) {
-    const existingProfilePicture = localStorage.getItem('profilePicture');
+    const existingProfilePicture = localStorage.getItem('avatar');
     const finalProfilePicture = profilePicture || existingProfilePicture;
 
     localStorage.setItem('profilePicture', finalProfilePicture);
@@ -425,10 +431,10 @@ function saveProfileState(profilePicture, preferences) {
 }
 
 function restoreProfileState() {
-    const profilePicture = localStorage.getItem('profilePicture');
+    const profilePicture = localStorage.getItem('avatar');
     const preferences = JSON.parse(localStorage.getItem('preferences'));
     if (profilePicture) {
-        document.getElementById('profilePicture').src = profilePicture;
+        document.getElementById('avatar').src = profilePicture;
     }
 
     // Restore preferences

@@ -411,6 +411,18 @@ footer {
   font-size: 20px;
 }
 
+.edit-button {
+  position: absolute; 
+  left: 260px; 
+  background-color: transparent; 
+  color: #4e4e4eda; 
+  border: none; 
+  font-size: 24px; 
+  cursor: pointer;
+  padding: 0; 
+  transition: color 0.3s ease;
+}
+
 /* Modal Overlay */
 .custom-modal-overlay {
   position: fixed;
@@ -489,6 +501,7 @@ footer {
 .custom-modal .btn-secondary:hover {
   background-color: #495057; 
 }
+
 
 
 

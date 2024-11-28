@@ -269,6 +269,16 @@ footer {
   overflow-wrap: break-word; 
 }
 
+/* Styling for H2 Title Inside Event Form Container */
+#eventFormContainer h2 {
+  font-size: 1.5rem; 
+  color: #333; 
+  margin: 0 0 30px 0 !important; 
+  text-align: center; 
+  display: block; 
+}
+
+
 /* Attendance Section */
 #eventAttendanceContainer {
   padding: 15px;
@@ -452,13 +462,171 @@ textarea#commentInput {
   font-weight: bold;
 }
 
-#events-container .card {
-  cursor: pointer; 
+/* Form Container */
+#eventFormContainer {
+  width: 100%;
+  max-width: 500px;
+  background-color: #ffffff;
+  overflow: hidden; 
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 15px; 
+  box-sizing: border-box;
 }
 
-#events-container .card:hover {
-  transform: scale(1.01); 
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
+#eventFormContainer h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0; 
+  flex-grow: 1;
 }
 
+
+/* Image Styling */
+#eventPreviewImage {
+  width: 100%;
+  max-height: 100%; 
+  object-fit: cover;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+/* Labels */
+#eventFormContainer label {
+  font-size: 0.85rem; 
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4px; 
+  display: block;
+}
+
+/* Input Fields */
+#eventFormContainer input[type="text"],
+#eventFormContainer textarea,
+#eventFormContainer input[type="number"],
+#eventFormContainer input[type="datetime-local"] {
+  width: 100%;
+  padding: 6px; 
+  border: 1px solid #ccc;
+  border-radius: 8px; 
+  font-size: 0.85rem;
+  margin-bottom: 8px; 
+  box-sizing: border-box;
+}
+
+#eventFormContainer input:focus,
+#eventFormContainer textarea:focus {
+  border-color: #175e60;
+  outline: none;
+  box-shadow: 0 0 5px rgba(23, 94, 96, 0.5);
+}
+
+/* Description Textarea */
+#eventFormContainer textarea {
+  height: 60px; 
+  resize: none;
+}
+
+/* Category Section */
+#eventFormContainer .category-container {
+  margin-bottom: 10px; 
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; 
+  justify-content: space-between; 
+}
+
+#eventFormContainer .category-container .category-item {
+  flex: 0 0 calc(33.33% - 10px); 
+  display: flex;
+  align-items: center; 
+  gap: 6px; 
+  font-size: 0.85rem; 
+  cursor: pointer;
+}
+
+#eventFormContainer .category-container input[type="radio"] {
+  margin: 0; 
+  accent-color: #175e60; 
+}
+
+/* Price Section */
+#eventFormContainer .price-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+  margin-bottom: 12px;
+}
+
+#eventFormContainer .price-container input[type="radio"] {
+  margin-right: 4px; 
+}
+
+#eventFormContainer .price-container .dollar-sign {
+  margin-left: 3px;
+}
+
+#eventFormContainer #priceInput {
+  flex-grow: 1;
+  padding: 6px; 
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 0.85rem;
+}
+
+/* Time and Location Section */
+#eventFormContainer .field-container {
+  margin-bottom: 12px; 
+}
+
+#eventFormContainer .place {
+  margin-bottom: 15px; 
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#eventFormContainer .place input[type="radio"] {
+  margin-right: 4px;
+}
+
+#eventFormContainer .place input[type="radio"] + label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  background-color: #f5f5f5;
+  padding: 6px 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#eventFormContainer .place input[type="radio"]:checked + label {
+  background-color: #175e60;
+  color: white;
+  border-color: #175e60;
+}
+
+/* Submit Button */
+#submitButton {
+  width: 100%;
+  background-color: #175e60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px; 
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 8px; 
+}
+
+#submitButton:hover {
+  background-color: #28AFB0;
+}
 

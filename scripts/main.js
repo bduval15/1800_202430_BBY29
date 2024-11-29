@@ -123,22 +123,28 @@ function openPopup() {
 
 // Generalized close function to handle multiple popups
 function closePopup(event) {
-    const button = event.target; 
-    const parentPopup = button.closest('.popup'); 
+    const parentPopup = event?.target?.closest('.popup'); // Check if event and target exist
     if (parentPopup) {
-      parentPopup.style.display = 'none';
+        parentPopup.style.display = 'none';
     }
-  
+
     const overlay = document.getElementById('overlay');
     if (overlay) {
-      overlay.style.display = 'none';
+        overlay.style.display = 'none';
     }
-  }
-  document.querySelectorAll('.close-popup').forEach((button) => {
+}
+
+function closePopupById(popupId) {
+    const popup = document.getElementById(popupId);
+    const overlay = document.getElementById('overlay');
+    
+    if (popup) popup.style.display = 'none';
+    if (overlay) overlay.style.display = 'none';
+}
+
+document.querySelectorAll('.close-popup').forEach((button) => {
     button.addEventListener('click', closePopup);
-  });
-  
-  
+});
 
 function openConfirmationPopup(eventData) {
     const confirmationPopup = document.getElementById('confirmationPopup');
@@ -235,7 +241,7 @@ async function handleFormSubmit(event) {
             newEvent.id = docRef.id;
         }
 
-        closePopup();
+        closePopupById('popup');
         openConfirmationPopup(newEvent);
         event.target.reset(); // Reset the form for a new event
         tempEventData = newEvent;
@@ -378,11 +384,6 @@ async function loadFilteredEvents(categories = []) {
             ) {
                 displayEvent(eventData, eventsContainer);
             }
-        });
-
-        snapshot.forEach((doc) => {
-            const eventData = { id: doc.id, ...doc.data() }; // Include Firestore document ID here
-            displayEvent(eventData, eventsContainer);
         });
     } catch (error) {
         console.error("Error loading filtered events:", error);

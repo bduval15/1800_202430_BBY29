@@ -87,12 +87,7 @@ body {
   border-bottom: none !important;
 }
 
-
-
-
-/* Responsive Navbar */
-@media (max-width: 768px) {
-  .nav-links {
+.nav-links {
     display: none;
   }
 
@@ -169,8 +164,6 @@ body {
 
 
 
-/* Responsive Design */
-@media (max-width: 700px) {
   .welcome-banner h1 {
     font-size: 2rem;
   }
@@ -183,7 +176,7 @@ body {
     padding: 12px 25px;
     font-size: 1rem;
   }
-}
+
 
 /* Footer Styles */
 footer {
@@ -683,5 +676,4 @@ article p {
   /* Maintain the logo's aspect ratio */
   display: inline-block;
   vertical-align: middle;
-}
 }

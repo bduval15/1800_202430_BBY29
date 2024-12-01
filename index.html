@@ -20,7 +20,7 @@
     <!-- CSS-->
     <link rel="stylesheet" type="text/css" href="./styles/style.css" />
     <link rel="stylesheet" href="./styles/index.css">
-    
+
 
     <!-- Firebase -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -54,27 +54,31 @@
         </div>
     </nav>
 
+
     <!-- Welcome Section -->
-     <section class="welcome-banner">
+    <section class="welcome-banner">
         <div class="welcome-content text-center">
             <h1 id="notefy">NotEFY</h1>
-            <p id="exp">Discover and join the most exciting events in your area. <br> From art exhibitions to sporting events, NotEFY is your gateway to unforgettable experiences.</p>
+            <p id="exp">
+                Discover and join the most exciting events in your area. <br>
+                From art exhibitions to sporting events, NotEFY is your gateway to unforgettable experiences.
+            </p>
             <div class="card-body d-grid gap-2">
                 <a href="login.html" id="login-button">
                     <button id="submit" class="btn btn-primary" type="button">Login / Sign Up</button>
                 </a>
             </div>
-            <div class="scroll" id="events-container">
-                <!-- Event details will dynamically populate here -->
-                <button class="arrow left" id="prev-event">&#9664;</button>
-                <div id="event-preview">
-                    <!-- Single event will display here -->
+            <!-- Events Section -->
+            <section id="events-container">
+                <div id="carousel-track">
+                    <!-- Events will be dynamically injected here -->
                 </div>
-                <button class="arrow right" id="next-event">&#9654;</button>
-            </div>
-        </div>
+            </section>
         </div>
     </section>
+
+
+
 
     <!-- Footer -->
     <footer>

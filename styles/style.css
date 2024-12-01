@@ -104,7 +104,6 @@ body {
 .welcome-content {
   max-width: 800px;
   background-color: #0e2727;
-  /* Transparent background for text readability */
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgb(0, 0, 0);
@@ -457,16 +456,12 @@ button {
 .field-container {
   display: flex;
   justify-content: space-between;
-  /* Aligns fields side by side */
   margin-bottom: 10px;
-  /* Space between rows */
 }
 
 .field-container div {
   flex: 1;
-  /* Distributes space equally */
   margin-right: 10px;
-  /* Space between the two fields */
 }
 
 .field-container div:last-child {
@@ -626,7 +621,6 @@ article p {
 .filter-buttons {
   display: flex;
   justify-content: flex-end;
-  /* Align submit button to the far right */
   align-items: center;
   margin-top: 15px;
   position: relative;

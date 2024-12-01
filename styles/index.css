@@ -113,8 +113,7 @@ footer {
   align-items: center;
   background: linear-gradient(180deg, rgba(33, 146, 147, 1) 60%, rgba(16, 75, 69, 1) 100%);
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 /* Carousel track for smooth transitions */
@@ -257,18 +256,3 @@ article p {
   padding: 0;
 }
 
-/* Logo Container Styling */
-.main-logo-container {
-  display: flex;
-  justify-content: center; 
-  align-items: center; 
-  margin-top: 50px;
-  margin-bottom: -50px;
-}
-
-/* Logo Image Styling */
-.main-logo {
-  width: 150px; 
-  height: auto; 
-  object-fit: contain;
-}

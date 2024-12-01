@@ -37,7 +37,6 @@ body {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-
 #userName {
   margin-top: 5px;
 }
@@ -45,7 +44,6 @@ body {
 .card-body .text-center {
   margin-top: 0;
 }
-
 
 /* Avatar Modal */
 #avatarModal {

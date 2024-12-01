@@ -49,36 +49,36 @@ body {
 .dropdown-menu {
   position: absolute !important;
   top: 50px !important;
-  right: 0 !important; 
-  left: auto !important; 
-  background-color: #175e60 !important; 
+  right: 0 !important;
+  left: auto !important;
+  background-color: #175e60 !important;
   color: white !important;
-  border: none !important; 
+  border: none !important;
   border-radius: 8px !important;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1) !important; 
-  padding: 0 !important; 
-  margin: 0 !important; 
-  min-width: unset !important; 
-  width: auto !important; 
-  z-index: 1000 !important; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-width: unset !important;
+  width: auto !important;
+  z-index: 1000 !important;
 }
 
 /* Dropdown Items */
 .dropdown-menu .dropdown-item {
-  padding: 8px 15px !important; 
-  font-size: 1rem !important; 
-  color: white !important; 
-  text-decoration: none !important; 
-  display: block !important; 
-  transition: all 0.3s ease !important; 
-  margin: 0 !important; 
-  border: none !important; 
+  padding: 8px 15px !important;
+  font-size: 1rem !important;
+  color: white !important;
+  text-decoration: none !important;
+  display: block !important;
+  transition: all 0.3s ease !important;
+  margin: 0 !important;
+  border: none !important;
 }
 
 
 /* Hover Effect for Items */
 .dropdown-menu .dropdown-item:hover {
-  background-color: #28AFB0 !important; 
+  background-color: #28AFB0 !important;
   color: white !important;
 }
 
@@ -88,8 +88,8 @@ body {
 }
 
 .nav-links {
-    display: none;
-  }
+  display: none;
+}
 
 .welcome-banner {
   padding: 100px 20px;
@@ -161,21 +161,18 @@ body {
   background-color: #22333b;
 }
 
+.welcome-banner h1 {
+  font-size: 2rem;
+}
 
+.welcome-banner p {
+  font-size: 1.2rem;
+}
 
-  .welcome-banner h1 {
-    font-size: 2rem;
-  }
-
-  .welcome-banner p {
-    font-size: 1.2rem;
-  }
-
-  .banner-btn {
-    padding: 12px 25px;
-    font-size: 1rem;
-  }
-
+.banner-btn {
+  padding: 12px 25px;
+  font-size: 1rem;
+}
 
 /* Footer Styles */
 footer {
@@ -260,7 +257,6 @@ div.scroll {
 
 .scroll {
   max-height: 200px;
-  /* Adjust height as needed */
   overflow-y: auto;
   padding: 10px;
   background-color: #fff;
@@ -299,7 +295,6 @@ div.scroll {
 
 .plus-icon {
   font-size: 28px;
-  /* Make the Plus Icon slightly larger */
 }
 
 .container h1 {
@@ -328,22 +323,18 @@ div.scroll {
 }
 
 body {
-
   background: #d1d5db;
 }
 
 .height {
-
   height: 10vh;
 }
 
 .form {
-
   position: relative;
 }
 
 .form .fa-search {
-
   position: absolute;
   top: 20px;
   left: 20px;
@@ -352,7 +343,6 @@ body {
 }
 
 .form span {
-
   position: absolute;
   right: 17px;
   top: 13px;
@@ -366,7 +356,6 @@ body {
 }
 
 .left-pan i {
-
   padding-left: 10px;
 }
 
@@ -405,8 +394,6 @@ body {
   margin-top: 5px;
 }
 
-
-
 .overlay {
   display: none;
   position: fixed;
@@ -434,15 +421,12 @@ body {
 button {
   margin-top: 20px;
   padding: 15px 30px;
-  /* Increased padding for a bigger button */
   background-color: #175e60;
-  /* Teal color for the button */
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  /* Increased font size */
 }
 
 .event {
@@ -466,7 +450,6 @@ button {
 
 .field-container div:last-child {
   margin-right: 0;
-  /* Remove margin from last child */
 }
 
 input[type="text"],
@@ -474,20 +457,14 @@ input[type="url"],
 input[type="datetime-local"],
 textarea {
   width: 100%;
-  /* Make input boxes take the full width of the container */
   padding: 10px;
-  /* Add padding for better appearance */
   border: 1px solid #ccc;
-  /* Border styling */
   border-radius: 5px;
-  /* Rounded corners */
   box-sizing: border-box;
-  /* Ensures padding is included in width */
 }
 
 textarea {
   height: 100px;
-  /* Make the description box taller */
 }
 
 
@@ -660,14 +637,11 @@ article p {
   display: block;
   position: relative;
   padding-top: 20px;
-  /* Leave space for the X icon */
 }
 
 .nav-logo {
   height: 25px;
-  /* Adjust this value to resize the logo */
   width: auto;
-  /* Maintain the logo's aspect ratio */
   display: inline-block;
   vertical-align: middle;
 }

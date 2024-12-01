@@ -21,12 +21,6 @@ h2 {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-@media (max-width: 768px) {
-  .popup {
-    width: 75%;
-  }
-}
-
 .field-container {
   display: flex;
   flex-direction: column;
@@ -356,8 +350,6 @@ textarea#commentInput {
   background-color: #145a5e;
 }
 
-
-
 /* Categories Section */
 .categories-section {
   margin: 20px 0;
@@ -465,7 +457,7 @@ textarea#commentInput {
 /* Form Container */
 #eventFormContainer {
   width: 100%;
-  max-width: 500px;
+  max-width: 100%;
   background-color: #ffffff;
   overflow: hidden; 
   max-height: 90vh;

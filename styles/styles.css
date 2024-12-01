@@ -1,18 +1,15 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    /* Center align all content */
 }
 
 h1,
 h2 {
     margin: 20px 0;
-    /* Adds vertical space above and below headings */
 }
 
 p {
     margin: 15px 0;
-    /* Adds vertical space for paragraphs */
 }
 
 .popup {
@@ -26,7 +23,6 @@ p {
     z-index: 1000;
     padding: 20px;
     width: 600px;
-    /* Increased width for the popup */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -44,15 +40,12 @@ p {
 button {
     margin-top: 20px;
     padding: 15px 30px;
-    /* Increased padding for a bigger button */
     background-color: teal;
-    /* Teal color for the button */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    /* Increased font size */
 }
 
 .event {
@@ -66,21 +59,16 @@ button {
 .field-container {
     display: flex;
     justify-content: space-between;
-    /* Aligns fields side by side */
     margin-bottom: 10px;
-    /* Space between rows */
 }
 
 .field-container div {
     flex: 1;
-    /* Distributes space equally */
     margin-right: 10px;
-    /* Space between the two fields */
 }
 
 .field-container div:last-child {
     margin-right: 0;
-    /* Remove margin from last child */
 }
 
 input[type="text"],
@@ -88,18 +76,12 @@ input[type="url"],
 input[type="datetime-local"],
 textarea {
     width: 100%;
-    /* Make input boxes take the full width of the container */
     padding: 10px;
-    /* Add padding for better appearance */
     border: 1px solid #ccc;
-    /* Border styling */
     border-radius: 5px;
-    /* Rounded corners */
     box-sizing: border-box;
-    /* Ensures padding is included in width */
 }
 
 textarea {
     height: 100px;
-    /* Make the description box taller */
 }

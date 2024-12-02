@@ -332,6 +332,25 @@ async function loadFilteredEvents(categories = []) {
             }
         }
 
+        eventsContainer.addEventListener('mouseover', (event) => {
+            const card = event.target.closest('.card');
+            if (card) {
+                card.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease'; 
+                card.style.transform = 'scale(1.05)';
+                card.style.boxShadow = '0px 8px 16px rgba(0, 0, 0, 0.2)';
+                card.style.cursor = 'pointer';
+            }
+        });
+
+        eventsContainer.addEventListener('mouseout', (event) => {
+            const card = event.target.closest('.card');
+            if (card) {
+                card.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease'; 
+                card.style.transform = 'scale(1)';
+                card.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
+            }
+        });
+
         // Default to "All Events" if no categories are active
         if (categories.length === 0) {
             upcomingHeader.innerText = "All Events"; // Default header

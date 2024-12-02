@@ -1,6 +1,6 @@
 /**
  * @file index.js
- * @description Theis script dynamically fetches events from a Firestore database, formats the data, 
+ * @description This script dynamically fetches events from a Firestore database, formats the data, 
  *              populates an event carousel, and enables auto-scrolling functionality. It ensures 
  *              proper data formatting, handles missing or default values, and provides a smooth 
  *              user experience for event browsing.

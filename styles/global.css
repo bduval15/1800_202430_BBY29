@@ -291,10 +291,71 @@ div.scroll {
   text-decoration: none;
   color: #fff;
   font-size: 24px;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
-.plus-icon {
+.footer-icon:hover {
+  color: #28AFB0;
+  transform: scale(1.1);
+}
+
+/* Circle Container */
+.circle-container {
+  position: absolute;
+  top: -35px; 
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  z-index: 101;
+}
+
+/* Circle Button */
+.circle-container a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px; 
+  height: 50px; 
+  background-color: #175e60; 
+  border-radius: 50%; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+  text-decoration: none;
+}
+
+.circle-container a:hover {
+  transform: scale(1.1); 
+  background-color: #28AFB0; 
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3); 
+  animation: pulse 0.6s infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+/* Plus Icon */
+.circle-container .plus-icon {
   font-size: 28px;
+  color: white; 
+  margin: 0; 
+  line-height: 1;
+}
+
+/* Create Event Text */
+.create-event-text {
+  margin-top: 0px;
+  margin-bottom: 20px; 
+  font-size: 17px; 
+  color: white; 
+  text-align: center;
+  white-space: nowrap; 
 }
 
 .container h1 {

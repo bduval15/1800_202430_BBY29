@@ -39,25 +39,25 @@
         <!-- Navbar -->
         <nav class="navbar">
             <div class="nav-logo">
-              <a href="main.html">
-                <img src="images/NotEFY.PNG" alt="NotEFY Logo" class="nav-logo">
-              </a>
+                <a href="main.html">
+                    <img src="images/NotEFY.PNG" alt="NotEFY Logo" class="nav-logo">
+                </a>
             </div>
             <div class="dropdown">
-              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <i class="fa-regular fa-user"></i>
-                <img id="navProfileImage" alt="Profile Image"
-                  style="width: 30px; height: 30px; border-radius: 50%; display: none;" />
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-                <li><a class="dropdown-item" href="#">Notifications</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="index.html">Log out</a></li>
-              </ul>
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="fa-regular fa-user"></i>
+                    <img id="navProfileImage" alt="Profile Image"
+                        style="width: 30px; height: 30px; border-radius: 50%; display: none;" />
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+                    <li><a class="dropdown-item" href="#">Notifications</a></li>
+                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><a class="dropdown-item" href="index.html">Log out</a></li>
+                </ul>
             </div>
-          </nav>
+        </nav>
     </header>
 
     <!-- Profile Information-->
@@ -70,8 +70,9 @@
                             <div class="d-flex flex-column align-items-center text-center">
                                 <div class="container py-5">
                                     <div class="icon" title="Click to interact">
-                                    <img id="profileImage" src="/images/profilePics/default.webp" class="profileImage"
-                                        style="width: 150px; height: 150px;" alt="Selected profile picture">
+                                        <img id="profileImage" src="/images/profilePics/default.webp"
+                                            class="profileImage" style="width: 150px; height: 150px;"
+                                            alt="Selected profile picture">
                                     </div>
                                 </div>
                                 <div id="avatarModal" class="modal">
@@ -228,8 +229,8 @@
                             <div class="tab-pane fade" id="likes" role="tabpanel" aria-labelledby="likes-tab">
                                 <div id="likedEventsContainer"></div>
                             </div>
-                            
-                              
+
+
                         </div>
 
                     </div>
@@ -237,71 +238,74 @@
             </div>
         </div>
     </div>
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="profileToast" class="toast align-items-center" role="alert" aria-live="assertive"
-                aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        Profile picture updated <i class="fa-solid fa-check" style="color: #226d5e;"></i>
-                    </div>
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="profileToast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Profile picture updated <i class="fa-solid fa-check" style="color: #226d5e;"></i>
                 </div>
             </div>
         </div>
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="deleteToast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        Event deleted successfully <i class="fa-solid fa-trash" style="color: #226d5e;"></i>
-                    </div>
+    </div>
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="deleteToast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Event deleted successfully <i class="fa-solid fa-trash" style="color: #226d5e;"></i>
                 </div>
             </div>
         </div>
-        
-        <!-- Sticky Footer-->
-        <div class="sticky-footer">
-            <div class="footer-icons">
-                <a href="main.html" class="footer-icon">
-                    <i class="fa fa-home"></i> <!-- Home Icon -->
-                </a>
+    </div>
+
+    <!-- Sticky Footer-->
+    <div class="sticky-footer">
+        <div class="footer-icons">
+            <a href="main.html" class="footer-icon">
+                <i class="fa fa-home"></i> <!-- Home Icon -->
+            </a>
+            <div class="circle-container">
                 <a href="#add" id="createIcon" class="footer-icon plus-icon">
                     <i class="fa fa-plus"></i> <!-- Plus Icon -->
                 </a>
-                <a href="profile.html" class="footer-icon">
-                    <i class="fa fa-user"></i> <!-- Profile Icon -->
-                </a>
+                <span class="create-event-text">Create Event</span>
+            </div>
+            <a href="profile.html" class="footer-icon">
+                <i class="fa fa-user"></i> <!-- Profile Icon -->
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>About NotEFY</h4>
+                <p>NotEFY helps you discover exciting events and make new friends. Join us and never miss out!
+                </p>
+            </div>
+            <div class="footer-section">
+                <ul class="social-links">
+                    <li><a href="instagram"><i aria-hidden="true" class="fa-brands fa-instagram"></i><span
+                                class="fa-sr-only">Instagram</span></a></li>
+                    <li><a href="x"><i aria-hidden="true" class="fa-brands fa-x-twitter"></i><span
+                                class="fa-sr-only">Twitter</span></a></li>
+                    <li><a href="pinterest"><i aria-hidden="true" class="fa-brands fa-pinterest-p"></i><span
+                                class="fa-sr-only">Pinterest</span></a></li>
+                    <li><a href="youtube"><i aria-hidden="true" class="fa-brands fa-youtube"></i><span
+                                class="fa-sr-only">Youtube</span></a></li>
+                </ul>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 NotEFY. All Rights Reserved.</p>
             </div>
         </div>
-        <!-- Footer -->
-        <footer>
-            <div class="footer-container">
-                <div class="footer-section">
-                    <h4>About NotEFY</h4>
-                    <p>NotEFY helps you discover exciting events and make new friends. Join us and never miss out!
-                    </p>
-                </div>
-                <div class="footer-section">
-                    <ul class="social-links">
-                        <li><a href="instagram"><i aria-hidden="true" class="fa-brands fa-instagram"></i><span
-                                    class="fa-sr-only">Instagram</span></a></li>
-                        <li><a href="x"><i aria-hidden="true" class="fa-brands fa-x-twitter"></i><span
-                                    class="fa-sr-only">Twitter</span></a></li>
-                        <li><a href="pinterest"><i aria-hidden="true" class="fa-brands fa-pinterest-p"></i><span
-                                    class="fa-sr-only">Pinterest</span></a></li>
-                        <li><a href="youtube"><i aria-hidden="true" class="fa-brands fa-youtube"></i><span
-                                    class="fa-sr-only">Youtube</span></a></li>
-                    </ul>
-                </div>
-                <div class="footer-bottom">
-                    <p>&copy; 2024 NotEFY. All Rights Reserved.</p>
-                </div>
-            </div>
-        </footer>
+    </footer>
 
-        
 
-        <!-- Scripts -->
-        <script type="module" src="./scripts/firebaseAPI_TEAM29.js"></script>
-        <script type="module" src="./scripts/profile.js"></script>
+
+    <!-- Scripts -->
+    <script type="module" src="./scripts/firebaseAPI_TEAM29.js"></script>
+    <script type="module" src="./scripts/profile.js"></script>
 </body>
 
 </html>

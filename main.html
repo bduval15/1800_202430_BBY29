@@ -120,8 +120,8 @@
   <!-- Creating Event Form -->
   <div class="popup" id="popup">
     <div id="eventFormContainer">
-      <button id="closeEventPopup" class="close-popup">X</button> 
-      <h2>Create New Event</h2>   
+      <button id="closeEventPopup" class="close-popup">X</button>
+      <h2>Create New Event</h2>
       <form id="eventForm">
         <label for="title">Event Title:</label>
         <input type="text" id="title" required placeholder="Christmas Comedy, Karaoke, etc...">
@@ -153,7 +153,7 @@
               <input type="radio" id="networking" name="preferences" value="networking">
               <label for="networking">Networking</label>
             </div>
-          </div>          
+          </div>
         </div>
         <label for="description">Description:</label>
         <textarea id="description" required placeholder="Describe your event here..."></textarea>
@@ -161,7 +161,8 @@
           <input type="radio" id="free" name="priceOption" value="free"> Free
           <input type="radio" id="paid" name="priceOption" value="paid"> Paid
           <span class="dollar-sign">$</span>
-          <input type="number" id="priceInput" name="price" placeholder="Enter amount" min="0" step="1" class="small-input">
+          <input type="number" id="priceInput" name="price" placeholder="Enter amount" min="0" step="1"
+            class="small-input">
         </div>
         <div class="field-container">
           <label for="time">Time:</label>
@@ -221,7 +222,7 @@
           <i id="likeButton" class="fa-regular fa-heart"></i>
         </div>
       </div>
-    
+
       <!-- Time -->
       <div class="time-location-container">
         <div class="time-container">
@@ -231,8 +232,8 @@
           <p><strong>Location:</strong> <span id="eventPlace" class="location"></span></p>
         </div>
       </div>
-      
-    
+
+
       <!-- Event Description -->
       <div id="eventDescriptionContainer">
         <p id="eventDescription"></p>
@@ -247,25 +248,25 @@
         <button id="joinEventButton">Join Event</button>
       </div>
     </div>
-    
-    
+
+
     <!-- Price and Questions Section -->
     <div class="price-comments-container">
       <h5>Questions & Comments</h5>
       <div id="eventPrice" class="price"></div>
     </div>
-    
+
     <!-- Comment Input -->
     <div class="comment-container">
       <textarea id="commentInput" placeholder="Ask a question or leave a comment"></textarea>
       <button id="postCommentButton">Post Comment</button>
     </div>
-    
+
     <!-- Comments Section -->
     <div id="commentsSection"></div>
-    
-    
-</div>
+
+
+  </div>
 
 
 
@@ -277,6 +278,24 @@
     <div class="container">
       <div class="row" id="events-container">
       </div>
+    </div>
+  </div>
+
+  <!-- Sticky Footer-->
+  <div class="sticky-footer">
+    <div class="footer-icons">
+      <a href="main.html" class="footer-icon">
+        <i class="fa fa-home"></i> <!-- Home Icon -->
+      </a>
+      <div class="circle-container">
+        <a href="#add" id="createIcon" class="footer-icon plus-icon">
+          <i class="fa fa-plus"></i> <!-- Plus Icon -->
+        </a>
+        <span class="create-event-text">Create Event</span>
+      </div>
+      <a href="profile.html" class="footer-icon">
+        <i class="fa fa-user"></i> <!-- Profile Icon -->
+      </a>
     </div>
   </div>
 
@@ -305,21 +324,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- Sticky Footer -->
-  <div class="sticky-footer">
-    <div class="footer-icons">
-      <a href="main.html" class="footer-icon">
-        <i class="fa fa-home"></i> <!-- Home Icon -->
-      </a>
-      <a href="#add" id="createIcon" class="footer-icon plus-icon">
-        <i class="fa fa-plus"></i> <!-- Plus Icon -->
-      </a>
-      <a href="profile.html" class="footer-icon">
-        <i class="fa fa-user"></i> <!-- Profile Icon -->
-      </a>
-    </div>
-  </div>
 
   <!-- Scripts -->
   <script type="module" src="./scripts/firebaseAPI_TEAM29.js"></script>

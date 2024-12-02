@@ -2,6 +2,7 @@ let events = []; // To store fetched events
 let currentIndex = 0; // Index of the currently displayed event
 const scrollInterval = 4000; // Time between scrolls (in milliseconds)
 
+// 1. Fetches a maximum of 6 events from the Firestore database.
 function fetchEvents() {
     const eventsRef = db.collection("events").limit(6); // Fetch a maximum of 6 events
 
@@ -18,6 +19,7 @@ function fetchEvents() {
         });
 }
 
+// 2. Dynamically generates HTML for each event and injects it into the carousel track.
 async function populateCarousel() {
     const carouselTrack = document.getElementById("carousel-track");
     carouselTrack.innerHTML = ""; // Clear previous content
@@ -102,9 +104,7 @@ async function populateCarousel() {
     }
 }
 
-
-
-
+// 3/ Enables automatic scrolling of the carousel by periodically shifting the visible event.
 function startAutoScroll() {
     const carouselTrack = document.getElementById("carousel-track");
 

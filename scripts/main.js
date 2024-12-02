@@ -4,6 +4,7 @@ const auth = firebase.auth();
 let currentUser = null;
 let tempEventData = null;
 
+// 1. Tracks user authentication state changes.
 auth.onAuthStateChanged(async (user) => {
     if (user) {
         currentUser = user;
@@ -29,8 +30,7 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
-
-// ========================== HELPER FUNCTIONS ==========================
+// 23. Formats the date and time in "Month Day, Year Hour:Minute AM/PM" format.
 function formatTimestamp(timestamp) {
     if (!timestamp) return "No Time Provided";
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
@@ -38,13 +38,13 @@ function formatTimestamp(timestamp) {
     return date.toLocaleString("en-US", options);
 }
 
-
+// 24. Formats a price value into a CAD currency string.
 function formatPrice(price) {
     if (!price || price === "Free" || price === 0) return "Free";
     return `${new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(price)} / Person`;
 }
 
-
+// 10. An object that maps event category keys to their corresponding image file paths.
 const eventCategoryImages = {
     sports: "/images/events/sports.jpg",
     clubs: "/images/events/clubs.jpg",
@@ -69,8 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
-// Initialization and Event Handlers
+// 21. Initialization and Event Handlers
 function initializeEventHandlers() {
     // Open/close event creation popup
     document.getElementById('createButton')?.addEventListener('click', openPopup);
@@ -110,7 +109,7 @@ function initializeEventHandlers() {
 
 }
 
-// Popup Controls
+// 15. Displays the event creation form popup.
 function openPopup() {
     document.getElementById('overlay').style.display = 'block';
     document.getElementById('popup').style.display = 'block';
@@ -121,9 +120,9 @@ function openPopup() {
     });
 }
 
-// Generalized close function to handle multiple popups
+// 16. Closes the popup triggered by the specified event.
 function closePopup(event) {
-    const parentPopup = event?.target?.closest('.popup'); // Check if event and target exist
+    const parentPopup = event?.target?.closest('.popup'); 
     if (parentPopup) {
         parentPopup.style.display = 'none';
     }
@@ -133,7 +132,7 @@ function closePopup(event) {
         overlay.style.display = 'none';
     }
 }
-
+// 17. Closes a specific popup by its ID.
 function closePopupById(popupId) {
     const popup = document.getElementById(popupId);
     const overlay = document.getElementById('overlay');
@@ -142,10 +141,12 @@ function closePopupById(popupId) {
     if (overlay) overlay.style.display = 'none';
 }
 
+// Event listener for the closePopup function.
 document.querySelectorAll('.close-popup').forEach((button) => {
     button.addEventListener('click', closePopup);
 });
 
+// 18. Displays a confirmation popup with the newly created or updated event details.
 function openConfirmationPopup(eventData) {
     const confirmationPopup = document.getElementById('confirmationPopup');
     const overlay = document.getElementById('overlay');
@@ -194,13 +195,13 @@ function openConfirmationPopup(eventData) {
     }
 }
 
-
+// 19. Closes the event confirmation popup.
 function closeConfirmationPopup() {
     document.getElementById('confirmationPopup').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
 }
 
-// Event Form Handling
+// 2. Handles form submission for creating or updating events.
 async function handleFormSubmit(event) {
     event.preventDefault();
 
@@ -250,7 +251,7 @@ async function handleFormSubmit(event) {
     }
 }
 
-
+// 8. Restores the form fields in the event creation or editing popup to the last saved state.
 function handleUndo() {
     if (!tempEventData) {
         console.error("No event data to undo!");
@@ -289,7 +290,7 @@ function handleUndo() {
     openPopup();
 }
 
-// Navbar Profile Picture
+// 22. Updates the user's profile picture in the navbar.
 async function updateNavbarProfilePicture() {
     if (!currentUser) return;
 
@@ -312,6 +313,7 @@ async function updateNavbarProfilePicture() {
     }
 }
 
+// 11. Fetches events from Firestore based on active filters (e.g., category, user preferences).
 async function loadFilteredEvents(categories = []) {
     const eventsContainer = document.getElementById('events-container');
     const upcomingHeader = document.getElementById('upcoming');
@@ -390,7 +392,7 @@ async function loadFilteredEvents(categories = []) {
     }
 }
 
-
+// 12. Dynamically generates and renders a card for a single event.
 function displayEvent(eventData, container) {
     const fallbackImage = '/images/events/default.jpg';
     const imagePath = eventData.picture || fallbackImage;
@@ -473,7 +475,7 @@ function displayEvent(eventData, container) {
     });
 }
 
-
+// 20. Opens the event detail popup and populates it with the provided event data.
 async function openEventDetailPopup(eventData) {
     console.log("Received eventData:", eventData);
     const popup = document.getElementById('eventDetailPopup');
@@ -668,7 +670,7 @@ async function openEventDetailPopup(eventData) {
     overlay.style.display = 'block';
 }
 
-
+// 13. Synchronizes the like/unlike state of an event in the main feed with Firestore.
 function updateMainFeedHeart(eventId) {
     // Find the corresponding event card in the main feed
     const likeButtonInFeed = document.querySelector(`#likeButton-${eventId}`);
@@ -689,6 +691,7 @@ function updateMainFeedHeart(eventId) {
     }
 }
 
+// 14. Updates the like button's icon state in the event detail popup based on whether the user has liked the event.
 function updatePopupHeartIcon(eventId) {
     const likeButton = document.getElementById("likeButton");
 
@@ -708,7 +711,7 @@ function updatePopupHeartIcon(eventId) {
     }
 }
 
-
+// 7. Adds a new comment to the specified event.
 function postComment(eventData) {
     const commentInput = document.getElementById('commentInput');
     const commentText = commentInput.value.trim();
@@ -738,7 +741,7 @@ function postComment(eventData) {
     });
 }
 
-// Keep Track of Active Filters 
+// Keep Track of Active Filters. 
 document.addEventListener('DOMContentLoaded', () => {
     const activeFilters = new Set();
 
@@ -764,6 +767,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// 9. Updates the text display for selected event categories in the filter section.
 function updateSelectedCategoriesDisplay() {
     const categoryLabels = {
         myevents: "My Events",
@@ -782,7 +786,7 @@ function updateSelectedCategoriesDisplay() {
     document.getElementById('selectedCategoriesDisplay').value = selectedCategories.join(', ') || 'Select Categories';
 }
 
-// Logout
+// 26. Logout 
 document.getElementById('logoutButton')?.addEventListener('click', () => {
     localStorage.removeItem('avatar');
     auth.signOut()
@@ -790,31 +794,23 @@ document.getElementById('logoutButton')?.addEventListener('click', () => {
         .catch((error) => console.error("Logout error:", error));
 });
 
-// this function is called automatically each time the page loads to clean up firestore of old events
-var THRESHOLD_HOURS = 1; // Set the threshold to 1 hour
+// 3. Automatically removes events older than the configured `THRESHOLD_HOURS`.
+var THRESHOLD_HOURS = 1; 
 function removeOldEvents() {
     db.collection("events")
         .get()
         .then(function (list) {
             list.forEach(function (doc) {
-                // Get the current time
                 let d1 = new Date();
-                // Get the event's scheduled time (time of the event) and convert it to JS Date object
                 let d2 = doc.data().time.toDate();
 
-                // Calculate the "time difference" between the current time and event's scheduled time
                 const timeDifference = Math.abs(d1 - d2);
-
-                // Convert milliseconds to hours
                 const hoursDifference = timeDifference / (1000 * 60 * 60);
 
-                // Check if the time difference is greater than the threshold (1 hour) 
-                // and if the event's scheduled time has already passed
                 if (hoursDifference > THRESHOLD_HOURS && d1 > d2) {
                     db.collection("events").doc(doc.id).delete()
                         .then(() => {
                             console.log(`Deleted event: ${doc.id}`);
-                            // Optionally, refresh the page after deletion
                             location.reload();
                         })
                         .catch((error) => console.error(`Error deleting event ${doc.id}:`, error));
@@ -825,6 +821,8 @@ function removeOldEvents() {
 }
 removeOldEvents();
 
+// 25. Disables or enables the price input field based on whether the "Free" option is selected.
+// Function to toggle the price input field
 function togglePriceInput() {
     const freeOption = document.getElementById('free');
     const priceInput = document.getElementById('priceInput');
@@ -837,7 +835,21 @@ function togglePriceInput() {
     }
 }
 
-// Function to update the attendees count and button state
+// Attach event listeners on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    const freeOption = document.getElementById('free');
+    const paidOption = document.getElementById('paid');
+
+    if (freeOption && paidOption) {
+        freeOption.addEventListener('click', togglePriceInput);
+        paidOption.addEventListener('click', togglePriceInput);
+    }
+});
+
+
+
+
+// 6. Updates the displayed attendee count for an event.
 function updateAttendance(eventData) {
     const attendeesCount = document.getElementById('attendeesCount');
     const joinEventButton = document.getElementById('joinEventButton');
@@ -866,7 +878,7 @@ function updateAttendance(eventData) {
     }
 }
 
-// Function to handle the "Join Event" action
+// 4. Adds the current user to the event's attendees list.
 async function joinEvent(eventData) {
     if (!currentUser) {
         alert("You need to be logged in to join an event!");
@@ -896,7 +908,7 @@ async function joinEvent(eventData) {
     }
 }
 
-// Function to handle the "Leave Event" action
+// 5. Removes the current user from the event's attendees list.
 async function leaveEvent(eventData) {
     if (!currentUser) {
         alert("You need to be logged in to leave an event!");

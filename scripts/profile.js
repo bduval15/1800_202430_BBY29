@@ -4,6 +4,7 @@ console.log("Firebase app initialized");
 var auth = firebase.auth(); // Firebase v8 auth
 window.db = firebase.firestore(); // Ensure Firestore is initialized
 
+// 1. Initializes Firebase and loads user-specific data (e.g., profile settings, created events).
 document.addEventListener("DOMContentLoaded", function () {
     console.log("DOM fully loaded and parsed");
 
@@ -21,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// ========================== HELPER FUNCTIONS ==========================
+// 13. Formats a Firebase Timestamp or JavaScript Date into a readable string.
 function formatTimestamp(timestamp) {
     if (!timestamp) return "No Time Provided";
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
@@ -29,12 +30,14 @@ function formatTimestamp(timestamp) {
     return date.toLocaleString("en-US", options);
 }
 
-
+// 14. Formats a price as a CAD currency string or returns "Free" if the price is not provided.
 function formatPrice(price) {
     if (!price || price === "Free" || price === 0) return "Free";
     return `${new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(price)} / Person`;
 }
 
+
+// 1. Fetches the user's profile settings from Firestore using their UID.
 function loadProfileSettings(uid) {
     var profileRef = window.db.collection("profileSettings").doc(uid);
     profileRef.get().then((docSnap) => {
@@ -64,6 +67,7 @@ function loadProfileSettings(uid) {
     });
 }
 
+// 2. Saves updated profile settings to Firestore.
 function saveProfileSettings() {
     console.log("Save button clicked");
 
@@ -114,6 +118,7 @@ function saveProfileSettings() {
     }
 }
 
+// 3. Updates the navbar with the user's avatar if available.
 function updateNavbarProfilePicture() {
     var user = auth.currentUser;
     if (!user) {
@@ -150,6 +155,7 @@ function updateNavbarProfilePicture() {
     });
 }
 
+// 4. Fetches and populates the user's email address in the form.
 function populateEmail(uid) {
     console.log("Fetching email for UID:", uid);
 
@@ -206,7 +212,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-
 document.getElementById('saveButton').addEventListener('click', saveProfileSettings);
 
 window.addEventListener('load', function () {
@@ -241,8 +246,7 @@ document.querySelectorAll(".avatar-option").forEach((avatar) => {
     });
 });
 
-
-// Function to show the toast / dismiss toast
+// 11. Displays a success toast notification for profile updates.
 function showToast() {
     const toastElement = document.getElementById("profileToast");
     const toast = new bootstrap.Toast(toastElement);
@@ -257,6 +261,7 @@ function showToast() {
     setTimeout(() => toast.hide(), 3000);
 }
 
+// 12. Displays a success toast notification for event deletions.
 function showToast2() {
     const toastElement = document.getElementById("deleteToast");
     const toast = new bootstrap.Toast(toastElement);
@@ -271,9 +276,7 @@ function showToast2() {
     setTimeout(() => toast.hide(), 3000);
 }
 
-
-
-// Profile Picture is saved to fireBase under user. 
+// 5. Updates the user's profile picture in Firestore with the selected avatar URL.
 function saveProfilePicture(avatarUrl) {
     const user = auth.currentUser;
     if (user) {
@@ -294,7 +297,7 @@ function saveProfilePicture(avatarUrl) {
     }
 }
 
-// Load my events in the My Events tab on the profile page.
+// 8. Fetches and displays events created by the logged-in user from Firestore.
 function loadMyEvents() {
     console.log("Loading My Events...");
     const myEventsContainer = document.getElementById("myEventsContainer");
@@ -375,7 +378,7 @@ function loadMyEvents() {
     }
 }
 
-// Deletes page with confirmation modal popup.
+// 9. Deletes the event from Firestore and updates the UI to remove the deleted event card.
 function deleteEvent(eventId) {
     const modalHtml = `
         <div class="custom-modal-overlay">
@@ -422,6 +425,7 @@ function deleteEvent(eventId) {
 }
 window.deleteEvent = deleteEvent;
 
+// 6. Saves the user's profile picture and preferences to `localStorage`.
 function saveProfileState(profilePicture, preferences) {
     const existingProfilePicture = localStorage.getItem('avatar');
     const finalProfilePicture = profilePicture || existingProfilePicture;
@@ -430,6 +434,7 @@ function saveProfileState(profilePicture, preferences) {
     localStorage.setItem('preferences', JSON.stringify(preferences));
 }
 
+// 7. Restores the user's profile picture and preferences from `localStorage`
 function restoreProfileState() {
     const profilePicture = localStorage.getItem('avatar');
     const preferences = JSON.parse(localStorage.getItem('preferences'));
@@ -449,6 +454,7 @@ function restoreProfileState() {
 // Restore state on page load
 restoreProfileState();
 
+// 10. Fetches and displays events liked by the user.
 async function displayUserLikedEvents() {
     const likedEventsContainer = document.getElementById("likedEventsContainer");
 
@@ -555,5 +561,3 @@ async function displayUserLikedEvents() {
         likedEventsContainer.innerHTML = "<p>Failed to load liked events. Please try again later.</p>";
     }
 }
-
-

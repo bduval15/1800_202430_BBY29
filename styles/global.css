@@ -102,7 +102,7 @@ body {
 }
 
 .welcome-content {
-  max-width: 800px;
+  max-width: 100%;
   background-color: #0e2727;
   padding: 30px;
   border-radius: 10px;

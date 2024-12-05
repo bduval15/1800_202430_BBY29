@@ -1,4 +1,4 @@
-# Project Title
+# NotEFY
 
 ## 1. Project Description
 This browser based web application to host events, and find events in your area. All while staying organized enough to ensure you never miss out on a function you want to attend. 
@@ -23,9 +23,13 @@ List technologies (with version numbers), API's, icons, fonts, images, media or 
 ## 4. Complete setup/installion/usage
 State what a user needs to do when they come to your project.  How do others start using your code or application?
 Here are the steps ...
+
+**When looking at the scripts. Please refer to the documentation corresponding to each script under the documents folder.**
+
 * Login using the account 
     username: demo15@email.ca
     password: pass1234
+
 * After login you are directed to the main page. Here you can filter by events, view events in the main feed or host a new event. 
 
 * Filtering by My Events will show the events the User has created. For You filters events set up in the Event Preferences tab on the profile page. The rest filter the events by categories selected when creating the event. 

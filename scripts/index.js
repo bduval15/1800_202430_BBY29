@@ -55,7 +55,7 @@ async function populateCarousel() {
                 if (event.time instanceof firebase.firestore.Timestamp) {
                     eventDate = event.time.toDate(); // Convert Firebase Timestamp to JavaScript Date
                 } else {
-                    eventDate = new Date(event.time);
+                    eventDate = new Date(event.time); // If it's a string, directly convert to Date
                 }
 
                 // Format the date and time
@@ -104,14 +104,14 @@ async function populateCarousel() {
     }
 }
 
-// 3. Enables automatic scrolling of the carousel by periodically shifting the visible event.
+// 3/ Enables automatic scrolling of the carousel by periodically shifting the visible event.
 function startAutoScroll() {
     const carouselTrack = document.getElementById("carousel-track");
 
     setInterval(() => {
-        currentIndex = (currentIndex + 1) % events.length; 
-        const translateX = -currentIndex * 100;
-        carouselTrack.style.transform = `translateX(${translateX}%)`;
+        currentIndex = (currentIndex + 1) % events.length; // Increment index and loop back if needed
+        const translateX = -currentIndex * 100; // Calculate the shift percentage
+        carouselTrack.style.transform = `translateX(${translateX}%)`; // Apply smooth slide effect
     }, scrollInterval);
 }
 

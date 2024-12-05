@@ -58,6 +58,7 @@ What we'd like to build in the future:
 * A calender for better representation of event dates and planning.
 * A chat service to better message event owners and other participants to 
 * enhance coordination between users. 
+* A notifcation system to update users when events are close to starting or if we have reccomendations for the user when a new event they might be interested in are created.
 	
 ## 7. Contents of Folder
 Content of the project folder:

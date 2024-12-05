@@ -411,7 +411,7 @@ footer {
 
 .edit-button {
   position: absolute; 
-  left: 260px; 
+  left: 87%; 
   background-color: transparent; 
   color: #4e4e4eda; 
   border: none; 
@@ -433,6 +433,14 @@ footer {
   justify-content: center;
   align-items: center;
   z-index: 1000; 
+}
+
+.container {
+  max-width: 100%; 
+  padding: 15px;
+}
+.main-body {
+  width: 100%;
 }
 
 /* Modal Box */

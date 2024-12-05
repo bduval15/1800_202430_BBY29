@@ -347,7 +347,7 @@ function loadMyEvents() {
                                         <!-- Price and Edit Button -->
                                         <div class="d-flex justify-content-between align-items-center mt-3">
                                             <span style="font-size: 0.9rem; font-weight: bold; color: black;">${formatPrice(eventData.price)}</span>
-                                            <button class="edit-button" style="border-radius: 50%; font-size: 1.2rem; margin-top:" onclick="editEvent('${eventId}')">
+                                            <button class="edit-button" style="border-radius: 50%; font-size: 1.2rem;" onclick="editEvent('${eventId}')">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
                                         </div>

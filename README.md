@@ -17,8 +17,8 @@ List technologies (with version numbers), API's, icons, fonts, images, media or 
 * FontAwesome (Icon Library https://kit.fontawesome.com/62f3b3a061.js)
 * Tech Tips (Carly's Library of technical expertise)
 * Provile Avatars (Provided by https://www.flaticon.com/free-icons)
-* ChatGPT o1-preview (Used for troubleshooting and assistance with building functions) 
-**Disclaminer** ChatGPT helped us flesh out our functions so we could get the intended use out of them. We also used it to add console log errors to help with debugging throughout the implementation process.
+* ChatGPT (Used for troubleshooting and assistance with building functions) 
+**Disclaimer** ChatGPT helped us flesh out our functions so we could get the intended use out of them. We also used it to add console log errors to help with debugging throughout the implementation process.
 
 ## 4. Complete setup/installion/usage
 State what a user needs to do when they come to your project.  How do others start using your code or application?
